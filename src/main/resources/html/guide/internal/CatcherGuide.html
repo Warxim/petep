@@ -1,0 +1,23 @@
+<p>Catcher allows you to manually intercept ("catch") and edit PDUs.</p>
+<h2>Description</h2>
+<p>Catcher GUI Tab is added to PETEP when you press start. Catching is disabled by default and can be enabled in the Catcher tab.</p>
+<h3>Section PDU Flow</h3>
+<p>PDU Flow section contains fields that characterize:</p>
+<ul>
+	<li><strong>Proxy</strong>: proxy instance for PDU transmission.</li>
+	<li><strong>Connection</strong>: connection of specified proxy that will send the PDU to its destination.</li>
+	<li><strong>Destination</strong>: in which direction the PDU is sent.</li>
+	<li><strong>Target Interceptor</strong>: next interceptor in which the PDU will be processed.</li>
+</ul>
+<p>This section is disabled by default, because it is an advanced approach to modify these fields.</p>
+<h3>Section PDU Data</h3>
+<p>PDU Data section contains fields for tags, data bytes and also protocol-specific data (if there are any).</p>
+<h2>Tags</h2>
+<p>
+In order to specify, which PDUs should be catched, you can tag them using the following tags (all PDUs are catched by default):
+</p>
+<ul>
+	<li><strong>no_catch</strong>: tagged PDU won't show in GUI, however, it will be kept in queue to keep correct PDU order.</li>
+	<li><strong>no_catch_skip</strong>: tagged won't be catched (it will jump over the Catcher = PDU order can be violated).</li>
+	<li><strong>catch</strong>: tagged PDU will be catched even if it already has no_catch / no_catch_skip tag.</li>
+</ul>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="265.0" prefWidth="402.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+     <Label layoutX="13.0" layoutY="6.0" styleClass="h1" text="Connections" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <Label alignment="CENTER" prefHeight="265.0" prefWidth="402.0" text="Start PETEP to see connections here." AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0" />
+      <TabPane fx:id="tabs" layoutY="33.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0" />
+      <Button fx:id="refreshButton" layoutX="329.0" layoutY="8.0" mnemonicParsing="false" onAction="#onRefreshButtonClick" text="Refresh" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="8.0" />
+        </children>
+</AnchorPane>

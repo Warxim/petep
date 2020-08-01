@@ -1,0 +1,9 @@
+<p>HTTP Proxy extension allows you to transmit data over HTTP proxies like ZAP and Burp.</p>
+<h2>Tags</h2>
+<p>
+In order to specify, which PDUs should go through proxy, you can use the following tags (all PDUs are sent over HTTP proxy by default):
+</p>
+<ul>
+	<li><strong>no_httpp</strong>: tagged PDU won't be transfered over HTTP proxy.</li>
+	<li><strong>httpp</strong>: tagged PDU will be transfered over HTTP proxy even if it already has no_httpp tag.</li>
+</ul>

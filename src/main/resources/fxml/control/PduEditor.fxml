@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- PetepAPI -->
+
+<?import com.warxim.petep.gui.control.BytesEditor?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root prefHeight="478.0" prefWidth="549.0" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox layoutX="10.0" layoutY="185.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="185.0">
+         <children>
+            <AnchorPane maxHeight="120.0" prefWidth="200.0" VBox.vgrow="SOMETIMES">
+               <children>
+                  <Label styleClass="input-label" text="Tags:" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="2.0" />
+                  <ListView fx:id="tagsList" maxHeight="120.0" minHeight="60.0" prefWidth="374.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="0.0" />
+                  <Button mnemonicParsing="false" onAction="#onAddTagButtonClick" prefHeight="24.0" prefWidth="70.0" text="Add" AnchorPane.rightAnchor="10.0" />
+                  <Button mnemonicParsing="false" onAction="#onRemoveTagButtonClick" prefHeight="24.0" prefWidth="70.0" text="Remove" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0" />
+               </children>
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </AnchorPane>
+            <AnchorPane minHeight="100.0" prefWidth="200.0">
+               <children>
+                  <BytesEditor fx:id="dataInput" minHeight="250.0" prefWidth="454.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="35.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
+                  <Label styleClass="input-label" text="Data:" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="2.0" />
+               </children>
+               <VBox.margin>
+                  <Insets left="10.0" />
+               </VBox.margin>
+            </AnchorPane>
+            <AnchorPane fx:id="metadataPane" prefHeight="83.0" prefWidth="585.0">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin></AnchorPane>
+         </children>
+      </VBox>
+      <Label layoutX="10.0" layoutY="38.0" styleClass="input-label" text="Proxy:" AnchorPane.leftAnchor="10.0" />
+      <ComboBox fx:id="proxyInput" layoutX="85.0" layoutY="34.0" prefHeight="26.0" prefWidth="460.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" />
+      <Label layoutX="10.0" layoutY="69.0" styleClass="input-label" text="Connection:" AnchorPane.leftAnchor="10.0" />
+      <ComboBox fx:id="connectionInput" layoutX="85.0" layoutY="64.0" prefHeight="26.0" prefWidth="460.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" />
+      <Label layoutX="10.0" layoutY="99.0" styleClass="input-label" text="Destination:" AnchorPane.leftAnchor="10.0" />
+      <ComboBox fx:id="destinationInput" layoutX="85.0" layoutY="94.0" prefHeight="26.0" prefWidth="460.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" />
+      <Label layoutX="10.0" layoutY="129.0" styleClass="input-label" text="Target interceptor:" AnchorPane.leftAnchor="10.0" />
+      <ComboBox fx:id="interceptorInput" layoutX="120.0" layoutY="124.0" prefHeight="26.0" prefWidth="460.0" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="10.0" />
+      <Label layoutX="10.0" layoutY="14.0" styleClass="h3" text="PDU Flow" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <CheckBox fx:id="flowInput" layoutX="84.0" layoutY="14.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="133.0" text="Editable (advanced)" AnchorPane.topAnchor="10.0" />
+      <Label layoutX="10.0" layoutY="162.0" styleClass="h3" text="PDU Data" />
+   </children>
+</fx:root>

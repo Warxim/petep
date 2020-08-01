@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="374.0" prefWidth="654.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutY="-4.0" prefWidth="424.0" styleClass="header-1" text="PETEP" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" onMouseClicked="#onHeaderLabelClick"  />
+      <Label layoutX="5.0" layoutY="50.0" prefWidth="424.0" styleClass="header-2" text="Project" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0" />
+      <Button layoutX="14.0" layoutY="340.0" mnemonicParsing="false" onAction="#onOpenButtonClick" prefHeight="24.0" prefWidth="65.0" text="Open" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+      <TableView fx:id="projectsTable" layoutX="14.0" layoutY="87.0" prefHeight="200.0" prefWidth="627.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="90.0">
+        <columns>
+          <TableColumn fx:id="nameColumn" prefWidth="138.0" text="Name" />
+            <TableColumn fx:id="descriptionColumn" prefWidth="202.0" text="Description" />
+            <TableColumn fx:id="dateColumn" prefWidth="102.0" text="Date" />
+          <TableColumn fx:id="pathColumn" prefWidth="191.0" text="Path" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+      <Button layoutX="79.0" layoutY="340.0" mnemonicParsing="false" onAction="#onNewButtonClick" prefHeight="24.0" prefWidth="65.0" text="New" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="80.0" />
+      <Button layoutX="149.0" layoutY="340.0" mnemonicParsing="false" onAction="#onEditButtonClick" prefHeight="24.0" prefWidth="65.0" text="Edit" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="150.0" />
+      <Button layoutX="219.0" layoutY="340.0" mnemonicParsing="false" onAction="#onRemoveButtonClick" prefWidth="65.0" text="Remove" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="220.0" />
+      <Button layoutX="521.0" layoutY="340.0" mnemonicParsing="false" onAction="#onRunButtonClick" prefHeight="24.0" prefWidth="100.0" styleClass="is-primary" text="Run" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+   </children>
+</AnchorPane>

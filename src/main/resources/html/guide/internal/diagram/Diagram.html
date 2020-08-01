@@ -1,0 +1,262 @@
+<style>
+	.diagram {
+		margin: 0 auto;
+		display: flex;
+		width: max-content;
+	}
+	
+	.node {
+		text-orientation: upright;
+		text-transform:uppercase;
+		text-align:center;
+		padding:20px 5px;
+		border: 2px solid #8e96d9;
+		font-weight:700;
+		writing-mode:vertical-lr;
+		width:14px;
+	}
+	
+	.code {
+		color:#8e96d9;
+		font-size:10px;
+		background: #fff;
+		padding:0;
+	}
+	
+	.arrows {
+		display: flex;
+		padding:0 5px;
+		flex-direction: column;
+		justify-content: space-between;
+		font-weight: 700;
+		font-size:12px;
+	}
+	
+	.arrows div:first-child {
+		align-self: flex-start;
+		margin-top:50px;
+	}
+	
+	.arrows div:not(:first-child) {
+		align-self: flex-end;
+		margin-bottom:50px;
+	}
+	
+	.petep {
+		flex-direction: column;
+		display: flex;
+		border: 2px solid #8e96d9;
+	}
+	
+	.petep > .header {
+		font-size:13px;
+		text-align:center;
+		font-weight: 700;
+		padding:5px;
+		color:#383b53;
+		border-bottom: 2px dotted #8e96d9;
+	}
+	
+	.petep .content {
+		display: flex;
+	}
+	
+	.petep .content .node {
+		border:0;
+	}
+	
+	.petep .content .node:first-child {
+		border-right: 2px dotted  #8e96d9;
+	}
+	
+	.petep .content .node:last-child {
+		border-left: 2px dotted  #8e96d9;
+	}
+	
+	.petep .footer {
+		border-top:0;
+		font-weight: 700;
+		padding:10px;
+		text-align:center;
+	}
+	
+	.petep .footer > .title {
+		font-size:12px;
+		font-weight: 700;
+		padding-top:5px;
+		padding-bottom:5px;
+		color:#515477;
+	}
+	
+	/*
+	INTERCEPTOR
+	*/	
+	
+	.interceptors {
+		display: flex;
+		flex-direction: column;
+		border-top:0;
+		border-bottom: 2px dotted #8e96d9;
+		background: #f4f4fc;
+	}
+	
+	.interceptors .row {
+		display:block;
+		height:auto;
+	}
+	
+	.interceptors .row:not(:first-child) {
+		margin-top:20px;
+		margin-bottom:5px;
+	}
+
+	.interceptors .row .header {
+		font-size:12px;
+		text-align:center;
+		font-weight: 700;
+		padding:5px;
+		color:#515477;
+	}
+
+	.interceptors .row .instances {
+		display:flex;
+	}
+
+	.interceptors .row .instances .interceptor {
+		flex: 1 1 auto;
+		border: 1px solid #8e96d9;
+		padding: 5px 4px;
+		text-align:center;
+		margin:0 5px;
+		white-space: nowrap;
+		background: #fff;
+	}
+
+	.interceptors .row .instances .interceptor:hover {
+		border: 1px solid #383b53;
+	}
+	
+	.interceptors .row .instances .interceptor .code {
+		margin:0 -4px;
+		padding-top:6px;
+	}
+
+	
+	.interceptors .row .instances .separator {
+		padding: 15px 0;
+		font-weight: 700;
+		font-size:12px;
+	}
+	
+	/*
+	PROXY
+	*/
+	
+	.proxy {
+		border: 1px dotted #8e96d9;
+		padding: 5px;
+		font-weight:400;
+	}
+
+	.proxy:hover {
+		border: 1px dotted #383b53;
+	}
+	
+	.proxy:not(:first-child) {
+		margin-top:5px;
+	}
+	
+	/*
+	TOOLTIP
+	*/
+	
+	.tooltip {
+	  position: relative;
+	}
+	
+	.tooltip .tooltip-content {
+	  visibility: hidden;
+	  width: 250px;
+	  background-color: rgba(56, 59, 83, 0.8);
+	  color: #fff;
+	  text-align: center;
+	  padding: 5px 0;
+	  position: absolute;
+	  z-index: 1;
+	  top: 100%;
+	  left: 50%; 
+	  margin-left: -125px;
+	}
+	
+	.tooltip .tooltip-content::after {
+	  content: " ";
+	  position: absolute;
+	  bottom: 100%;
+	  left: 50%;
+	  margin-left: -5px;
+	  border-width: 5px;
+	  border-style: solid;
+	  border-color: transparent transparent rgba(56, 59, 83, 0.8) transparent;
+	}
+	
+	.tooltip:hover .tooltip-content {
+	  visibility: visible;
+	}
+</style>
+<p>In the following diagram, you can see structure of PETEP in its current configuration.</p>
+<div class="diagram">
+	<div class="node">
+		Clients
+	</div>
+	<div class="arrows">
+		<div>&#8680;</div>
+		<div>&#8678;</div>
+	</div>
+	<div class="petep">
+		<div class="header">
+			PETEP
+		</div>
+		<div class="content">
+			<div class="node">
+				Proxies
+			</div>
+			<div class="interceptors">
+				<div class="row">
+					<div class="header">
+						&#8680;&nbsp;&nbsp; Interceptors in direction C2S &nbsp;&nbsp;&#8680;
+					</div>
+					<div class="instances">
+						<!--  Interceptors will be loaded here. -->
+						{{interceptorsC2S}}
+					</div>
+				</div>
+				<div class="row">
+					<div class="header">
+						&#8678;&nbsp;&nbsp; Interceptors in direction S2C &nbsp;&nbsp;&#8678;
+					</div>
+					<div class="instances">
+						<!--  Interceptors will be loaded here. -->
+						{{interceptorsS2C}}
+					</div>
+				</div>
+			</div>
+			<div class="node">
+				Proxies
+			</div>
+		</div>
+		<div class="footer">
+			<div class="title">Proxies</div>
+			<div class="proxies">
+				<!--  Proxies will be loaded here. -->
+				{{proxies}}
+			</div>
+		</div>
+	</div>
+	<div class="arrows">
+		<div>&#8680;</div>
+		<div>&#8678;</div>
+	</div>
+	<div class="node">
+		Servers
+	</div>
+</div>

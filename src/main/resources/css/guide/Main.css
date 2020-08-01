@@ -1,0 +1,66 @@
+/* * FONTS */
+ @font-face {
+     src: url('../fonts/OpenSans-Regular.ttf');
+}
+ @font-face {
+     font-weight: bold;
+     src: url('../fonts/OpenSans-Bold.ttf');
+}
+ @font-face {
+     font-style: italic;
+     src: url('../fonts/OpenSans-ExtraBoldItalic.ttf');
+}
+
+/* * COLORS */
+ body {
+     font-size: 11px;
+     font-family:'Open Sans';
+     color: #272932;
+ }
+
+ h1 {
+     font-size: 15px;
+     font-weight: 700;
+     color: #515477;
+}
+ 
+h2 {
+     font-size: 13px;
+     font-weight: 700;
+     color: #515477;
+}
+ 
+ h3 {
+     font-size: 12px;
+     font-weight: 700;
+     color: #515477;
+}
+ 
+ h3 {
+     font-size: 11px;
+     font-weight: 700;
+     color: #515477;
+}
+
+ul {
+	list-style: none;
+}
+
+
+li::before {
+	content: "▪"; 
+	color: #515477;
+	font-weight: bold;
+	display: inline-block;
+	width: 1em;
+	margin-left: -1em;
+}
+
+a {
+	text-decoration:none;
+}
+
+.code {
+	background:#f4f4fc;
+	padding:5px;
+}

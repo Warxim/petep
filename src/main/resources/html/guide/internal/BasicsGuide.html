@@ -1,0 +1,65 @@
+<p>In this chapter, you can find useful basic information for PETEP usage.</p>
+
+<h2>Terms</h2>
+<p>There are many different terms used in PETEP:</p>
+<ul>
+	<li>
+		<strong>PDU (Protocol Data Unit)</strong>: units used to transmit data through PETEP.
+		<br>
+		PDUs always contain operational data (tags, destination, connection, ...) and data bytes, however, they can also contain any protocol specific data.
+	</li>
+	<li>
+		<strong>Direction C2S / S2C</strong>: direction in which PDUs go through PETEP.
+		<ul>
+			<li><strong>C2S</strong>: direction from client to server.</li>
+			<li><strong>S2C</strong>: direction from server to client.</li>
+		</ul>
+	</li>
+	<li>
+		<strong>Tags</strong>: tags are just strings used to distinguish PDUs between each other. Using tags, you can for example differentiate specific message and then perform some operation on it.
+	</li>
+	<li>
+		<strong>Proxy</strong>: element that handles communication protocol.
+	</li>
+	<li>
+		<strong>Interceptor</strong>: element that processes PDUs (changes content, adds tags, ...).
+	</li>
+	<li>
+		<strong>Module</strong>: internal / external module that adds some functionality to PETEP.
+		<ul>
+			<li><strong>Proxy module</strong>: adds communication protocol to PETEP (TCP, UDP, ...).</li>
+			<li><strong>Interceptor module</strong>: adds options for PDU processing.</li>
+		</ul>
+	</li>
+</ul>
+
+<h2>Projects</h2>
+<p>Projects are distinguished by their project folder, which only contains configuration directory "conf" by default.</p>
+<h3>Project configuration</h3>
+<p>Each project contains the following configuration files in JSON format:</p>
+<ul>
+	<li>
+		<strong>project.json</strong>: basic configuration that contains project name and description.
+	</li>
+	<li>
+		<strong>extensions.json</strong>: contains list of used extensions and their configuration / storage.
+	</li>
+	<li>
+		<strong>proxies.json</strong>: configuration of user defined proxy instances.
+	</li>
+	<li>
+		<strong>interceptors-C2S.json</strong>: configuration of user defined interceptor instances in direction C2S (Client -> Server).
+	</li>
+	<li>
+		<strong>interceptors-S2C.json</strong>: configuration of user defined interceptor instances in direction S2C (Client <- Server).
+	</li>
+</ul>
+
+<h2>Extensions</h2>
+<p>PETEP's main feature is its modularity and extensibility. That is why PETEP is divided into modules, which are connected to core. These modules are registered to PETEP through extensions.</p>
+<p>If you want to use internal / external extension, you have to add it to the project before you open it. (This can be done using wizard or by manually editing configuration.)</p>
+<p>For list of available extensions, please, go to Introduction chapter.</p>
+
+<h2>Interceptors</h2>
+<p>As I have already described above, interceptors are made to work with PDUs in various ways (modification, tagging, dropping, ...).</p>
+<p>There are two interceptor queues (one for each direction: C2S between client and server; S2C between server and client). It is completely up to you, what interceptors will you add to these queues and in what order.</p>

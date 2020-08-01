@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<fx:root type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane fx:id="httpPane" prefHeight="245.0" prefWidth="442.0">
+               <children>
+                  <Label layoutX="12.0" layoutY="213.0" styleClass="input-label" text="Version:" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" />
+                  <TextField fx:id="httpVersionInput" layoutX="61.0" layoutY="6.0" text="1" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="10.0" />
+                  <Label layoutX="9.0" layoutY="37.0" styleClass="input-label" text="Headers:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="37.0" />
+                  <TableView fx:id="httpHeadersInput" layoutX="80.0" layoutY="33.0" prefHeight="180.0" prefWidth="272.0" AnchorPane.bottomAnchor="31.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="35.0">
+                    <columns>
+                      <TableColumn fx:id="httpHeaderNameColumn" prefWidth="75.0" text="Header Name" />
+                      <TableColumn fx:id="httpHeaderValueColumn" prefWidth="75.0" text="Header Value" />
+                    </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
+                  <Button layoutX="362.0" layoutY="33.0" mnemonicParsing="false" onAction="#onHttpHeaderAddButtonClick" prefHeight="25.0" prefWidth="70.0" text="Add" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="33.0" />
+                  <Button layoutX="362.0" layoutY="63.0" mnemonicParsing="false" onAction="#onHttpHeaderEditButtonClick" prefHeight="25.0" prefWidth="70.0" text="Edit" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="63.0" />
+                  <Button layoutX="362.0" layoutY="93.0" mnemonicParsing="false" onAction="#onHttpHeaderRemoveButtonClick" prefHeight="25.0" prefWidth="70.0" text="Remove" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="93.0" />
+                  <Label layoutX="15.0" layoutY="14.0" styleClass="h3" text="HTTP Protocol" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="httpRequestPane" prefWidth="442.0">
+               <children>
+                  <Label layoutX="10.0" layoutY="6.0" styleClass="input-label" text="Method:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="6.0" />
+                  <TextField fx:id="httpMethodInput" layoutX="80.0" layoutY="2.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="2.0" />
+                  <Label layoutX="10.0" layoutY="33.0" styleClass="input-label" text="Path:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="35.0" />
+                  <TextField fx:id="httpPathInput" layoutX="80.0" layoutY="31.0" prefHeight="25.0" prefWidth="352.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="31.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="httpResponsePane" prefWidth="200.0">
+               <children>
+                  <TextField fx:id="httpStatusCodeInput" layoutX="92.0" layoutY="10.0" prefHeight="25.0" prefWidth="340.0" AnchorPane.leftAnchor="105.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="2.0" />
+                  <Label layoutX="13.0" layoutY="13.0" styleClass="input-label" text="Status code:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="5.0" />
+                  <TextField fx:id="httpStatusMessageInput" layoutX="105.0" layoutY="31.0" prefHeight="25.0" prefWidth="327.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="105.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="31.0" />
+                  <Label layoutX="14.0" layoutY="30.0" styleClass="input-label" text="Status message:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="35.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="websocketPane" prefWidth="200.0">
+               <children>
+                  <Label layoutX="26.0" layoutY="8.0" styleClass="h3" text="WebSocket Protocol" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                  <HBox alignment="CENTER" layoutX="14.0" layoutY="32.0" prefHeight="38.0" prefWidth="418.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="30.0">
+                     <children>
+                        <CheckBox fx:id="websocketFinInput" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="FIN" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </HBox.margin>
+                        </CheckBox>
+                        <CheckBox fx:id="websocketRsv1Input" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="RSV1" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </HBox.margin>
+                        </CheckBox>
+                        <CheckBox fx:id="websocketRsv2Input" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="RSV2" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </HBox.margin>
+                        </CheckBox>
+                        <CheckBox fx:id="websocketRsv3Input" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="RSV3" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </HBox.margin>
+                        </CheckBox>
+                        <CheckBox fx:id="websocketMaskedInput" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Masked" HBox.hgrow="ALWAYS">
+                           <HBox.margin>
+                              <Insets left="10.0" right="10.0" />
+                           </HBox.margin>
+                        </CheckBox>
+                     </children>
+                  </HBox>
+                  <Label layoutX="10.0" layoutY="68.0" styleClass="input-label" text="Opcode:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="70.0" />
+                  <ComboBox fx:id="websocketOpcodeInput" layoutX="72.0" layoutY="66.0" prefWidth="150.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="66.0" />
+                  <Label layoutX="10.0" layoutY="100.0" styleClass="input-label" text="Mask:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="100.0" />
+                  <TextField fx:id="websocketMaskInput" layoutX="70.0" layoutY="95.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="70.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="95.0" />
+               </children>
+            </AnchorPane>
+         </children>
+      </VBox>
+   </children>
+</fx:root>

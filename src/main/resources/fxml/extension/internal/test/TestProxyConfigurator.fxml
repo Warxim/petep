@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.warxim.petep.gui.control.BytesEditor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<fx:root type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <BytesEditor fx:id="sendInput" layoutX="71.0" layoutY="14.0" prefHeight="138.0" prefWidth="314.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <Label layoutX="14.0" layoutY="16.0" styleClass="input-label" text="Send:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <BytesEditor fx:id="receiveInput" layoutX="71.0" layoutY="157.0" prefHeight="138.0" prefWidth="314.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="160.0" />
+      <Label layoutX="14.0" layoutY="159.0" styleClass="input-label" text="Receive:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="160.0" />
+      <Label layoutX="10.0" layoutY="310.0" styleClass="input-label" text="Connections:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="310.0" />
+      <TextField fx:id="connectionsInput" layoutX="88.0" layoutY="306.0" text="1" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="306.0" />
+      <Label layoutX="14.0" layoutY="342.0" styleClass="input-label" text="Send delay:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="340.0" />
+      <TextField fx:id="delayInput" layoutX="90.0" layoutY="336.0" text="1" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" />
+   </children>
+</fx:root>

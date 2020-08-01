@@ -1,0 +1,27 @@
+/*
+ * PETEP Gradle Settings
+ */
+
+rootProject.name = 'PETEP'
+
+// If "gradle.ext.wizard" is set to "false", gradle "Run" will run PETEP with project (gradle.ext.testProjectDirectory) automatically.
+gradle.ext.wizard = true
+
+// If GUI is set to "false", gradle "Run" will run PETEP without GUI.
+gradle.ext.GUI = true
+
+// Path to project to open automatically when "gradle.ext.wizard" is set to "false".
+gradle.ext.testProjectDirectory = './projects/test_project'
+
+// Include external extensions to gradle build?
+gradle.ext.extensions = false
+
+// Path to extensions to automatically include (useful for extension development).
+gradle.ext.extensionsDirectory = '../petep_extensions/'
+
+// Include extensions
+if (gradle.ext.extensions) {
+	file(gradle.ext.extensionsDirectory).eachDir { f -> 
+		includeBuild f.path
+	}
+}

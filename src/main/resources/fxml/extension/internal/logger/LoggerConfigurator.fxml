@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<fx:root prefHeight="39.0" prefWidth="284.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="25.0" layoutY="45.0" styleClass="input-label" text="Log path:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <TextField fx:id="pathInput" layoutX="40.0" layoutY="6.0" prefHeight="26.0" prefWidth="237.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="35.0" />
+      <Button layoutX="222.0" layoutY="6.0" mnemonicParsing="false" onAction="#onFileOpenButtonClick" prefHeight="26.0" prefWidth="25.0" text="..." AnchorPane.rightAnchor="10.0" />
+   </children>
+</fx:root>

@@ -1,0 +1,28 @@
+<p>Logger is a simple extension that logs PDUs into specified plain-text file.</p>
+<h2>Example log</h2>
+<div class="code">
+###############################################<br>
+Time: 09/12/2019 17:42:26<br>
+Proxy: test<br>
+Destination: server<br>
+Connection: 1<br>
+Tags: test_tag_1,test_tag_2<br>
+Meta data:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Test: test_string<br>
+Data [bytes]:<br>
+-----------------------------<br>
+74 65 73 74 20 78 79 7A<br>
+-----------------------------<br>
+Data [string]:<br>
+-----------------------------<br>
+test xyz<br>
+-----------------------------<br>
+</div>
+<h2>Tags</h2>
+<p>
+In order to specify, which PDUs should be logged, you can tag them using the following tags (all PDUs are logged by default):
+</p>
+<ul>
+	<li><strong>no_log</strong>: tagged PDU won't be logged.</li>
+	<li><strong>log</strong>: tagged PDU will be logged even if it already has no_log tag.</li>
+</ul>

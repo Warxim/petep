@@ -1,0 +1,55 @@
+<p>Tagger is extension for automatic PDU tagging.</p>
+
+<h2>Tag rule</h2>
+<p>For each tag you have to create rule:</p>
+<ul>
+	<li><strong>Name</strong>: for clarity.</li>
+	<li><strong>Description</strong>: for clarity.</li>
+	<li><strong>Enabled</strong></li>
+	<li><strong>Tag</strong>: with what tag should be the PDU tagged.</li>
+	<li><strong>Subrules</strong>: list of subrules (more about subrules below).</li>
+	<li>
+		<strong>Expression</strong>: boolean logic expression (condition for tagging).
+		<br>
+		<strong>Symbols</strong>:
+		<ul>
+			<li><strong>0-...</strong>: index of subrule (displayed in column "N." in subrule table).</li>
+			<li><strong>&</strong>: logical AND.</li>
+			<li><strong>|</strong>: logical OR.</li>
+			<li><strong>^</strong>: logical XOR.</li>
+			<li><strong>!</strong>: logical NOT.</li>
+			<li><strong>()</strong>: parenthesis.</li>
+		</ul>
+		<strong>Example</strong>: 0 & !(1 | 2) & 3
+		<br>
+		<strong>Default</strong>: Expressions are generated using logical AND.
+		<br>
+		<strong>Warning</strong>: Expressions are not entirely validated, so you have to pay attention to writing correct expression yourself.
+	</li>
+</ul>
+
+<h2>Tag subrule</h2>
+<p>Tag subrules are rules that can be used in condition for tagging. Using subrules, you can describe, for example, what the PDU has to contain, from which direction it has to come etc.</p>
+<h3>Subrule types</h3>
+<ul>
+	<li><strong>Contains</strong>: PDU has to contain the specified data.</li>
+	<li><strong>Starts with</strong>: PDU has to start with the specified data.</li>
+	<li><strong>Ends with</strong>: PDU has to end with the specified data.</li>
+	<li><strong>Has tag</strong>: PDU has to have the specified tag.</li>
+	<li><strong>Destination</strong>: PDU has to be sent to the specified destination (client / server).</li>
+	<li><strong>Proxy</strong>: PDU has to be from the specified proxy.</li>
+	<li><strong>Size</strong>: PDU has to be exactly the specified size.</li>
+</ul>
+
+<h2>Tag group</h2>
+<p>Tag groups contain tag rules. These groups can be then bound with particular tag interceptors.</p>
+<p>It is possible to bind one tag group to multiple interceptors, so it is up to you, if you will create just one group or multiple groups.</p>
+
+<h2>Tag interceptor</h2>
+<p>In order to setup automatic tagging, you have to create tag interceptors in one or both directions and you have to specify, which tag group should these interceptors use.</p>
+
+<h2>Special tags</h2>
+<p>Special tags will make the Tagger run a special action instead of tagging the PDU. You cannot use these tags for normal tagging. Right now, you can use the following tags:</p>
+<ul>
+	<li><strong>drop</strong>: PDU will be dropped.</li>
+</ul>

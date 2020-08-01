@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="233.0" prefWidth="518.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="10.0" layoutY="197.0" prefHeight="16.0" prefWidth="54.0" styleClass="input-label" text="Type:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="197.0" />
+      <ComboBox fx:id="factoryComboBox" layoutX="85.0" layoutY="195.0" onAction="#onModuleChange" prefHeight="26.0" prefWidth="400.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="192.0" />
+      <Label layoutX="10.0" layoutY="13.0" prefHeight="16.0" prefWidth="54.0" styleClass="input-label" text="Code:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <TextField fx:id="codeInput" layoutX="85.0" layoutY="5.0" prefHeight="26.0" prefWidth="400.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0" />
+      <Label layoutX="10.0" layoutY="43.0" prefHeight="16.0" prefWidth="77.0" styleClass="input-label" text="Name:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="40.0" />
+      <TextField fx:id="nameInput" layoutX="85.0" layoutY="35.0" prefHeight="26.0" prefWidth="400.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="35.0" />
+      <Label layoutX="10.0" layoutY="73.0" prefHeight="16.0" prefWidth="77.0" styleClass="input-label" text="Description:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="70.0" />
+      <TextArea fx:id="descriptionInput" layoutX="85.0" layoutY="70.0" prefHeight="100.0" prefWidth="400.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="65.0" />
+      <Label layoutX="10.0" layoutY="173.0" prefHeight="16.0" prefWidth="77.0" styleClass="input-label" text="Enabled:" AnchorPane.topAnchor="170.0" />
+      <CheckBox fx:id="enabledCheckBox" layoutX="85.0" layoutY="169.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="18.0" selected="true" AnchorPane.leftAnchor="85.0" AnchorPane.topAnchor="169.0" />
+      <AnchorPane fx:id="factoryPane" layoutX="10.0" layoutY="226.0" prefHeight="17.0" prefWidth="518.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="220.0" />
+   </children>
+</AnchorPane>

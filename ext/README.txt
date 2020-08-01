@@ -1,0 +1,1 @@
+It is recommended to place your extensions into this directory.

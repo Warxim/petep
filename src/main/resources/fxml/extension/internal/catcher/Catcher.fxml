@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.warxim.petep.gui.control.PduEditor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="373.0" prefWidth="680.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+	<children> 
+     <Label layoutX="13.0" layoutY="6.0" styleClass="h1" text="Catcher" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <PduEditor fx:id="pduEditor" layoutX="10.0" layoutY="34.0" prefHeight="440.0" prefWidth="667.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0" />
+      <Button fx:id="forwardButton" layoutX="613.0" layoutY="9.0" mnemonicParsing="false" onAction="#onForwardButtonClick" text="Forward" AnchorPane.rightAnchor="10.0" />
+      <Button fx:id="dropButton" layoutX="530.0" layoutY="9.0" mnemonicParsing="false" onAction="#onDropButtonClick" prefHeight="24.0" prefWidth="66.0" text="Drop" AnchorPane.rightAnchor="85.0" />
+      <Label fx:id="stateLabel" layoutX="90.0" layoutY="13.0" text="OFF" />
+      <Button fx:id="startStopButton" layoutX="119.0" layoutY="9.0" mnemonicParsing="false" onAction="#onInterceptStartStopButtonClick" prefHeight="24.0" prefWidth="66.0" text="START" />
+    </children>
+</AnchorPane>

@@ -1,0 +1,50 @@
+<p>Processor is a simple extension that allows you to define rules for automatic replacement and other modification of PDUs.</p>
+
+<h2>Process rule</h2>
+<p>For each modification you have to create rule:</p>
+<ul>
+	<li><strong>Name</strong>: for clarity.</li>
+	<li><strong>Description</strong>: for clarity.</li>
+	<li><strong>Enabled</strong></li>
+	<li>
+		<strong>Tag</strong>:
+		<ul>
+			<li>"": Rule will be applied to any PDU.</li>
+			<li>"<strong>some_tag</strong>": Rule will be applied only to PDUs with specified tag.</li>
+		</ul>
+	</li>
+	<li>
+		Rest of the configuration depends on the processor module.
+	</li>
+	<li>
+		<strong>Occurrence</strong>:
+		<ul>
+			<li><strong>-1</strong>: All occurrences will be replaced.</li>
+			<li><strong>&gt;= 0</strong>: Only specified occurrence (starting from 0), will be replaced (0., 1., 2., ...).</li>
+		</ul>
+	</li>
+	<li><strong>What</strong>: what should be replaced.</li>
+	<li><strong>With</strong>: [What] will be replaced with [With].</li>	
+</ul>
+
+<h2>Process group</h2> 
+<p>Process groups contain process rules. These groups can be then bound with particular process interceptors.</p>
+<p>It is possible to bind one process group to multiple interceptors, so it is up to you, if you will create just one group or multiple groups.</p>
+
+<h2>Process interceptor</h2>
+<p>In order to setup automatic modification, you have to create process interceptors in one or both directions and you have to specify, which process group should these interceptors use.</p>
+
+<h2>Internal processors</h2>
+<h3>Replace</h3>
+<p>Replace is a simple processor that allows you to setup automatic replacement rules.</p>
+<ul>
+	<li>
+		<strong>Occurrence</strong>:
+		<ul>
+			<li><strong>-1</strong>: All occurrences will be replaced.</li>
+			<li><strong>&gt;= 0</strong>: Only specified occurrence (starting from 0), will be replaced (0., 1., 2., ...).</li>
+		</ul>
+	</li>
+	<li><strong>What</strong>: what should be replaced.</li>
+	<li><strong>With</strong>: [What] will be replaced with [With].</li>	
+</ul>

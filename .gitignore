@@ -1,0 +1,16 @@
+# Gradle
+.gradle
+# Eclipse, ...
+.settings
+bin
+build
+doc
+# Testing
+ext/**
+projects
+.project
+petep.json
+.classpath
+src/test/**
+
+!ext/README.txt

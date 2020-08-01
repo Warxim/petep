@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.warxim.petep.gui.control.BytesEditor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<fx:root prefHeight="100.0" prefWidth="533.0" type="javafx.scene.layout.AnchorPane" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1">
+   <children>
+      <Label layoutY="6.0" text="Starts with:" styleClass="input-label" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <BytesEditor fx:id="dataInput" layoutX="77.0" layoutY="10.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+   </children>
+</fx:root>

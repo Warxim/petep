@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<fx:root prefHeight="44.0" prefWidth="249.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="7.0" layoutY="13.0" styleClass="input-label" text="Test:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="13.0" />
+      <TextField fx:id="testInput" layoutX="90.0" layoutY="2.0" text="1" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+   </children>
+</fx:root>

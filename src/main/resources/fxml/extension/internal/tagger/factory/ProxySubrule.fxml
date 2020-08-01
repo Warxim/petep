@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<fx:root prefHeight="37.0" prefWidth="533.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutY="6.0" styleClass="input-label" text="Proxy:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <ComboBox fx:id="proxyInput" layoutX="81.0" layoutY="6.0" prefWidth="150.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" />
+   </children>
+</fx:root>
