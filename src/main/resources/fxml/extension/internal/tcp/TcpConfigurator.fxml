@@ -8,7 +8,7 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<fx:root prefHeight="908.0" prefWidth="313.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="846.0" prefWidth="313.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="11.0" layoutY="58.0" styleClass="input-label" text="Proxy IP:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="58.0" />
       <TextField fx:id="proxyIpInput" layoutX="86.0" layoutY="53.0" prefHeight="26.0" prefWidth="237.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" />

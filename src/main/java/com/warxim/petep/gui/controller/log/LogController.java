@@ -59,70 +59,72 @@ public final class LogController extends Handler implements Initializable {
     Logger.getGlobal().addHandler(this);
   }
 
+  private void addLogRecord(LogRecord record) {
+    // Level.
+    Level level = record.getLevel();
+
+    Text levelText;
+
+    if (level == Level.INFO) {
+      levelText = new Text("[INFO] ");
+      levelText.pseudoClassStateChanged(INFO_PSEUDO_CLASS, true);
+    } else if (level == Level.SEVERE) {
+      levelText = new Text("[SEVERE] ");
+      levelText.pseudoClassStateChanged(SEVERE_PSEUDO_CLASS, true);
+    } else if (level == Level.WARNING) {
+      levelText = new Text("[WARNING] ");
+      levelText.pseudoClassStateChanged(WARNING_PSEUDO_CLASS, true);
+    } else if (level == Level.FINE) {
+      levelText = new Text("[FINE] ");
+      levelText.pseudoClassStateChanged(FINE_PSEUDO_CLASS, true);
+    } else if (level == Level.CONFIG) {
+      levelText = new Text("[CONFIG] ");
+      levelText.pseudoClassStateChanged(CONFIG_PSEUDO_CLASS, true);
+    } else {
+      levelText = new Text("[OTHER] ");
+      levelText.pseudoClassStateChanged(OTHER_PSEUDO_CLASS, true);
+    }
+    levelText.getStyleClass().add("log-record");
+    levelText.setFont(Font.font(null, FontWeight.BOLD, 11));
+
+    // Message.
+    Text messageText = new Text(record.getMessage());
+
+    logFlow.getChildren().add(levelText);
+    logFlow.getChildren().add(messageText);
+
+    // Exception.
+    if (record.getThrown() != null) {
+      StringWriter exception = new StringWriter();
+      exception.append(System.lineSeparator());
+      exception.append("\tException:");
+      exception.append(System.lineSeparator());
+      exception.append("\t");
+      record.getThrown().printStackTrace(new PrintWriter(exception));
+      Text exceptionText = new Text(exception.toString());
+      logFlow.getChildren().add(exceptionText);
+    }
+
+    // Separator.
+    Text logSeparator = new Text(System.lineSeparator());
+    logSeparator.setFont(Font.font(null, FontWeight.NORMAL, 1));
+    logSeparator.setLineSpacing(0);
+    logFlow.getChildren().add(logSeparator);
+
+    // Limit children.
+    int size = logFlow.getChildren().size();
+    if (size > LIMIT_LOG_CHILDREN) {
+      logFlow.getChildren().remove(0, size - LIMIT_LOG_CHILDREN);
+    }
+
+    // Scroll down automatically.
+    scrollPane.layout();
+    scrollPane.setVvalue(1D);
+  }
+
   @Override
   public void publish(LogRecord record) {
-    Platform.runLater(() -> {
-      // Level.
-      Level level = record.getLevel();
-
-      Text levelText;
-
-      if (level == Level.INFO) {
-        levelText = new Text("[INFO] ");
-        levelText.pseudoClassStateChanged(INFO_PSEUDO_CLASS, true);
-      } else if (level == Level.SEVERE) {
-        levelText = new Text("[SEVERE] ");
-        levelText.pseudoClassStateChanged(SEVERE_PSEUDO_CLASS, true);
-      } else if (level == Level.WARNING) {
-        levelText = new Text("[WARNING] ");
-        levelText.pseudoClassStateChanged(WARNING_PSEUDO_CLASS, true);
-      } else if (level == Level.FINE) {
-        levelText = new Text("[FINE] ");
-        levelText.pseudoClassStateChanged(FINE_PSEUDO_CLASS, true);
-      } else if (level == Level.CONFIG) {
-        levelText = new Text("[CONFIG] ");
-        levelText.pseudoClassStateChanged(CONFIG_PSEUDO_CLASS, true);
-      } else {
-        levelText = new Text("[OTHER] ");
-        levelText.pseudoClassStateChanged(OTHER_PSEUDO_CLASS, true);
-      }
-      levelText.getStyleClass().add("log-record");
-      levelText.setFont(Font.font(null, FontWeight.BOLD, 11));
-
-      // Message.
-      Text messageText = new Text(record.getMessage());
-
-      logFlow.getChildren().add(levelText);
-      logFlow.getChildren().add(messageText);
-
-      // Exception.
-      if (record.getThrown() != null) {
-        StringWriter exception = new StringWriter();
-        exception.append(System.lineSeparator());
-        exception.append("\tException:");
-        exception.append(System.lineSeparator());
-        exception.append("\t");
-        record.getThrown().printStackTrace(new PrintWriter(exception));
-        Text exceptionText = new Text(exception.toString());
-        logFlow.getChildren().add(exceptionText);
-      }
-
-      // Separator.
-      Text logSeparator = new Text(System.lineSeparator());
-      logSeparator.setFont(Font.font(null, FontWeight.NORMAL, 1));
-      logSeparator.setLineSpacing(0);
-      logFlow.getChildren().add(logSeparator);
-
-      // Limit children.
-      int size = logFlow.getChildren().size();
-      if (size > LIMIT_LOG_CHILDREN) {
-        logFlow.getChildren().remove(0, size - LIMIT_LOG_CHILDREN);
-      }
-
-      // Scroll down automatically.
-      scrollPane.layout();
-      scrollPane.setVvalue(1D);
-    });
+    Platform.runLater(() -> this.addLogRecord(record));
   }
 
   @Override

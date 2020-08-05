@@ -45,10 +45,10 @@ public final class FileUtils {
     if (Paths.get(path).isAbsolute()) {
       // Absolute path
       return new File(path);
-    } else {
-      // Relative path
-      return new File(FileUtils.getApplicationDirectory(), path);
     }
+
+    // Relative path
+    return new File(FileUtils.getApplicationDirectory(), path);
   }
 
   /** Returns application file absolute path. */
@@ -56,14 +56,18 @@ public final class FileUtils {
     if (Paths.get(path).isAbsolute()) {
       // Absolute path
       return path;
-    } else {
-      // Relative path
-      return new File(FileUtils.getApplicationDirectory(), path).getAbsolutePath();
     }
+
+    // Relative path
+    return new File(FileUtils.getApplicationDirectory(), path).getAbsolutePath();
   }
 
   public static String applicationRelativize(Path path) {
-    return Paths.get(APP_DIR).relativize(path).toString();
+    try {
+      return Paths.get(APP_DIR).relativize(path).toString();
+    } catch (IllegalArgumentException e) {
+      return path.toString();
+    }
   }
 
   public static String applicationRelativize(String path) {
@@ -71,7 +75,11 @@ public final class FileUtils {
   }
 
   public static String projectRelativize(Path path) {
-    return Paths.get(getProjectDirectory()).relativize(path).toString();
+    try {
+      return Paths.get(getProjectDirectory()).relativize(path).toString();
+    } catch (IllegalArgumentException e) {
+      return path.toString();
+    }
   }
 
   public static String projectRelativize(String path) {
@@ -83,10 +91,10 @@ public final class FileUtils {
     if (Paths.get(path).isAbsolute()) {
       // Absolute path
       return new File(path);
-    } else {
-      // Relative path
-      return new File(FileUtils.getProjectDirectory(), path);
     }
+
+    // Relative path
+    return new File(FileUtils.getProjectDirectory(), path);
   }
 
   /** Returns absolute path of project file. */
@@ -94,10 +102,10 @@ public final class FileUtils {
     if (Paths.get(path).isAbsolute()) {
       // Absolute path
       return path;
-    } else {
-      // Relative path
-      return new File(FileUtils.getProjectDirectory(), path).getAbsolutePath();
     }
+
+    // Relative path
+    return new File(FileUtils.getProjectDirectory(), path).getAbsolutePath();
   }
 
   /** Returns project directory. */
@@ -143,10 +151,9 @@ public final class FileUtils {
 
       if (path.toString().toLowerCase().endsWith(".jar")) {
         return path.getParent().getParent().toString();
-      } else {
-        return getProjectDirectory();
       }
 
+      return getProjectDirectory();
     } catch (URISyntaxException e) {
       Logger.getGlobal().severe(e.getMessage());
     }

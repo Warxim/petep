@@ -38,7 +38,7 @@ public class PetepApplication extends Application {
     // Close PETEP if running.
     PetepManager petepManager = Bundle.getInstance().getPetepManager();
     if (petepManager != null && petepManager.getState() != PetepState.STOPPED) {
-      Bundle.getInstance().getPetepManager().stop();
+      petepManager.stop();
     }
   }
 

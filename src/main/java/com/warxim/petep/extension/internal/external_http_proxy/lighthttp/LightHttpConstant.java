@@ -53,7 +53,7 @@ public final class LightHttpConstant {
   /*
    * RESPONSES
    */
-  public static final byte[] RESPONSE_OK = "HTTP/1.0 OK\r\n\r\n".getBytes();
+  public static final byte[] RESPONSE_OK = "HTTP/1.0 200 OK\r\n\r\n".getBytes();
   public static final byte[] RESPONSE_WRONG_PROXY =
       "HTTP/1.0 404 Proxy not found\r\n\r\n".getBytes();
   public static final byte[] RESPONSE_WRONG_CONNECTION =
