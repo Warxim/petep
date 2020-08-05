@@ -1,5 +1,5 @@
-# PETEP - PEnetration TEsting Proxy
-PETEP is open-source Java application for network communication proxying for the purpose of penetration testing.
+# ![PETEP - PEnetration TEsting Proxy](http://petep.warxim.com/img/logo.png)
+**PETEP** (**PEnetration TEsting Proxy**) is open-source Java application for network communication proxying for the purpose of penetration testing.
 
 Currently PETEP supports primarily TCP (with SSL/TLS support).
 

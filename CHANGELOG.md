@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.2] - 2020-08-05
+### Added
+- minor bug fixes
+- minor UI improvements
+
 ## [1.2.1] - 2020-05-31
 ### Added
 - version checks
