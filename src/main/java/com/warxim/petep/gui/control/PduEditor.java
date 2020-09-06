@@ -95,8 +95,7 @@ public class PduEditor extends AnchorPane {
     loader.setClassLoader(getClass().getClassLoader());
     loader.load();
 
-    destinationInput
-        .setItems(FXCollections.observableArrayList(PduDestination.CLIENT, PduDestination.SERVER));
+    destinationInput.setItems(FXCollections.observableArrayList(PduDestination.CLIENT, PduDestination.SERVER));
 
     connectionInput.focusedProperty().addListener(this::onConnectionFocusChange);
     proxyInput.valueProperty().addListener(this::onProxyChange);
@@ -110,18 +109,14 @@ public class PduEditor extends AnchorPane {
   }
 
   /** Loads selected proxy interface. */
-  private void onProxyChange(
-      ObservableValue<? extends Proxy> observable,
-      Proxy oldValue,
-      Proxy newValue) {
+  private void onProxyChange(ObservableValue<? extends Proxy> observable, Proxy oldValue, Proxy newValue) {
     if (newValue == null) {
       return;
     }
 
     connectionInput.getSelectionModel().clearSelection();
 
-    if (oldValue == null
-        || oldValue.getModule().getFactory() != newValue.getModule().getFactory()) {
+    if (oldValue == null || oldValue.getModule().getFactory() != newValue.getModule().getFactory()) {
       loadMetadataPane(newValue);
     }
   }
@@ -144,10 +139,7 @@ public class PduEditor extends AnchorPane {
   }
 
   /** Shows/hides flow editor. */
-  private void onFlowChange(
-      ObservableValue<? extends Boolean> observable,
-      boolean oldValue,
-      boolean newValue) {
+  private void onFlowChange(ObservableValue<? extends Boolean> observable, boolean oldValue, boolean newValue) {
     proxyInput.setDisable(oldValue);
     destinationInput.setDisable(oldValue);
     connectionInput.setDisable(oldValue);
@@ -160,9 +152,9 @@ public class PduEditor extends AnchorPane {
       PduDestination oldValue,
       PduDestination newValue) {
     if (newValue == PduDestination.CLIENT) {
-      interceptorInput.setItems(interceptorsC2S);
-    } else {
       interceptorInput.setItems(interceptorsS2C);
+    } else {
+      interceptorInput.setItems(interceptorsC2S);
     }
   }
 
@@ -219,11 +211,11 @@ public class PduEditor extends AnchorPane {
 
     if (!metadataPane.getChildren().isEmpty()) {
       PduMetadataPane pane = ((PduMetadataPane) metadataPane.getChildren().get(0));
-      pdu = pane.getPdu(proxyInput.getValue(), connectionInput.getValue(),
-          destinationInput.getValue(), dataInput.getBytes(), dataInput.getBytes().length);
+      pdu = pane.getPdu(proxyInput.getValue(), connectionInput.getValue(), destinationInput.getValue(),
+          dataInput.getBytes(), dataInput.getBytes().length);
     } else {
-      pdu = new DefaultPdu(proxyInput.getValue(), connectionInput.getValue(),
-          destinationInput.getValue(), dataInput.getBytes(), dataInput.getBytes().length);
+      pdu = new DefaultPdu(proxyInput.getValue(), connectionInput.getValue(), destinationInput.getValue(),
+          dataInput.getBytes(), dataInput.getBytes().length);
     }
 
     pdu.setCharset(dataInput.getCharset());
@@ -256,9 +248,9 @@ public class PduEditor extends AnchorPane {
     connectionInput.getSelectionModel().select(pdu.getConnection());
 
     if (pdu.getDestination() == PduDestination.CLIENT) {
-      interceptorInput.setItems(interceptorsC2S);
-    } else {
       interceptorInput.setItems(interceptorsS2C);
+    } else {
+      interceptorInput.setItems(interceptorsC2S);
     }
 
     if (pdu.getLastInterceptor() == null) {

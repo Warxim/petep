@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.3] - 2020-09-01
+### Added
+- PduEditor bug fix
+
 ## [1.2.2] - 2020-08-05
 ### Added
 - minor bug fixes

@@ -27,7 +27,7 @@ import com.warxim.petep.extension.PetepAPI;
 @PetepAPI
 public final class Constant {
   // PETEP version
-  public static final String VERSION = "1.2.2";
+  public static final String VERSION = "1.2.3";
 
   // PETEP web
   public static final String WEB = "http://petep.warxim.com/";
@@ -44,9 +44,8 @@ public final class Constant {
   public static final String INTERCEPTORS_S2C_CONFIG_FILE = "interceptors-S2C.json";
 
   // Internal extensions
-  public static final List<String> INTERNAL_EXTENSIONS =
-      Collections.unmodifiableList(Arrays.asList("logger", "tcp", "http", "external_http_proxy",
-          "test", "connection_view", "tagger", "catcher", "modifier"));
+  public static final List<String> INTERNAL_EXTENSIONS = Collections.unmodifiableList(Arrays.asList("logger", "tcp",
+      "http", "external_http_proxy", "test", "connection_view", "tagger", "catcher", "modifier"));
 
   // Configuration items
   public static final String CONFIG_ITEM_FACTORY = "factory";

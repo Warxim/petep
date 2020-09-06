@@ -124,8 +124,7 @@ public final class PETEP {
     Logger.getGlobal().info("PETEP preparing...");
     state = PetepState.PREPARING;
 
-    if (!proxyExecutor.prepare() || !interceptorExecutorC2S.prepare()
-        || !interceptorExecutorS2C.prepare()) {
+    if (!proxyExecutor.prepare() || !interceptorExecutorC2S.prepare() || !interceptorExecutorS2C.prepare()) {
       return false;
     }
 
@@ -195,16 +194,14 @@ public final class PETEP {
   }
 
   /**
-   * Processes PDU internally in direction C2S and start in specified interceptor. (Client ->
-   * Server)
+   * Processes PDU internally in direction C2S and start in specified interceptor. (Client -> Server)
    */
   public void processC2S(PDU pdu, int interceptorId) {
     interceptorExecutorC2S.intercept(pdu, interceptorId);
   }
 
   /**
-   * Processes PDU internally in direction S2C and start in specified interceptor. (Client <-
-   * Server)
+   * Processes PDU internally in direction S2C and start in specified interceptor. (Client <- Server)
    */
   public void processS2C(PDU pdu, int interceptorId) {
     interceptorExecutorS2C.intercept(pdu, interceptorId);
