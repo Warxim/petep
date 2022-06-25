@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,20 +16,15 @@
  */
 package com.warxim.petep;
 
-import java.io.File;
 import com.warxim.petep.bootstrap.CommandLineArguments;
 import com.warxim.petep.common.Constant;
 import com.warxim.petep.common.ContextType;
-import com.warxim.petep.configuration.ExtensionsLoader;
-import com.warxim.petep.configuration.ExtensionsSaver;
-import com.warxim.petep.configuration.ModulesLoader;
-import com.warxim.petep.configuration.ModulesSaver;
-import com.warxim.petep.configuration.ProjectLoader;
-import com.warxim.petep.configuration.ProjectSaver;
+import com.warxim.petep.configuration.*;
 import com.warxim.petep.core.PetepManager;
 import com.warxim.petep.core.listener.PetepListenerManager;
 import com.warxim.petep.exception.ConfigurationException;
 import com.warxim.petep.extension.ExtensionManager;
+import com.warxim.petep.extension.receiver.ReceiverManager;
 import com.warxim.petep.helper.DefaultExtensionHelper;
 import com.warxim.petep.interceptor.factory.InterceptorModuleFactoryManager;
 import com.warxim.petep.interceptor.module.InterceptorModuleContainer;
@@ -37,142 +32,171 @@ import com.warxim.petep.project.Project;
 import com.warxim.petep.proxy.factory.ProxyFactoryModuleManager;
 import com.warxim.petep.proxy.module.ProxyModuleContainer;
 import com.warxim.petep.util.FileUtils;
+import lombok.Getter;
 
-/** Singleton for PETEP assets. */
+import java.io.File;
+
+/**
+ * Singleton for PETEP assets.
+ */
+@Getter
 public final class Bundle {
-  /** Singleton instance. */
-  private static Bundle instance;
+    /**
+     * Singleton instance.
+     */
+    private static volatile Bundle instance;
 
-  /*
-   * DATA
-   */
-  private String projectPath;
-  private Project project;
-  private ContextType contextType;
+    /*
+     * DATA
+     */
+    private String projectPath;
+    private Project project;
+    private ContextType contextType;
 
-  /*
-   * MANAGERS
-   */
-  private ExtensionManager extensionManager;
-  private ProxyFactoryModuleManager proxyModuleFactoryManager;
-  private InterceptorModuleFactoryManager interceptorModuleFactoryManager;
-  private PetepListenerManager petepListenerManager;
-  private PetepManager petepManager;
+    /*
+     * MANAGERS
+     */
+    private ExtensionManager extensionManager;
+    private ProxyFactoryModuleManager proxyModuleFactoryManager;
+    private InterceptorModuleFactoryManager interceptorModuleFactoryManager;
+    private PetepListenerManager petepListenerManager;
+    private PetepManager petepManager;
+    private ReceiverManager receiverManager;
 
-  private Bundle() {}
-
-  public static Bundle getInstance() {
-    if (instance == null) {
-      instance = new Bundle();
+    private Bundle() {
     }
 
-    return instance;
-  }
+    /**
+     * Creates instance of Bundle or returns existing instance if it exists.
+     * @return Bundle instance
+     */
+    public static Bundle getInstance() {
+        if (instance == null) {
+            synchronized(Bundle.class) {
+                if (instance == null) {
+                    instance = new Bundle();
+                }
+            }
+        }
 
-  /** Loads project and managers. */
-  public void load(CommandLineArguments arguments) throws ConfigurationException {
-    contextType = arguments.getContextType();
-    projectPath = arguments.getProjectPath();
+        return instance;
+    }
 
-    String configDirectory =
-        FileUtils.getProjectFileAbsolutePath(Constant.PROJECT_CONFIG_DIRECTORY) + File.separator;
+    /**
+     * Loads project and managers.
+     * @param arguments Command line arguments
+     * @throws ConfigurationException if the bundle could not be initialized because of configuration error
+     */
+    public void load(CommandLineArguments arguments) throws ConfigurationException {
+        contextType = arguments.getContextType();
+        projectPath = arguments.getProjectPath();
 
-    project = ProjectLoader.load(configDirectory + Constant.PROJECT_CONFIG_FILE);
+        var configDirectory = FileUtils.getProjectFileAbsolutePath(Constant.PROJECT_CONFIG_DIRECTORY) + File.separator;
 
-    // Create managers.
-    extensionManager = new ExtensionManager(
-        ExtensionsLoader.load(configDirectory + Constant.EXTENSIONS_CONFIG_FILE));
-    proxyModuleFactoryManager = new ProxyFactoryModuleManager();
-    interceptorModuleFactoryManager = new InterceptorModuleFactoryManager();
-    petepListenerManager = new PetepListenerManager();
+        project = ProjectLoader.load(configDirectory + Constant.PROJECT_CONFIG_FILE);
 
-    // Init extensions using default extension helper.
-    extensionManager.init(new DefaultExtensionHelper(this));
+        receiverManager = new ReceiverManager();
+        // Create managers.
+        extensionManager = new ExtensionManager(ExtensionsLoader.load(configDirectory + Constant.EXTENSIONS_CONFIG_FILE));
+        proxyModuleFactoryManager = new ProxyFactoryModuleManager();
+        interceptorModuleFactoryManager = new InterceptorModuleFactoryManager();
+        petepListenerManager = new PetepListenerManager();
 
-    // Load proxies.
-    ProxyModuleContainer proxyModuleContainer = new ProxyModuleContainer(ModulesLoader
-        .load(configDirectory + Constant.PROXIES_CONFIG_FILE, proxyModuleFactoryManager));
+        // Init extensions using default extension helper.
+        extensionManager.init(new DefaultExtensionHelper(this));
 
-    // Load interceptor module managers.
-    InterceptorModuleContainer interceptorModuleContainerC2S = new InterceptorModuleContainer(
-        ModulesLoader.load(configDirectory + Constant.INTERCEPTORS_C2S_CONFIG_FILE,
-            interceptorModuleFactoryManager));
+        // Load proxies.
+        var proxyModuleContainer = new ProxyModuleContainer(ModulesLoader.load(
+                configDirectory + Constant.PROXIES_CONFIG_FILE,
+                proxyModuleFactoryManager));
 
-    InterceptorModuleContainer interceptorModuleContainerS2C = new InterceptorModuleContainer(
-        ModulesLoader.load(configDirectory + Constant.INTERCEPTORS_S2C_CONFIG_FILE,
-            interceptorModuleFactoryManager));
+        // Load interceptor module managers.
+        var interceptorModuleContainerC2S = new InterceptorModuleContainer(ModulesLoader.load(
+                configDirectory + Constant.INTERCEPTORS_C2S_CONFIG_FILE,
+                interceptorModuleFactoryManager));
 
-    // Create PETEP manager.
-    petepManager = new PetepManager(proxyModuleContainer, interceptorModuleContainerC2S,
-        interceptorModuleContainerS2C, petepListenerManager);
-  }
+        var interceptorModuleContainerS2C = new InterceptorModuleContainer(ModulesLoader.load(
+                configDirectory + Constant.INTERCEPTORS_S2C_CONFIG_FILE,
+                interceptorModuleFactoryManager));
 
-  /** Saves project, extensions and configuration. */
-  public void save() throws ConfigurationException {
-    String configDirectory =
-        FileUtils.getProjectFileAbsolutePath(Constant.PROJECT_CONFIG_DIRECTORY) + File.separator;
+        // Create PETEP manager.
+        petepManager = new PetepManager(
+                proxyModuleContainer,
+                interceptorModuleContainerC2S,
+                interceptorModuleContainerS2C,
+                petepListenerManager);
+    }
 
-    ProjectSaver.save(configDirectory + Constant.PROJECT_CONFIG_FILE, project);
+    /**
+     * Saves project, extensions and configuration.
+     * @throws ConfigurationException if the bundle could not be saved because of configuration error
+     */
+    public void save() throws ConfigurationException {
+        var configDirectory =
+                FileUtils.getProjectFileAbsolutePath(Constant.PROJECT_CONFIG_DIRECTORY) + File.separator;
 
-    ExtensionsSaver.save(configDirectory + Constant.EXTENSIONS_CONFIG_FILE,
-        extensionManager.getList());
+        ProjectSaver.save(
+                configDirectory + Constant.PROJECT_CONFIG_FILE,
+                project);
 
-    ModulesSaver.save(configDirectory + Constant.PROXIES_CONFIG_FILE,
-        petepManager.getProxyModuleContainer().getList());
+        ExtensionsSaver.save(
+                configDirectory + Constant.EXTENSIONS_CONFIG_FILE,
+                extensionManager.getList());
 
-    ModulesSaver.save(configDirectory + Constant.INTERCEPTORS_C2S_CONFIG_FILE,
-        petepManager.getInterceptorModuleContainerC2S().getList());
+        ModulesSaver.save(
+                configDirectory + Constant.PROXIES_CONFIG_FILE,
+                petepManager.getProxyModuleContainer().getList());
 
-    ModulesSaver.save(configDirectory + Constant.INTERCEPTORS_S2C_CONFIG_FILE,
-        petepManager.getInterceptorModuleContainerS2C().getList());
-  }
+        ModulesSaver.save(
+                configDirectory + Constant.INTERCEPTORS_C2S_CONFIG_FILE,
+                petepManager.getInterceptorModuleContainerC2S().getList());
 
-  /*
-   * GETTERS
-   */
-  public Project getProject() {
-    return project;
-  }
+        ModulesSaver.save(
+                configDirectory + Constant.INTERCEPTORS_S2C_CONFIG_FILE,
+                petepManager.getInterceptorModuleContainerS2C().getList());
+    }
 
-  public String getProjectPath() {
-    return projectPath;
-  }
+    /**
+     * Destroys the bundle.
+     */
+    public void destroy() {
+        if (extensionManager != null) {
+            extensionManager.destroy();
+        }
+    }
 
-  public ContextType getContextType() {
-    return contextType;
-  }
+    /*
+     * GETTERS
+     */
+    /**
+     * Obtains proxy module container for storing proxy modules.
+     * @return Proxy module container
+     */
+    public ProxyModuleContainer getProxyModuleContainer() {
+        return petepManager.getProxyModuleContainer();
+    }
 
-  public ExtensionManager getExtensionManager() {
-    return extensionManager;
-  }
+    /**
+     * Returns interceptor module container in direction C2S. (Client -&gt; Server)
+     * @return Interceptor module container for direction C2S
+     */
+    public InterceptorModuleContainer getInterceptorModuleContainerC2S() {
+        return petepManager.getInterceptorModuleContainerC2S();
+    }
 
-  public ProxyModuleContainer getProxyModuleContainer() {
-    return petepManager.getProxyModuleContainer();
-  }
+    /**
+     * Returns interceptor module container in direction S2C. (Client &lt;- Server)
+     * @return Interceptor module container for direction S2C
+     */
+    public InterceptorModuleContainer getInterceptorModuleContainerS2C() {
+        return petepManager.getInterceptorModuleContainerS2C();
+    }
 
-  /** Returns interceptor module container in direction C2S. (Client -> Server) */
-  public InterceptorModuleContainer getInterceptorModuleContainerC2S() {
-    return petepManager.getInterceptorModuleContainerC2S();
-  }
-
-  /** Returns interceptor module container in direction S2C. (Client <- Server) */
-  public InterceptorModuleContainer getInterceptorModuleContainerS2C() {
-    return petepManager.getInterceptorModuleContainerS2C();
-  }
-
-  public ProxyFactoryModuleManager getProxyModuleFactoryManager() {
-    return proxyModuleFactoryManager;
-  }
-
-  public InterceptorModuleFactoryManager getInterceptorModuleFactoryManager() {
-    return interceptorModuleFactoryManager;
-  }
-
-  public PetepListenerManager getPetepListenerManager() {
-    return petepListenerManager;
-  }
-
-  public PetepManager getPetepManager() {
-    return petepManager;
-  }
+    /**
+     * Obtains receiver manager for handling receiver instances.
+     * @return Receiver manager
+     */
+    public ReceiverManager getReceiverManager() {
+        return receiverManager;
+    }
 }

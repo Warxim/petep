@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,36 +16,24 @@
  */
 package com.warxim.petep.proxy.worker;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import com.warxim.petep.helper.PetepHelper;
 import com.warxim.petep.module.ModuleWorkerManager;
-import com.warxim.petep.proxy.module.ProxyModule;
 import com.warxim.petep.proxy.module.ProxyModuleContainer;
 
-/** Proxy manager. */
+/**
+ * Proxy manager.
+ * <p>Manages active proxies for running core.</p>
+ */
 public final class ProxyManager extends ModuleWorkerManager<Proxy> {
-  public ProxyManager(PetepHelper helper, ProxyModuleContainer container) {
-    Map<String, Proxy> tempMap = new HashMap<>((int) (container.size() / 0.75) + 1, 0.75f);
-    List<Proxy> tempList = new ArrayList<>(container.size());
-
-    // Create proxies using modules.
-    for (ProxyModule module : container.getList()) {
-      if (!module.isEnabled()) {
-        continue;
-      }
-
-      // Create proxy and add it to collections.
-      Proxy proxy = module.createProxy(helper);
-      tempList.add(proxy);
-      tempMap.put(module.getCode(), proxy);
+    /**
+     * Constructs proxy manager.
+     * <p>Creates list and map of proxy workers by generating workers using enabled modules.</p>
+     * @param container Container containing modules for generation
+     * @param helper PETEP helper for currently running core
+     */
+    public ProxyManager(
+            PetepHelper helper,
+            ProxyModuleContainer container) {
+        super(container, ((module, index) -> module.createProxy(helper)));
     }
-
-    // Create unmodifiable collections.
-    map = Collections.unmodifiableMap(tempMap);
-    list = Collections.unmodifiableList(tempList);
-  }
 }

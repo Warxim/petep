@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,8 +16,6 @@
  */
 package com.warxim.petep.gui.dialog.module;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
 import com.warxim.petep.gui.dialog.Dialogs;
 import com.warxim.petep.module.Module;
 import com.warxim.petep.module.ModuleContainer;
@@ -27,100 +25,122 @@ import com.warxim.petep.persistence.Configurable;
 import com.warxim.petep.persistence.Storable;
 import com.warxim.petep.util.ExtensionUtils;
 
-/** Edit module dialog. */
-public final class EditModuleDialog<M extends Module<F>, F extends ModuleFactory<M>>
-    extends ModuleDialog<M, F> {
-  private final M oldModule;
+import java.io.IOException;
 
-  /** Create edit module dialog for specified module. */
-  public EditModuleDialog(
-      M module,
-      ModuleFactoryManager<F> factoryManager,
-      ModuleContainer<M> moduleContainer) throws IOException {
-    super("Edit module", "Save", factoryManager, moduleContainer);
+/**
+ * Edit module dialog.
+ * @param <M> Type of the module
+ * @param <F> Type of the module factory
+ */
+public final class EditModuleDialog<M extends Module<F>, F extends ModuleFactory<M>> extends ModuleDialog<M, F> {
+    private final M oldModule;
 
-    this.oldModule = module;
+    /**
+     * Constructs module dialog for editing.
+     * @param module Module to be edited
+     * @param factoryManager Manager of module factories for working with factories
+     * @param moduleContainer Module container for adding/removing modules
+     * @throws IOException If the dialog template could not be loaded
+     */
+    public EditModuleDialog(
+            M module,
+            ModuleFactoryManager<F> factoryManager,
+            ModuleContainer<M> moduleContainer) throws IOException {
+        super("Edit module", "Save", factoryManager, moduleContainer);
 
-    // Select module and disable combo box.
-    factoryComboBox.getSelectionModel().select(module.getFactory());
-    factoryComboBox.setDisable(true);
+        this.oldModule = module;
 
-    // Fill input fields.
-    codeInput.setText(module.getCode());
-    nameInput.setText(module.getName());
-    descriptionInput.setText(module.getDescription());
-    enabledCheckBox.setSelected(module.isEnabled());
+        // Select module and disable combo box.
+        factoryComboBox.getSelectionModel().select(module.getFactory());
+        factoryComboBox.setDisable(true);
 
-    // Load config pane.
-    var pane = createConfigPane();
-    if (pane == null) {
-      return;
-    }
-    setConfigPane(pane);
+        // Fill input fields.
+        codeInput.setText(module.getCode());
+        nameInput.setText(module.getName());
+        descriptionInput.setText(module.getDescription());
+        enabledCheckBox.setSelected(module.isEnabled());
 
-    // Get configuration from module.
-    var config = ((Configurable<?>) module).saveConfig();
-    if (config == null) {
-      return;
-    }
+        // Load config pane.
+        var pane = createConfigPane();
+        if (pane == null) {
+            return;
+        }
+        setConfigPane(pane);
 
-    // Set config to pane.
-    pane.setConfig(config);
-  }
+        // Get configuration from module.
+        var config = ((Configurable<?>) module).saveConfig();
+        if (config == null) {
+            return;
+        }
 
-  @Override
-  protected M obtainResult() {
-    M module = super.obtainResult();
-
-    processStore(module);
-    processConfig(module);
-
-    return module;
-  }
-
-  @SuppressWarnings("unchecked")
-  private <S> void processStore(M module) {
-    Type storeType = ExtensionUtils.getStoreType(module);
-
-    if (storeType != null) {
-      if (((Storable<S>) oldModule).saveStore() == null) {
-        return;
-      }
-
-      ((Storable<S>) module).loadStore(((Storable<S>) oldModule).saveStore());
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  private <C> void processConfig(M module) {
-    Type configType = ExtensionUtils.getConfigType(module);
-
-    if (configType != null) {
-      if (((Configurable<C>) module).saveConfig() != null) {
-        return;
-      }
-
-      if (((Configurable<C>) oldModule).saveConfig() == null) {
-        return;
-      }
-
-      ((Configurable<C>) module).loadConfig(((Configurable<C>) oldModule).saveConfig());
-    }
-  }
-
-  @Override
-  protected boolean isValid() {
-    if (!super.isValid()) {
-      return false;
+        // Set config to pane.
+        pane.setConfig(config);
     }
 
-    M result = moduleContainer.get(codeInput.getText());
-    if (result != null && !result.equals(oldModule)) {
-      Dialogs.createErrorDialog("Code reserved",
-          "You have entered code that is reserved by other module.");
-      return false;
+    @Override
+    protected M obtainResult() {
+        var module = super.obtainResult();
+
+        loadStoreFromOldModuleToNew(module);
+        loadConfigFromOldModuleToNew(module);
+
+        return module;
     }
 
-    return true;
-  }
+    @Override
+    protected boolean isValid() {
+        if (!super.isValid()) {
+            return false;
+        }
+
+        var maybeResult = moduleContainer.get(codeInput.getText());
+        if (maybeResult.isPresent() && !maybeResult.get().equals(oldModule)) {
+            Dialogs.createErrorDialog(
+                    "Code reserved",
+                    "You have entered code that is reserved by other module.");
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Loads store from old module into new one.
+     */
+    @SuppressWarnings("unchecked")
+    private <S> void loadStoreFromOldModuleToNew(M module) {
+        var storeType = ExtensionUtils.getStoreType(module);
+        if (storeType.isEmpty()) {
+            return;
+        }
+
+        var store = ((Storable<S>) oldModule).saveStore();
+        if (store == null) {
+            return;
+        }
+
+        ((Storable<S>) module).loadStore(store);
+    }
+
+    /**
+     * Loads config from old module into new one.
+     */
+    @SuppressWarnings("unchecked")
+    private <C> void loadConfigFromOldModuleToNew(M module) {
+        var configType = ExtensionUtils.getConfigType(module);
+        if (configType.isEmpty()) {
+            return;
+        }
+
+        if (((Configurable<C>) module).saveConfig() != null) {
+            return;
+        }
+
+        var config = ((Configurable<C>) oldModule).saveConfig();
+        if (config == null) {
+            return;
+        }
+
+        ((Configurable<C>) module).loadConfig(config);
+    }
 }

@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,45 +16,35 @@
  */
 package com.warxim.petep.extension.internal.modifier.intercept;
 
-import java.io.IOException;
 import com.warxim.petep.extension.Extension;
-import com.warxim.petep.extension.internal.common.rule_group.config.RuleInterceptorConfig;
-import com.warxim.petep.extension.internal.common.rule_group.gui.RuleInterceptorConfigurator;
-import com.warxim.petep.extension.internal.modifier.ModifierExtension;
-import com.warxim.petep.gui.component.ConfigPane;
-import com.warxim.petep.interceptor.factory.InterceptorModuleFactory;
+import com.warxim.petep.extension.internal.common.rulegroup.intercept.RuleInterceptorModuleFactory;
+import com.warxim.petep.extension.internal.modifier.rule.ModifyRule;
 import com.warxim.petep.interceptor.module.InterceptorModule;
-import com.warxim.petep.persistence.Configurator;
 
-/** Modifier interceptor module. */
-public final class ModifierInterceptorModuleFactory extends InterceptorModuleFactory
-    implements Configurator<RuleInterceptorConfig> {
-  /** Modifier interceptor module constructor. */
-  public ModifierInterceptorModuleFactory(Extension extension) {
-    super(extension);
-  }
+/**
+ * Modifier interceptor module.
+ */
+public final class ModifierInterceptorModuleFactory extends RuleInterceptorModuleFactory<ModifyRule> {
+    /**
+     * Modifier interceptor module constructor.
+     * @param extension Extension that owns this factory
+     */
+    public ModifierInterceptorModuleFactory(Extension extension) {
+        super(extension);
+    }
 
-  @Override
-  public String getCode() {
-    return "modifier";
-  }
+    @Override
+    public String getCode() {
+        return "modifier";
+    }
 
-  @Override
-  public String getName() {
-    return "Modifier";
-  }
+    @Override
+    public String getName() {
+        return "Modifier";
+    }
 
-  @Override
-  public InterceptorModule createModule(
-      String code,
-      String name,
-      String description,
-      boolean enabled) {
-    return new ModifierInterceptorModule(this, code, name, description, enabled);
-  }
-
-  @Override
-  public ConfigPane<RuleInterceptorConfig> createConfigPane() throws IOException {
-    return new RuleInterceptorConfigurator<>(((ModifierExtension) extension).getRuleGroupManager());
-  }
+    @Override
+    public InterceptorModule createModule(String code, String name, String description, boolean enabled) {
+        return new ModifierInterceptorModule(this, code, name, description, enabled);
+    }
 }

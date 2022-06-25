@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,51 +16,54 @@
  */
 package com.warxim.petep.extension.internal.tcp;
 
-import java.util.logging.Logger;
 import com.warxim.petep.extension.Extension;
 import com.warxim.petep.extension.internal.tcp.proxy.TcpProxyModuleFactory;
 import com.warxim.petep.helper.ExtensionHelper;
-import com.warxim.petep.helper.GuiHelper;
 
-/** TCP extension. */
+import java.util.logging.Logger;
+
+/**
+ * TCP extension.
+ * <p>Adds support for basic TCP proxies.</p>
+ */
 public final class TcpExtension extends Extension {
-  /** TCP extension constructor. */
-  public TcpExtension(String path) {
-    super(path);
+    /**
+     * TCP extension constructor.
+     * @param path Path to the extension
+     */
+    public TcpExtension(String path) {
+        super(path);
 
-    Logger.getGlobal().info("TCP extension loaded.");
-  }
+        Logger.getGlobal().info("TCP extension loaded.");
+    }
 
-  /** Initializes TCP extension (registers TCP proxy module). */
-  @Override
-  public void init(ExtensionHelper helper) {
-    helper.registerProxyModuleFactory(new TcpProxyModuleFactory(this));
+    /**
+     * Initializes TCP extension (registers TCP proxy module).
+     */
+    @Override
+    public void init(ExtensionHelper helper) {
+        helper.registerProxyModuleFactory(new TcpProxyModuleFactory(this));
 
-    Logger.getGlobal().info("TCP extension registered.");
-  }
+        Logger.getGlobal().info("TCP extension registered.");
+    }
 
-  @Override
-  public void initGui(GuiHelper helper) {
-    // No action needed.
-  }
+    @Override
+    public String getCode() {
+        return "tcp";
+    }
 
-  @Override
-  public String getCode() {
-    return "tcp";
-  }
+    @Override
+    public String getName() {
+        return "TCP extension";
+    }
 
-  @Override
-  public String getName() {
-    return "TCP extension";
-  }
+    @Override
+    public String getDescription() {
+        return "TCP extension adds TCP proxy to PETEP.";
+    }
 
-  @Override
-  public String getDescription() {
-    return "TCP extension adds TCP proxy to PETEP.";
-  }
-
-  @Override
-  public String getVersion() {
-    return "1.0";
-  }
+    @Override
+    public String getVersion() {
+        return "1.0";
+    }
 }

@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,85 +16,92 @@
  */
 package com.warxim.petep.extension;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import com.warxim.petep.helper.ExtensionHelper;
 import com.warxim.petep.helper.GuiHelper;
 
-/** Extension manager. */
+import java.util.*;
+
+/**
+ * Extension manager.
+ */
 public final class ExtensionManager {
-  /** Map of extensions (key = extension code). */
-  private final Map<String, Extension> extensionMap;
+    /**
+     * Map of extensions (key = extension code).
+     */
+    private final Map<String, Extension> extensionMap;
 
-  /** List of extensions. */
-  private final List<Extension> extensionList;
+    /**
+     * List of extensions.
+     */
+    private final List<Extension> extensionList;
 
-  /**
-   * Extension manager constructor that takes list of extensions and stores them to own unmodifiable
-   * collections.
-   */
-  public ExtensionManager(List<Extension> extensions) {
-    // Make list unmodifiable.
-    extensionList = Collections.unmodifiableList(extensions);
+    /**
+     * Extension manager constructor that takes list of extensions and stores them to own unmodifiable collections.
+     * @param extensions List of loaded extensions
+     */
+    public ExtensionManager(List<Extension> extensions) {
+        // Make list unmodifiable.
+        extensionList = Collections.unmodifiableList(extensions);
 
-    // Fill map with extensions with code as key.
-    Map<String, Extension> map = new HashMap<>((int) (extensions.size() / 0.75 + 1), 0.75f);
-    for (Extension extension : extensions) {
-      map.put(extension.getCode(), extension);
+        // Fill map with extensions with code as key.
+        var map = new HashMap<String, Extension>((int) (extensions.size() / 0.75 + 1), 0.75f);
+        for (var extension : extensions) {
+            map.put(extension.getCode(), extension);
+        }
+
+        // Make map unmodifiable
+        extensionMap = Collections.unmodifiableMap(map);
     }
 
-    // Make map unmodifiable
-    extensionMap = Collections.unmodifiableMap(map);
-  }
+    /**
+     * Obtains unmodifiable extensions map.
+     * @return Extensions mapped by their code
+     */
+    public Map<String, Extension> getMap() {
+        return extensionMap;
+    }
 
-  /** Returns unmodifiable extensions map <String(ExtensionName), Extension>. */
-  public Map<String, Extension> getMap() {
-    return extensionMap;
-  }
+    /**
+     * Obtains unmodifiable extensions list.
+     * @return List of loaded extension
+     */
+    public List<Extension> getList() {
+        return extensionList;
+    }
 
-  /** Returns unmodifiable extensions list. */
-  public List<Extension> getList() {
-    return extensionList;
-  }
+    /**
+     * Obtains extension by code.
+     * @param code Code of the extension
+     * @return Extension or empty optional if it does not exist
+     */
+    public Optional<Extension> getExtension(String code) {
+        return Optional.ofNullable(extensionMap.get(code));
+    }
 
-  /** Returns extension by code. */
-  public Extension getExtension(String code) {
-    return extensionMap.get(code);
-  }
+    /**
+     * Inits extensions (alls before, init and after methods).
+     * @param helper Helper for init methods
+     */
+    public void init(ExtensionHelper helper) {
+        extensionList.parallelStream().forEach(extension -> extension.beforeInit(helper));
+        extensionList.parallelStream().forEach(extension -> extension.init(helper));
+        extensionList.parallelStream().forEach(extension -> extension.afterInit(helper));
+    }
 
-  /** Inits extensions. */
-  public void init(ExtensionHelper helper) {
-    // Call beforeInit on listeners.
-    extensionList.stream()
-        .filter(ExtensionInitListener.class::isInstance)
-        .map(ExtensionInitListener.class::cast)
-        .forEach(extension -> extension.beforeInit(helper));
+    /**
+     * Inits extensions GUI (alls before, init and after methods).
+     * @param helper Helper for init methods
+     */
+    public void initGui(GuiHelper helper) {
+        extensionList.parallelStream().forEach(extension -> extension.beforeInitGui(helper));
+        extensionList.parallelStream().forEach(extension -> extension.initGui(helper));
+        extensionList.parallelStream().forEach(extension -> extension.afterInitGui(helper));
+    }
 
-    extensionList.parallelStream().forEach(extension -> extension.init(helper));
-
-    // Call afterInit on listeners.
-    extensionList.stream()
-        .filter(ExtensionInitListener.class::isInstance)
-        .map(ExtensionInitListener.class::cast)
-        .forEach(extension -> extension.afterInit(helper));
-  }
-
-  /** Inits extensions GUI. */
-  public void initGui(GuiHelper helper) {
-    // Call beforeInitGui on listeners.
-    extensionList.stream()
-        .filter(ExtensionGuiInitListener.class::isInstance)
-        .map(ExtensionGuiInitListener.class::cast)
-        .forEach(extension -> extension.beforeInitGui(helper));
-
-    extensionList.parallelStream().forEach(extension -> extension.initGui(helper));
-
-    // Call afterInitGui on listeners.
-    extensionList.stream()
-        .filter(ExtensionGuiInitListener.class::isInstance)
-        .map(ExtensionGuiInitListener.class::cast)
-        .forEach(extension -> extension.afterInitGui(helper));
-  }
+    /**
+     * Destroys extensions.
+     */
+    public void destroy() {
+        extensionList.parallelStream().forEach(Extension::destroy);
+    }
 }

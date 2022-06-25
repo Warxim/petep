@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -17,40 +17,52 @@
 package com.warxim.petep.extension.internal.modifier.intercept;
 
 import com.warxim.petep.core.pdu.PDU;
-import com.warxim.petep.extension.internal.common.rule_group.RuleGroup;
+import com.warxim.petep.extension.internal.common.rulegroup.RuleGroup;
 import com.warxim.petep.extension.internal.modifier.rule.ModifyRule;
 import com.warxim.petep.helper.PetepHelper;
 import com.warxim.petep.interceptor.worker.Interceptor;
 
-/** Modifier interceptor. */
+/**
+ * Modifier interceptor.
+ * <p>Uses all enabled rules in rule group and applies them to intercepted PDU.</p>
+ */
 public final class ModifierInterceptor extends Interceptor {
-  private final RuleGroup<ModifyRule> group;
+    private final RuleGroup<ModifyRule> group;
 
-  /** Modifier interceptor constructor. */
-  public ModifierInterceptor(int id, ModifierInterceptorModule module, PetepHelper helper) {
-    super(id, module, helper);
+    /**
+     * Modifier interceptor constructor.
+     * @param id Identifier of interceptor (index of the interceptor)
+     * @param module Parent module of the interceptor
+     * @param helper Helper for accessing running instance of PETEP core
+     */
+    public ModifierInterceptor(int id, ModifierInterceptorModule module, PetepHelper helper) {
+        super(id, module, helper);
 
-    this.group = module.getRuleGroup();
-  }
-
-  @Override
-  public boolean prepare() {
-    return true;
-  }
-
-  @Override
-  public boolean intercept(PDU pdu) {
-    for (ModifyRule rule : group.getRules()) {
-      if (!rule.process(pdu)) {
-        return false;
-      }
+        this.group = module.getRuleGroup();
     }
 
-    return true;
-  }
+    @Override
+    public boolean prepare() {
+        return true;
+    }
 
-  @Override
-  public void stop() {
-    // No action needed.
-  }
+    @Override
+    public boolean intercept(PDU pdu) {
+        if (pdu.hasTag("no_modifier") && !pdu.hasTag("modifier")) {
+            return true;
+        }
+
+        for (var rule : group.getRules()) {
+            if (!rule.process(pdu)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public void stop() {
+        // No action needed.
+    }
 }

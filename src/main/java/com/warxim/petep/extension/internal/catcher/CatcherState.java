@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -17,11 +17,19 @@
 package com.warxim.petep.extension.internal.catcher;
 
 /**
- * Catcher state.<br>
- * <b>ON</b> = catcher is enabled.<br>
- * <b>OFF</b> = catcher is disabled.<br>
- * <b>TRANSITION</b> = catcher is in transition state between ON and OFF.
+ * Catcher state.
  */
 public enum CatcherState {
-  ON, OFF, TRANSITION
+    /**
+     * Catcher is enabled.
+     */
+    ON,
+    /**
+     * Catcher is disabled.
+     */
+    OFF,
+    /**
+     * Catcher is in transition state between ON and OFF.
+     */
+    TRANSITION
 }

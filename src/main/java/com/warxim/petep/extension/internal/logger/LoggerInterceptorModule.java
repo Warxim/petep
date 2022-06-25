@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -21,37 +21,46 @@ import com.warxim.petep.interceptor.module.InterceptorModule;
 import com.warxim.petep.interceptor.worker.Interceptor;
 import com.warxim.petep.persistence.Configurable;
 
-/** Logger interceptor module. */
+/**
+ * Logger interceptor module.
+ */
 public final class LoggerInterceptorModule extends InterceptorModule
-    implements Configurable<LoggerConfig> {
-  private LoggerConfig config;
+        implements Configurable<LoggerConfig> {
+    private LoggerConfig config;
 
-  /** Logger interceptor module constructor. */
-  public LoggerInterceptorModule(
-      LoggerInterceptorModuleFactory factory,
-      String code,
-      String name,
-      String description,
-      boolean enabled) {
-    super(factory, code, name, description, enabled);
-  }
+    /**
+     * Logger interceptor module constructor.
+     * @param factory Factory that created this module
+     * @param code Code of this module
+     * @param name Name of this module
+     * @param description Description of this module
+     * @param enabled {@code true} if the module should be used
+     */
+    public LoggerInterceptorModule(
+            LoggerInterceptorModuleFactory factory,
+            String code,
+            String name,
+            String description,
+            boolean enabled) {
+        super(factory, code, name, description, enabled);
+    }
 
-  @Override
-  public LoggerConfig saveConfig() {
-    return config;
-  }
+    @Override
+    public LoggerConfig saveConfig() {
+        return config;
+    }
 
-  @Override
-  public void loadConfig(LoggerConfig config) {
-    this.config = config;
-  }
+    @Override
+    public void loadConfig(LoggerConfig config) {
+        this.config = config;
+    }
 
-  @Override
-  public Interceptor createInterceptor(int id, PetepHelper helper) {
-    return new LoggerInterceptor(id, this, helper);
-  }
+    @Override
+    public Interceptor createInterceptor(int id, PetepHelper helper) {
+        return new LoggerInterceptor(id, this, helper);
+    }
 
-  public LoggerConfig getConfig() {
-    return config;
-  }
+    public LoggerConfig getConfig() {
+        return config;
+    }
 }

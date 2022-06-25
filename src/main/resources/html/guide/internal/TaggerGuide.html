@@ -23,8 +23,6 @@
 		<strong>Example</strong>: 0 & !(1 | 2) & 3
 		<br>
 		<strong>Default</strong>: Expressions are generated using logical AND.
-		<br>
-		<strong>Warning</strong>: Expressions are not entirely validated, so you have to pay attention to writing correct expression yourself.
 	</li>
 </ul>
 
@@ -51,5 +49,7 @@
 <h2>Special tags</h2>
 <p>Special tags will make the Tagger run a special action instead of tagging the PDU. You cannot use these tags for normal tagging. Right now, you can use the following tags:</p>
 <ul>
-	<li><strong>drop</strong>: PDU will be dropped.</li>
+	<li><strong>drop</strong> - PDU will be dropped,</li>
+	<li><strong>no_tagger</strong> - tagged PDU won't be processed in tagger,</li>
+	<li><strong>tagger</strong> - tagged PDU will be processed in tagger even if it already has no_tagger tag.</li>
 </ul>

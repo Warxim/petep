@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -18,7 +18,11 @@ package com.warxim.petep.extension.internal.tagger.factory;
 
 import com.warxim.petep.extension.PetepAPI;
 
-/** Tag subrule data. */
+/**
+ * Tag subrule data.
+ * <p>Can contain any serializable data for tag subrule.</p>
+ * <p>Data should be immutable!</p>
+ */
 @PetepAPI
-public class TagSubruleData {
+public abstract class TagSubruleData {
 }

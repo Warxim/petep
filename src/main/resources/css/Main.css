@@ -1,23 +1,34 @@
-/* * FONTS */
+/*
+ FONTS
+*/
 
 @font-face {
-  src: url('../fonts/OpenSans-Regular.ttf');
+  src: url('../fonts/NotoSans-Regular.ttf');
 }
 
 @font-face {
   font-weight: bold;
-  src: url('../fonts/OpenSans-Bold.ttf');
+  src: url('../fonts/NotoSans-Bold.ttf');
 }
 
 @font-face {
   font-style: italic;
-  src: url('../fonts/OpenSans-ExtraBoldItalic.ttf');
+  src: url('../fonts/NotoSans-Italic.ttf');
 }
 
+@font-face {
+  src: url('../fonts/NotoSansMono-Regular.ttf');
+}
 
-/* * COLORS */
+@font-face {
+  font-weight: bold;
+  src: url('../fonts/NotoSansMono-Bold.ttf');
+}
 
-* {
+/*
+ COLORS
+*/
+ {
   -fx-color-light-1: #ffffff;
   -fx-color-light-2: #f4f4fc;
   -fx-color-light-3: #f05d5e;
@@ -37,23 +48,27 @@
   -fx-button-primary-text-hover: -fx-color-light-1;
   -fx-input-border: -fx-color-neutral-1;
   -fx-input-border-hover: -fx-color-dark-3;
-  -fx-checkbox-background: -fx-color-neutral-2;
+  -fx-checkbox-background: -fx-color-neutral-1;
   -fx-font-size: 11px;
-  -fx-font-family: 'Open Sans';
+  -fx-font-family: 'Noto Sans', 'sans-serif';
   -fx-text-fill: -fx-color-dark-1;
   -fx-focus-color: transparent;
   -fx-faint-focus-color: transparent;
 }
 
 
-/** ROOT */
+/*
+ ROOT
+*/
 
 .root {
   -fx-base: -fx-color-light-1;
 }
 
 
-/* * MENU */
+/*
+ MENU
+*/
 
 .menu-bar,
 .menu,
@@ -99,7 +114,9 @@
 }
 
 
-/* * TABS */
+/*
+ TABS
+*/
 
 .tab-pane .tab-header-area .tab-header-background {
   -fx-background-color: -fx-color-dark-2;
@@ -142,8 +159,20 @@
   -fx-padding: 2 0 0 0 0;
 }
 
+.tab .tab-close-button {
+    -fx-shape: "M 10.26 3.4614 L 9.4986 2.7 L 6.48 5.7186 L 3.4614 2.7 L 2.7 3.4614 L 5.7186 6.48 L 2.7 9.4986 L 3.4614 10.26 L 6.48 7.2414 L 9.4986 10.26 L 10.26 9.4986 L 7.2414 6.48 z";
+    -fx-scale-shape: false;
+    -fx-background-color: -fx-color-light-1;
+}
 
-/* * SCROLL BAR */
+.tab:selected .tab-close-button {
+    -fx-background-color: -fx-color-dark-1;
+}
+
+
+/*
+ SCROLL BAR
+*/
 
 .scroll-bar:horizontal,
 .scroll-bar:vertical {
@@ -187,7 +216,21 @@
 }
 
 
-/* * DIALOGS */
+/*
+ SPLIT PANE
+*/
+.split-pane:horizontal > .split-pane-divider {
+   -fx-background-color: -fx-color-dark-3;
+}
+
+.split-pane:vertical > .split-pane-divider {
+   -fx-background-color: -fx-color-dark-3;
+}
+
+
+/*
+ DIALOGS
+*/
 
 .dialog-pane {
   -fx-background-color: -fx-color-light-1;
@@ -219,7 +262,9 @@
 }
 
 
-/* * BUTTONS */
+/*
+ BUTTONS
+*/
 
 .button {
   -fx-padding: 4 10 4 10;
@@ -246,7 +291,9 @@
 }
 
 
-/* * CHECKBOX */
+/*
+ CHECKBOX
+*/
 
 .check-box>.box,
 .check-box:focused>.box {
@@ -275,7 +322,9 @@
 }
 
 
-/* * TEXT FIELD */
+/*
+ TEXT FIELD
+*/
 
 .text-field,
 .text-area {
@@ -298,7 +347,9 @@
 }
 
 
-/* * COMBO BOX */
+/*
+ COMBO BOX
+*/
 
 .combo-box .list-cell {
   -fx-background: -fx-color-light-1 !important;
@@ -371,7 +422,9 @@
 }
 
 
-/* * RADIO */
+/*
+ RADIO
+*/
 
 .radio-button .radio {
   -fx-background-color: #fff;
@@ -395,13 +448,15 @@
 
 .radio-button .dot {
   -fx-background-insets: 0;
-  -fx-background-radius: 4px;
+  -fx-background-radius: 5px;
   -fx-background-color: #fff;
-  -fx-padding: 4px;
+  -fx-padding: 3px;
 }
 
 
-/* * LIST VIEW */
+/*
+ LIST VIEW
+*/
 
 .list-view {
   -fx-background-color: transparent;
@@ -418,7 +473,7 @@
   -fx-background: -fx-accent;
 }
 
-.list-view:focused .list-cell:filled:focused {
+.list-view .list-cell:filled:focused, .list-view .list-cell:selected {
   -fx-background-color: -fx-color-neutral-2 !important;
   -fx-text-fill: -fx-color-dark-1;
   -fx-border-style: none;
@@ -427,7 +482,9 @@
 }
 
 
-/* * TABLES */
+/*
+ TABLES
+*/
 
 .table-view {
   -fx-background-color: transparent;
@@ -491,7 +548,19 @@
 }
 
 
-/* * STYLES */
+/*
+ TOOLTIP
+*/
+.tooltip {
+  -fx-text-fill: white;
+  -fx-background-color: -fx-color-dark-1;
+  -fx-opacity: 0.8;
+}
+
+
+/*
+ STYLES
+*/
 
 .h1,
 .h1 .text {
@@ -515,18 +584,9 @@
 }
 
 
-/* * HELPERs */
-
-.input-label {
-  -fx-font-weight: bold;
-}
-
-.has-text-left {
-  -fx-alignment: center-left !important;
-}
-
-
-/* * HEADERS */
+/*
+ HEADERS
+*/
 
 .header-1 {
   -fx-background-color: -fx-color-dark-2;
@@ -560,8 +620,8 @@
 
 
 /*
- * LOG FLOW 
- */
+ LOG FLOW 
+*/
 
 .log-flow {
   -fx-padding: 5px;
@@ -596,15 +656,32 @@
 
 
 /*
-* BYTES EDITOR
+ BYTES EDITOR
 */
 
 .bytes-editor {
-  -fx-font-family: "Monospaced";
+  -fx-font-family: "Noto Sans Mono";
 }
 
 .bytes-editor-charset {
-  -fx-font-family: "Monospaced";
+  -fx-font-family: "Noto Sans Mono";
   -fx-background-color: rgba(142, 150, 217, 0.3);
   -fx-padding: 3;
+}
+
+
+/*
+ OTHER
+*/
+
+.input-label {
+  -fx-font-weight: bold;
+}
+
+.has-text-left {
+  -fx-alignment: center-left !important;
+}
+
+.monospaced {
+  -fx-font-family: "Noto Sans Mono";
 }

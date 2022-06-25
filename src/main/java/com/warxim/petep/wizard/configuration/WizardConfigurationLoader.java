@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,96 +16,115 @@
  */
 package com.warxim.petep.wizard.configuration;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+import com.warxim.petep.common.Constant;
+import com.warxim.petep.configuration.ProjectLoader;
+import com.warxim.petep.exception.ConfigurationException;
+import com.warxim.petep.util.FileUtils;
+import com.warxim.petep.wizard.project.WizardProjectDecorator;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
-import com.warxim.petep.configuration.ProjectLoader;
-import com.warxim.petep.exception.ConfigurationException;
-import com.warxim.petep.project.Project;
-import com.warxim.petep.util.FileUtils;
-import com.warxim.petep.wizard.project.WizardProjectDecorator;
 
-/** Static class for wizard configuration loading. */
+/**
+ * Static class for wizard configuration loading.
+ */
 public final class WizardConfigurationLoader {
-  private WizardConfigurationLoader() {}
+    private WizardConfigurationLoader() {
+    }
 
-  /**
-   * Loads wizard configuration.
-   *
-   * @throws ConfigurationException
-   * @returns List of project decorators or empty list (if wizard configuration cannot be loaded)
-   */
-  public static List<WizardProjectDecorator> load(String path) {
-    // Create configuration if not exist.
-    createIfNotExist(path);
+    /**
+     * Loads wizard configuration.
+     * @param path Path to wizard configuration
+     * @return List of project decorators or empty list (if wizard configuration cannot be loaded)
+     */
+    public static List<WizardProjectDecorator> load(String path) {
+        // Create configuration if not exist.
+        createIfNotExist(path);
 
-    try (JsonReader reader = new JsonReader(new FileReader(path))) {
-      // Parse list from configuration.
+        try (var reader = new JsonReader(new FileReader(path, Constant.FILE_CHARSET))) {
+            // Parse list from configuration.
 
-      JsonArray list = JsonParser.parseReader(reader).getAsJsonArray();
+            var list = JsonParser.parseReader(reader).getAsJsonArray();
+            var projects = new ArrayList<WizardProjectDecorator>(list.size());
 
-      List<WizardProjectDecorator> projects = new ArrayList<>(list.size());
+            for (var i = 0; i < list.size(); ++i) {
+                var maybeProjectDecrator = loadProjectDecorator(list.get(i));
+                if (maybeProjectDecrator.isPresent()) {
+                    projects.add(maybeProjectDecrator.get());
+                }
+            }
 
-      for (int i = 0; i < list.size(); ++i) {
-        try {
-          String configFile = FileUtils.getApplicationFileAbsolutePath(list.get(i).getAsString()
-              + File.separator + com.warxim.petep.common.Constant.PROJECT_CONFIG_DIRECTORY
-              + File.separator + com.warxim.petep.common.Constant.PROJECT_CONFIG_FILE);
-
-          // Load project information.
-          Project project = ProjectLoader.load(configFile);
-
-          // Create project decorator with path and date and add it to list of projects.
-          projects.add(new WizardProjectDecorator(project, list.get(i).getAsString(),
-              new Date(new File(configFile).lastModified())));
-        } catch (ConfigurationException e) {
-          Logger.getGlobal()
-              .log(Level.SEVERE, "PETEP wizard could not parse project configuration.", e);
+            return projects;
+        } catch (JsonParseException e) {
+            Logger.getGlobal().log(Level.SEVERE, "PETEP wizard configuration is invalid.", e);
+        } catch (NoSuchFileException e) {
+            Logger.getGlobal().info("PETEP wizard configuration doesn't exist.");
+        } catch (IOException e) {
+            Logger.getGlobal().log(Level.SEVERE, "PETEP wizard could not read configuration.", e);
         }
-      }
 
-      return projects;
-
-    } catch (JsonParseException e) {
-      Logger.getGlobal().log(Level.SEVERE, "PETEP wizard configuration is invalid.", e);
-    } catch (NoSuchFileException e) {
-      Logger.getGlobal().info("PETEP wizard configuration doesn't exist.");
-    } catch (IOException e) {
-      Logger.getGlobal().log(Level.SEVERE, "PETEP wizard could not read configuration.", e);
+        return new ArrayList<>();
     }
 
-    return new ArrayList<>();
-  }
+    /**
+     * Loads project decorator from given JSON element.
+     */
+    private static Optional<WizardProjectDecorator> loadProjectDecorator(JsonElement element) {
+        try {
+            var configFile = FileUtils.getApplicationFileAbsolutePath(
+                    element.getAsString()
+                            + File.separator
+                            + Constant.PROJECT_CONFIG_DIRECTORY
+                            + File.separator
+                            + Constant.PROJECT_CONFIG_FILE);
 
-  /**
-   * Creates configuration with empty JSON array.
-   */
-  private static void createIfNotExist(String pathInput) {
-    Path path = Paths.get(pathInput);
+            // Load project information.
+            var project = ProjectLoader.load(configFile);
 
-    if (Files.exists(path)) {
-      return;
+            var relativePath = element.getAsString();
+            var lastModified = Instant.ofEpochMilli(new File(configFile).lastModified());
+
+            // Create project decorator with path and date and add it to list of projects.
+            return Optional.of(new WizardProjectDecorator(
+                    project,
+                    relativePath,
+                    lastModified));
+        } catch (ConfigurationException e) {
+            Logger.getGlobal().log(Level.SEVERE, "PETEP wizard could not parse project configuration.", e);
+        }
+        return Optional.empty();
     }
 
-    try {
-      Files.writeString(path, "[]", StandardOpenOption.CREATE);
-    } catch (IOException e) {
-      Logger.getGlobal()
-          .log(Level.SEVERE, "PETEP wizard could not create petep.json configuration.", e);
+    /**
+     * Creates configuration with empty JSON array.
+     */
+    private static void createIfNotExist(String pathInput) {
+        var path = Paths.get(pathInput);
+
+        if (Files.exists(path)) {
+            return;
+        }
+
+        try {
+            Files.writeString(path, "[]", StandardOpenOption.CREATE);
+        } catch (IOException e) {
+            Logger.getGlobal()
+                    .log(Level.SEVERE, "PETEP wizard could not create petep.json configuration.", e);
+        }
     }
-  }
 }

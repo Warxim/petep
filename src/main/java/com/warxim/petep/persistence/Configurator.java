@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,13 +16,22 @@
  */
 package com.warxim.petep.persistence;
 
-import java.io.IOException;
 import com.warxim.petep.extension.PetepAPI;
 import com.warxim.petep.gui.component.ConfigPane;
 
-/** Configurator interface that creates graphical configuration pane for module configuration. */
+import java.io.IOException;
+
+/**
+ * Configurator interface that creates graphical configuration pane for module configuration.
+ * @param <C> Type of the configuration
+ */
 @PetepAPI
 @FunctionalInterface
 public interface Configurator<C> {
-  ConfigPane<C> createConfigPane() throws IOException;
+    /**
+     * Creates configuration pane
+     * @return ConfigPane for given configuration type
+     * @throws IOException If the config pane could not be created
+     */
+    ConfigPane<C> createConfigPane() throws IOException;
 }

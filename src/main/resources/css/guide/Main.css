@@ -1,51 +1,58 @@
 /* * FONTS */
- @font-face {
-  src: url('../fonts/OpenSans-Regular.ttf');
+@font-face {
+  src: url('../fonts/NotoSans-Regular.ttf');
 }
- @font-face {
+
+@font-face {
   font-weight: bold;
-  src: url('../fonts/OpenSans-Bold.ttf');
+  src: url('../fonts/NotoSans-Bold.ttf');
 }
- @font-face {
+
+@font-face {
   font-style: italic;
-  src: url('../fonts/OpenSans-ExtraBoldItalic.ttf');
+  src: url('../fonts/NotoSans-Italic.ttf');
+}
+
+@font-face {
+  src: url('../fonts/NotoSansMono-Regular.ttf');
+}
+
+@font-face {
+  font-weight: bold;
+  src: url('../fonts/NotoSansMono-Bold.ttf');
 }
 
 /* * COLORS */
  body {
   font-size: 11px;
-  font-family:'Open Sans';
+  font-family: 'Noto Sans';
   color: #272932;
- }
+}
 
- h1 {
-  font-size: 15px;
+h1, h2, h3, h4 {
   font-weight: 700;
   color: #515477;
+}
+
+h1 {
+  font-size: 15px;
 }
  
 h2 {
   font-size: 13px;
-  font-weight: 700;
-  color: #515477;
 }
  
- h3 {
+h3 {
   font-size: 12px;
-  font-weight: 700;
-  color: #515477;
 }
  
- h3 {
+h3 {
   font-size: 11px;
-  font-weight: 700;
-  color: #515477;
 }
 
 ul {
   list-style: none;
 }
-
 
 li::before {
   content: "▪"; 
@@ -63,4 +70,9 @@ a {
 .code {
   background:#f4f4fc;
   padding:5px;
+  font-family: 'Noto Sans Mono';
+}
+
+dt {
+  font-weight: 700;
 }

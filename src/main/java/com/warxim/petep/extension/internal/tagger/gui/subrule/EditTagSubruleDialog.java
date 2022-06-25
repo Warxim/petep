@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,35 +16,40 @@
  */
 package com.warxim.petep.extension.internal.tagger.gui.subrule;
 
-import java.io.IOException;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubrule;
-import com.warxim.petep.extension.internal.tagger.factory.TagSubruleData;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleFactoryManager;
-import com.warxim.petep.gui.component.ConfigPane;
 
-/** Edit tag subrule dialog. */
+import java.io.IOException;
+
+/**
+ * Edit tag subrule dialog.
+ */
 public final class EditTagSubruleDialog extends TagSubruleDialog {
-  /** Edit tag subrule dialog constructor. */
-  public EditTagSubruleDialog(TagSubruleFactoryManager factoryManager, TagSubrule subrule)
-      throws IOException {
-    super("Edit tag subrule", "Save", factoryManager);
+    /**
+     * Constructs tag subrule dialog for editing.
+     * @param factoryManager Manager of tag subrule factories
+     * @param subrule Subrule to be edited
+     * @throws IOException If the dialog template could not be loaded
+     */
+    public EditTagSubruleDialog(TagSubruleFactoryManager factoryManager, TagSubrule subrule) throws IOException {
+        super("Edit tag subrule", "Save", factoryManager);
 
-    factoryInput.getSelectionModel().select(subrule.getFactory());
+        factoryInput.getSelectionModel().select(subrule.getFactory());
 
-    // Load config pane.
-    ConfigPane<TagSubruleData> pane = createFactoryPane();
-    if (pane == null) {
-      return;
+        // Load config pane.
+        var pane = createFactoryPane();
+        if (pane == null) {
+            return;
+        }
+        setFactoryPane(pane);
+
+        // Get configuration from instance.
+        var data = subrule.getData();
+        if (data == null) {
+            return;
+        }
+
+        // Set config to pane.
+        pane.setConfig(data);
     }
-    setFactoryPane(pane);
-
-    // Get configuration from instance.
-    TagSubruleData data = subrule.getData();
-    if (data == null) {
-      return;
-    }
-
-    // Set config to pane.
-    pane.setConfig(data);
-  }
 }

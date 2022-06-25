@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,62 +16,64 @@
  */
 package com.warxim.petep.extension.internal.http.pdu;
 
-import java.util.Set;
 import com.warxim.petep.core.connection.Connection;
 import com.warxim.petep.core.pdu.PDU;
 import com.warxim.petep.core.pdu.PduDestination;
 import com.warxim.petep.proxy.worker.Proxy;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.nio.charset.Charset;
+import java.util.Set;
+
+/**
+ * PDU representing HTTP request.
+ */
+@Getter
+@Setter
 public final class HttpRequestPdu extends HttpPdu {
-  private String method;
-  private String path;
+    private String method;
+    private String path;
 
-  public HttpRequestPdu(
-      Proxy proxy,
-      Connection connection,
-      PduDestination destination,
-      byte[] buffer,
-      int size) {
-    super(proxy, connection, destination, buffer, size);
-  }
+    /**
+     * Constructs HTTP request PDU with empty tag set.
+     * @param proxy Proxy
+     * @param connection Connection
+     * @param destination Destination of the PDU
+     * @param buffer Data buffer
+     * @param size Size of the data in the buffer
+     * @param charset Charset of the data in the buffer
+     */
+    public HttpRequestPdu(Proxy proxy, Connection connection, PduDestination destination, byte[] buffer, int size, Charset charset) {
+        super(proxy, connection, destination, buffer, size, charset);
+    }
 
-  public HttpRequestPdu(
-      Proxy proxy,
-      Connection connection,
-      PduDestination destination,
-      byte[] buffer,
-      int size,
-      Set<String> tags) {
-    super(proxy, connection, destination, buffer, size, tags);
-  }
+    /**
+     * Constructs HTTP request PDU.
+     * @param proxy Proxy
+     * @param connection Connection
+     * @param destination Destination of the PDU
+     * @param buffer Data buffer
+     * @param size Size of the data in the buffer
+     * @param charset Charset of the data in the buffer
+     * @param tags Set of tags
+     */
+    public HttpRequestPdu(Proxy proxy, Connection connection, PduDestination destination, byte[] buffer, int size, Charset charset, Set<String> tags) {
+        super(proxy, connection, destination, buffer, size, charset, tags);
+    }
 
-  public String getMethod() {
-    return method;
-  }
+    @Override
+    public PDU copy() {
+        var pdu = new HttpRequestPdu(proxy, connection, destination, buffer.clone(), size, charset);
 
-  public void setMethod(String method) {
-    this.method = method;
-  }
+        pdu.addTags(tags);
+        pdu.setLastInterceptor(pdu.getLastInterceptor());
 
-  public String getPath() {
-    return path;
-  }
+        pdu.setMethod(method);
+        pdu.setPath(path);
+        pdu.setVersion(version);
+        pdu.addHeaders(headers);
 
-  public void setPath(String path) {
-    this.path = path;
-  }
-
-  @Override
-  public PDU copy() {
-    HttpRequestPdu pdu = new HttpRequestPdu(proxy, connection, destination, buffer.clone(), size);
-
-    pdu.addTags(tags);
-
-    pdu.setMethod(method);
-    pdu.setPath(path);
-    pdu.setVersion(version);
-    pdu.addHeaders(headers);
-
-    return pdu;
-  }
+        return pdu;
+    }
 }

@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -18,37 +18,55 @@ package com.warxim.petep.util;
 
 import com.warxim.petep.extension.PetepAPI;
 
-/** Web utils. */
+/**
+ * Web utils.
+ */
 @PetepAPI
 public final class WebUtils {
-  private WebUtils() {}
-
-  /** Converts value to JavaScript parameter wrapped in double quotes. */
-  public static String toJavaScriptParam(String value) {
-    return "\"" + value.replace("\u0000", "\\0")
-        .replace("\\", "\\\\")
-        .replace("\"", "\\\"")
-        .replace("\n", "\\n")
-        .replace("\r", "\\r")
-        .replace("\t", "\\t") + "\"";
-  }
-
-  /** Returns string with escaped HTML entities. */
-  public static String escapeHtml(String value) {
-    StringBuilder out = new StringBuilder(Math.max(16, value.length()));
-
-    for (int i = 0; i < value.length(); i++) {
-      char c = value.charAt(i);
-
-      if (c > 127 || c == '"' || c == '<' || c == '>' || c == '&') {
-        out.append("&#");
-        out.append((int) c);
-        out.append(';');
-      } else {
-        out.append(c);
-      }
+    private WebUtils() {
     }
 
-    return out.toString();
-  }
+    /**
+     * Converts value to JavaScript parameter wrapped in double quotes.
+     * @param value Value to be escaped for javascript
+     * @return Escaped value
+     */
+    public static String toJavaScriptParam(String value) {
+        return '"' + value.replace("\u0000", "\\0")
+                .replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
+                .replace("\t", "\\t") + '"';
+    }
+
+    /**
+     * Returns string with escaped HTML entities.
+     * @param value Value to be escaped for HTML
+     * @return Escaped value
+     */
+    public static String escapeHtml(String value) {
+        var out = new StringBuilder(Math.max(16, value.length()));
+
+        for (var i = 0; i < value.length(); i++) {
+            var c = value.charAt(i);
+
+            if (shouldBeEscaped(c)) {
+                out.append("&#");
+                out.append((int) c);
+                out.append(';');
+            } else {
+                out.append(c);
+            }
+        }
+
+        return out.toString();
+    }
+
+    /**
+     * Returns {@code true} if the character should be escaped.
+     */
+    private static boolean shouldBeEscaped(char c) {
+        return c > 127 || c == '"' || c == '<' || c == '>' || c == '&';
+    }
 }

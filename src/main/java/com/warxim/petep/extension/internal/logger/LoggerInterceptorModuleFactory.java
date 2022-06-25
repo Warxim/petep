@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,42 +16,44 @@
  */
 package com.warxim.petep.extension.internal.logger;
 
-import java.io.IOException;
 import com.warxim.petep.extension.Extension;
 import com.warxim.petep.gui.component.ConfigPane;
 import com.warxim.petep.interceptor.factory.InterceptorModuleFactory;
 import com.warxim.petep.interceptor.module.InterceptorModule;
 import com.warxim.petep.persistence.Configurator;
 
-/** Logger interceptor module factory. */
+import java.io.IOException;
+
+/**
+ * Logger interceptor module factory.
+ */
 public final class LoggerInterceptorModuleFactory extends InterceptorModuleFactory
-    implements Configurator<LoggerConfig> {
-  /** Logger interceptor module factory constructor. */
-  public LoggerInterceptorModuleFactory(Extension extension) {
-    super(extension);
-  }
+        implements Configurator<LoggerConfig> {
+    /**
+     * Logger interceptor module factory constructor.
+     * @param extension Extension that owns this factory
+     */
+    public LoggerInterceptorModuleFactory(Extension extension) {
+        super(extension);
+    }
 
-  @Override
-  public String getName() {
-    return "Logger";
-  }
+    @Override
+    public String getName() {
+        return "Logger";
+    }
 
-  @Override
-  public String getCode() {
-    return "logger";
-  }
+    @Override
+    public String getCode() {
+        return "logger";
+    }
 
-  @Override
-  public InterceptorModule createModule(
-      String code,
-      String name,
-      String description,
-      boolean enabled) {
-    return new LoggerInterceptorModule(this, code, name, description, enabled);
-  }
+    @Override
+    public InterceptorModule createModule(String code, String name, String description, boolean enabled) {
+        return new LoggerInterceptorModule(this, code, name, description, enabled);
+    }
 
-  @Override
-  public ConfigPane<LoggerConfig> createConfigPane() throws IOException {
-    return new LoggerConfigurator();
-  }
+    @Override
+    public ConfigPane<LoggerConfig> createConfigPane() throws IOException {
+        return new LoggerConfigurator();
+    }
 }

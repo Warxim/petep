@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -17,21 +17,17 @@
 package com.warxim.petep.extension.internal.tagger.factory.internal.ends_with;
 
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleData;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
-public final class EndsWithData extends TagSubruleData {
-  private final byte[] data;
-  private final String charset;
+import java.nio.charset.Charset;
 
-  public EndsWithData(byte[] data, String charset) {
-    this.data = data;
-    this.charset = charset;
-  }
-
-  public byte[] getData() {
-    return data;
-  }
-
-  public String getCharset() {
-    return charset;
-  }
+/**
+ * Tag subrule data for "endsWith" subrule.
+ */
+@Value
+@EqualsAndHashCode(callSuper=true)
+public class EndsWithData extends TagSubruleData {
+    byte[] data;
+    Charset charset;
 }

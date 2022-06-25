@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,36 +16,38 @@
  */
 package com.warxim.petep.extension.internal.http.reader.state;
 
-public final class BodyWithChunkedEncodingState extends InternalState {
-  public enum ChunkedBodyStep {
-    LENGTH, CHUNK
-  }
+import lombok.Getter;
+import lombok.Setter;
 
-  private int chunkLength;
-  private ChunkedBodyStep step;
+/**
+ * State for body with chunked encoding.
+ * <p>Determines, whether we are reading LENGTH or CHUNK.</p>
+ */
+@Getter
+@Setter
+public final class BodyWithChunkedEncodingState implements InternalBodyState {
+    private int chunkLength;
+    private ChunkedBodyStep chunkStep;
 
-  public BodyWithChunkedEncodingState() {
-    this.chunkLength = -1;
-    this.step = ChunkedBodyStep.LENGTH;
-  }
+    /**
+     * Constructs body state for chunked encoding.
+     */
+    public BodyWithChunkedEncodingState() {
+        this.chunkLength = -1;
+        this.chunkStep = ChunkedBodyStep.LENGTH;
+    }
 
-  public int getChunkLength() {
-    return chunkLength;
-  }
-
-  public int decreaseChunkLength() {
-    return --chunkLength;
-  }
-
-  public void setChunkLength(int chunkLength) {
-    this.chunkLength = chunkLength;
-  }
-
-  public ChunkedBodyStep getChunkStep() {
-    return step;
-  }
-
-  public void setChunkStep(ChunkedBodyStep step) {
-    this.step = step;
-  }
+    /**
+     * Step in processing of chunked body.
+     */
+    public enum ChunkedBodyStep {
+        /**
+         * Processing length of chunk in chunked body.
+         */
+        LENGTH,
+        /**
+         * Processing chunk in chunked body.
+         */
+        CHUNK
+    }
 }

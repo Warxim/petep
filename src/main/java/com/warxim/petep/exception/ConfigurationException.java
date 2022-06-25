@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -17,17 +17,26 @@
 package com.warxim.petep.exception;
 
 /**
- * Configuration exception for configuration errors (configuration does not exist, cannot be
- * accessed, invalid fields, ...)
+ * Configuration exception for configuration errors
+ * (configuration does not exist, cannot be accessed, invalid fields, ...)
  */
 public final class ConfigurationException extends Exception {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  public ConfigurationException(String message) {
-    super(message);
-  }
+    /**
+     * Constructs configuration exception.
+     * @param message Description of the problem
+     */
+    public ConfigurationException(String message) {
+        super(message);
+    }
 
-  public ConfigurationException(String message, Throwable cause) {
-    super(message, cause);
-  }
+    /**
+     * Constructs configuration exception.
+     * @param message Description of the problem
+     * @param cause Cause of the problem
+     */
+    public ConfigurationException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

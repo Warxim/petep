@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -18,12 +18,23 @@ package com.warxim.petep.persistence;
 
 import com.warxim.petep.extension.PetepAPI;
 
-/** Configurable interface that allows modules and extensions to be configured. */
+/**
+ * Configurable interface that allows modules and extensions to be configured.
+ * <p>Allows extensions/modules to load/save configuration of any serializable type.</p>
+ * <p>Loading of all configurations occurs during start of PETEP.</p>
+ * @param <C> Type of the configuration
+ */
 @PetepAPI
 public interface Configurable<C> {
-  /** Returns configuration to be saved. */
-  C saveConfig();
+    /**
+     * Obtains configuration to be saved.
+     * @return Serializable configuration, which will be persisted by PETEP
+     */
+    C saveConfig();
 
-  /** Loads configuration. */
-  void loadConfig(C config);
+    /**
+     * Loads configuration.
+     * @param config Deserialized configuration
+     */
+    void loadConfig(C config);
 }

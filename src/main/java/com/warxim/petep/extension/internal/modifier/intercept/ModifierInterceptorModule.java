@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,49 +16,35 @@
  */
 package com.warxim.petep.extension.internal.modifier.intercept;
 
-import com.warxim.petep.extension.internal.common.rule_group.RuleGroup;
-import com.warxim.petep.extension.internal.common.rule_group.config.RuleInterceptorConfig;
-import com.warxim.petep.extension.internal.common.rule_group.intercept.RuleInterceptorModule;
-import com.warxim.petep.extension.internal.modifier.ModifierExtension;
+import com.warxim.petep.extension.internal.common.rulegroup.intercept.RuleInterceptorModule;
 import com.warxim.petep.extension.internal.modifier.rule.ModifyRule;
 import com.warxim.petep.helper.PetepHelper;
 import com.warxim.petep.interceptor.factory.InterceptorModuleFactory;
 import com.warxim.petep.interceptor.worker.Interceptor;
-import com.warxim.petep.persistence.Configurable;
 
-/** Modifier interceptor module. */
-public final class ModifierInterceptorModule extends RuleInterceptorModule<ModifyRule>
-    implements Configurable<RuleInterceptorConfig> {
-  private RuleGroup<ModifyRule> group;
+/**
+ * Modifier interceptor module.
+ */
+public final class ModifierInterceptorModule extends RuleInterceptorModule<ModifyRule> {
+    /**
+     * Modifier interceptor module constructor.
+     * @param factory Factory that created this module
+     * @param code Code of this module
+     * @param name Name of this module
+     * @param description Description of this module
+     * @param enabled {@code true} if the module should be used
+     */
+    public ModifierInterceptorModule(
+            InterceptorModuleFactory factory,
+            String code,
+            String name,
+            String description,
+            boolean enabled) {
+        super(factory, code, name, description, enabled);
+    }
 
-  /** Modifier interceptor module constructor. */
-  public ModifierInterceptorModule(
-      InterceptorModuleFactory factory,
-      String code,
-      String name,
-      String description,
-      boolean enabled) {
-    super(factory, code, name, description, enabled);
-  }
-
-  @Override
-  public Interceptor createInterceptor(int id, PetepHelper helper) {
-    return new ModifierInterceptor(id, this, helper);
-  }
-
-  @Override
-  public RuleInterceptorConfig saveConfig() {
-    return new RuleInterceptorConfig(group.getCode());
-  }
-
-  @Override
-  public void loadConfig(RuleInterceptorConfig config) {
-    group = ((ModifierExtension) factory.getExtension()).getRuleGroupManager()
-        .get(config.getRuleGroupCode());
-  }
-
-  @Override
-  public RuleGroup<ModifyRule> getRuleGroup() {
-    return group;
-  }
+    @Override
+    public Interceptor createInterceptor(int id, PetepHelper helper) {
+        return new ModifierInterceptor(id, this, helper);
+    }
 }

@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -19,25 +19,49 @@ package com.warxim.petep.module;
 import com.warxim.petep.extension.Extension;
 import com.warxim.petep.extension.PetepAPI;
 
-/** Module factory base class. */
+/**
+ * Module factory base class.
+ * @param <M> Type of modules
+ */
 @PetepAPI
 public abstract class ModuleFactory<M extends Module<?>> {
-  protected final Extension extension;
+    protected final Extension extension;
 
-  public ModuleFactory(Extension extension) {
-    this.extension = extension;
-  }
+    /**
+     * Constructs module factory.
+     * @param extension Extension that owns this factory
+     */
+    protected ModuleFactory(Extension extension) {
+        this.extension = extension;
+    }
 
-  public final Extension getExtension() {
-    return extension;
-  }
+    /**
+     * Obtains parent extension of the factory.
+     * @return Extension
+     */
+    public final Extension getExtension() {
+        return extension;
+    }
 
-  /** Returns name of the factory. */
-  public abstract String getName();
+    /**
+     * Obtains name of the factory.
+     * @return Module factory name
+     */
+    public abstract String getName();
 
-  /** Returns unique code of the factory. */
-  public abstract String getCode();
+    /**
+     * Obtains unique code of the factory.
+     * @return Module factory code
+     */
+    public abstract String getCode();
 
-  /** Creates module with specified parameters. */
-  public abstract M createModule(String code, String name, String description, boolean enabled);
+    /**
+     * Creates module with specified parameters.
+     * @param code Code of the module
+     * @param name Name of the module
+     * @param description Description of the module
+     * @param enabled Whether the module is enabled and should be used in running PETEP core
+     * @return Created module
+     */
+    public abstract M createModule(String code, String name, String description, boolean enabled);
 }

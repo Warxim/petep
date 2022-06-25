@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -27,29 +27,82 @@ import javafx.scene.image.Image;
  */
 @PetepAPI
 public interface GuiHelper {
-  /*
-   * APPLICATION TABS
-   */
-  void registerTab(String title, Node node);
+    /*
+     * APPLICATION TABS
+     */
+    /**
+     * Registers tab (adds it to the main application tabs).
+     * <p>Node will be automatically wrapped into {@link javafx.scene.control.ScrollPane} and added into {@link javafx.scene.control.Tab}.</p>
+     * @param title Text displayed in the tab title
+     * @param node Node to be added as child into the tab
+     */
+    void registerTab(String title, Node node);
 
-  void unregisterTab(Node node);
+    /**
+     * Registers tab (adds it to the main application tabs).
+     * <p>Node will be automatically wrapped into {@link javafx.scene.control.ScrollPane} and added into {@link javafx.scene.control.Tab}.</p>
+     * @param title Text displayed in the tab title
+     * @param node Node to be added as child into the tab
+     * @param order Order of the tab (internal tabs use orders defined in {@link com.warxim.petep.gui.common.GuiConstant})
+     */
+    void registerTab(String title, Node node, Integer order);
 
-  /*
-   * SETTINGS
-   */
-  void registerSettingsTab(String title, Node node);
+    /**
+     * Unregisters tab (removes it from the main application tabs).
+     * <p>Automatically searches for tab with given node.</p>
+     * @param node Node to be removed from the application tabs
+     */
+    void unregisterTab(Node node);
 
-  void unregisterSettingsTab(Node node);
+    /*
+     * SETTINGS
+     */
+    /**
+     * Registers tab (adds it to the settings tabs).
+     * <p>Node will be automatically wrapped into {@link javafx.scene.control.ScrollPane} and added into {@link javafx.scene.control.Tab}.</p>
+     * @param title Text displayed in the tab title
+     * @param node Node to be added as child into the tab
+     */
+    void registerSettingsTab(String title, Node node);
 
-  /*
-   * GUIDES
-   */
-  void registerGuide(Guide guide);
+    /**
+     * Registers tab (adds it to the settings tabs).
+     * <p>Node will be automatically wrapped into {@link javafx.scene.control.ScrollPane} and added into {@link javafx.scene.control.Tab}.</p>
+     * @param title Text displayed in the tab title
+     * @param node Node to be added as child into the tab
+     * @param order Order of the tab (internal tabs use orders defined in {@link com.warxim.petep.gui.common.GuiConstant})
+     */
+    void registerSettingsTab(String title, Node node, Integer order);
 
-  void unregisterGuide(Guide guide);
+    /**
+     * Unregisters tab (removes it from the settings tabs).
+     * <p>Automatically searches for tab with given node.</p>
+     * @param node Node to be removed from the application tabs
+     */
+    void unregisterSettingsTab(Node node);
 
-  /*
-   * OTHER
-   */
-  Image getPetepIcon();
+    /*
+     * GUIDES
+     */
+    /**
+     * Registers guide into application guides.
+     * <p>Registered guide will be accessible through the application menu.</p>
+     * @param guide Guide to register
+     */
+    void registerGuide(Guide guide);
+
+    /**
+     * Unregisters guide from application guides.
+     * @param guide Guide to unregister
+     */
+    void unregisterGuide(Guide guide);
+
+    /*
+     * OTHER
+     */
+    /**
+     * Obtains PETEP icon.
+     * @return JavaFX Image with PETEP icon
+     */
+    Image getPetepIcon();
 }

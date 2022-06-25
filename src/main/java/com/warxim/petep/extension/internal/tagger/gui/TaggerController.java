@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,11 +16,10 @@
  */
 package com.warxim.petep.extension.internal.tagger.gui;
 
-import java.io.IOException;
-import com.warxim.petep.extension.internal.common.rule_group.RuleGroup;
-import com.warxim.petep.extension.internal.common.rule_group.gui.RuleGroupController;
-import com.warxim.petep.extension.internal.common.rule_group.gui.RuleGroupsController;
-import com.warxim.petep.extension.internal.common.rule_group.intercept.RuleInterceptorModule;
+import com.warxim.petep.extension.internal.common.rulegroup.RuleGroup;
+import com.warxim.petep.extension.internal.common.rulegroup.gui.RuleGroupController;
+import com.warxim.petep.extension.internal.common.rulegroup.gui.RuleGroupsController;
+import com.warxim.petep.extension.internal.common.rulegroup.intercept.RuleInterceptorModule;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleFactoryManager;
 import com.warxim.petep.extension.internal.tagger.intercept.TagInterceptorModule;
 import com.warxim.petep.extension.internal.tagger.rule.TagRule;
@@ -32,37 +31,41 @@ import javafx.scene.Node;
 import javafx.scene.control.TabPane;
 import javafx.util.Pair;
 
-/** Tagger controller. */
+import java.io.IOException;
+
+/**
+ * Tagger controller.
+ */
 public final class TaggerController extends RuleGroupsController<TagRule> {
-  private final TagSubruleFactoryManager factoryManager;
+    private final TagSubruleFactoryManager factoryManager;
 
-  @FXML
-  private TabPane tabs;
+    @FXML
+    private TabPane tabs;
 
-  /** Tagger controller constructor. */
-  public TaggerController(
-      TagRuleGroupManager groupManager,
-      ExtensionHelper extensionHelper,
-      TagSubruleFactoryManager factoryManager) {
-    super("Tagger", groupManager, extensionHelper);
-    this.factoryManager = factoryManager;
-  }
+    /**
+     * Constructs tagger controller.
+     * @param groupManager Manager for working with groups of rules
+     * @param extensionHelper Helper for extensions (for accessing configured modules]
+     * @param factoryManager Manager of tagger subrule factories
+     */
+    public TaggerController(
+            TagRuleGroupManager groupManager,
+            ExtensionHelper extensionHelper,
+            TagSubruleFactoryManager factoryManager) {
+        super("Tagger", groupManager, extensionHelper);
+        this.factoryManager = factoryManager;
+    }
 
-  @Override
-  protected Class<? extends RuleInterceptorModule<TagRule>> getInterceptorModuleClass() {
-    return TagInterceptorModule.class;
-  }
+    @Override
+    protected Class<? extends RuleInterceptorModule<TagRule>> getInterceptorModuleClass() {
+        return TagInterceptorModule.class;
+    }
 
-  @Override
-  protected Pair<Node, RuleGroupController<TagRule>> createGroupTabNode(RuleGroup<TagRule> group)
-      throws IOException {
-    FXMLLoader fxmlLoader =
-        new FXMLLoader(getClass().getResource("/fxml/extension/internal/tagger/TagRuleGroup.fxml"));
-
-    TagGroupController controller = new TagGroupController(group, factoryManager);
-
-    fxmlLoader.setController(controller);
-
-    return new Pair<>(fxmlLoader.load(), controller);
-  }
+    @Override
+    protected Pair<Node, RuleGroupController<TagRule>> createGroupTabNode(RuleGroup<TagRule> group) throws IOException {
+        var fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/extension/internal/tagger/TagRuleGroup.fxml"));
+        var controller = new TagGroupController(group, factoryManager);
+        fxmlLoader.setController(controller);
+        return new Pair<>(fxmlLoader.load(), controller);
+    }
 }

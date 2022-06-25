@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,12 +16,6 @@
  */
 package com.warxim.petep.gui.controller.settings;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import com.warxim.petep.gui.dialog.Dialogs;
 import com.warxim.petep.gui.dialog.module.EditModuleDialog;
 import com.warxim.petep.gui.dialog.module.NewModuleDialog;
@@ -34,164 +28,214 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 
-/** Module settings controller. */
-public final class ModuleSettingsController<M extends Module<F>, F extends ModuleFactory<M>>
-    implements Initializable {
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-  // Managers.
-  private final ModuleFactoryManager<F> factoryManager;
-  private final ModuleContainer<M> moduleContainer;
+/**
+ * Module settings controller.
+ * @param <M> Module type
+ * @param <F> Module factory type
+ */
+public final class ModuleSettingsController<M extends Module<F>, F extends ModuleFactory<M>> implements Initializable {
+    // Managers.
+    private final ModuleFactoryManager<F> factoryManager;
+    private final ModuleContainer<M> moduleContainer;
 
-  // Title.
-  private final String title;
+    // Title.
+    private final String title;
 
-  // Table.
-  @FXML
-  private TableView<M> moduleTable;
+    // Table.
+    @FXML
+    private TableView<M> moduleTable;
+    // Label.
+    @FXML
+    private Label titleLabel;
+    // Columns.
+    @FXML
+    private TableColumn<M, String> nameColumn;
+    @FXML
+    private TableColumn<M, String> codeColumn;
+    @FXML
+    private TableColumn<M, String> moduleColumn;
+    @FXML
+    private TableColumn<M, String> enabledColumn;
 
-  // Label.
-  @FXML
-  private Label titleLabel;
-
-  // Columns.
-  @FXML
-  private TableColumn<M, String> nameColumn;
-  @FXML
-  private TableColumn<M, String> codeColumn;
-  @FXML
-  private TableColumn<M, String> moduleColumn;
-  @FXML
-  private TableColumn<M, String> enabledColumn;
-
-  public ModuleSettingsController(
-      String title,
-      ModuleFactoryManager<F> factoryManager,
-      ModuleContainer<M> moduleContainer) {
-    this.title = title;
-    this.factoryManager = factoryManager;
-    this.moduleContainer = moduleContainer;
-  }
-
-  @Override
-  public void initialize(URL location, ResourceBundle resources) {
-    // Set value factories.
-    nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-    codeColumn.setCellValueFactory(new PropertyValueFactory<>("code"));
-    enabledColumn.setCellValueFactory(new PropertyValueFactory<>("enabled"));
-    moduleColumn.setCellValueFactory(
-        cell -> new SimpleStringProperty(cell.getValue().getFactory().getName()));
-
-    // Set items to table.
-    moduleTable.setItems(FXCollections.observableList(moduleContainer.getList()));
-
-    // Set title.
-    titleLabel.setText(title);
-  }
-
-  /** Handles edit module button click. */
-  @FXML
-  private void onEditButtonClick(ActionEvent event) {
-    M module = moduleTable.getSelectionModel().getSelectedItem();
-
-    if (module == null) {
-      return;
+    /**
+     * Constructs controller for module settings.
+     * @param title Title to be displayed in the controller
+     * @param factoryManager Manager of module factories for working with factories
+     * @param moduleContainer Module container for adding/removing modules
+     */
+    public ModuleSettingsController(
+            String title,
+            ModuleFactoryManager<F> factoryManager,
+            ModuleContainer<M> moduleContainer) {
+        this.title = title;
+        this.factoryManager = factoryManager;
+        this.moduleContainer = moduleContainer;
     }
 
-    try {
-      EditModuleDialog<M, F> dialog =
-          new EditModuleDialog<>(module, factoryManager, moduleContainer);
-      Optional<M> data = dialog.showAndWait();
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // Set value factories.
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        codeColumn.setCellValueFactory(new PropertyValueFactory<>("code"));
+        enabledColumn.setCellValueFactory(new PropertyValueFactory<>("enabled"));
+        moduleColumn.setCellValueFactory(
+                cell -> new SimpleStringProperty(cell.getValue().getFactory().getName()));
 
-      if (!data.isPresent() || data.get() == null) {
-        return;
-      }
+        // Set items to table.
+        moduleTable.setItems(FXCollections.observableList(moduleContainer.getList()));
 
-      // Remove previous module and add new one.
-      moduleContainer.replace(module, data.get());
+        // Set title.
+        titleLabel.setText(title);
 
-      refreshTable();
-    } catch (IOException e) {
-      Logger.getGlobal().log(Level.SEVERE, "Exception during openning of module dialog", e);
-    }
-  }
+        moduleTable.setOnMousePressed(this::onMouseClick);
 
-  /** Handles new module button click. */
-  @FXML
-  private void onNewButtonClick(ActionEvent event) {
-    try {
-      NewModuleDialog<M, F> dialog = new NewModuleDialog<>(factoryManager, moduleContainer);
-
-      Optional<M> data = dialog.showAndWait();
-
-      if (!data.isPresent() || data.get() == null) {
-        return;
-      }
-
-      // Add new module to module container.
-      moduleContainer.add(data.get());
-
-      refreshTable();
-    } catch (IOException e) {
-      Logger.getGlobal().log(Level.SEVERE, "Exception during openning of module dialog", e);
-    }
-  }
-
-  /** Handles remove module button click. */
-  @FXML
-  private void onRemoveButtonClick(ActionEvent event) {
-    M module = moduleTable.getSelectionModel().getSelectedItem();
-
-    if (module == null) {
-      return;
+        initContextMenu();
     }
 
-    if (!Dialogs.createYesOrNoDialog("Are you sure?",
-        "Do you really want to remove '" + module.getName() + "' from the project?")) {
-      return;
+    /**
+     * Handles edit module button click.
+     */
+    @FXML
+    private void onEditButtonClick(ActionEvent event) {
+        var module = moduleTable.getSelectionModel().getSelectedItem();
+
+        if (module == null) {
+            return;
+        }
+
+        try {
+            var dialog = new EditModuleDialog<>(module, factoryManager, moduleContainer);
+            var data = dialog.showAndWait();
+            if (data.isEmpty()) {
+                return;
+            }
+
+            // Remove previous module and add new one.
+            moduleContainer.replace(module, data.get());
+
+            refreshTable();
+        } catch (IOException e) {
+            Logger.getGlobal().log(Level.SEVERE, "Exception during openning of module dialog", e);
+        }
     }
 
-    // Remove module from module container.
-    moduleContainer.remove(module);
+    /**
+     * Handles new module button click.
+     */
+    @FXML
+    private void onNewButtonClick(ActionEvent event) {
+        try {
+            var dialog = new NewModuleDialog<>(factoryManager, moduleContainer);
+            var data = dialog.showAndWait();
+            if (data.isEmpty()) {
+                return;
+            }
 
-    refreshTable();
-  }
+            // Add new module to module container.
+            var success = moduleContainer.add(data.get());
+            if (!success) {
+                Logger.getGlobal().log(Level.SEVERE, "Failed to add module, its code is reserved!");
+            }
 
-  /** Moves module up. */
-  @FXML
-  private void onMoveUpButtonClick(ActionEvent event) {
-    int index = moduleTable.getSelectionModel().getSelectedIndex();
-
-    if (index <= 0) {
-      return;
+            refreshTable();
+        } catch (IOException e) {
+            Logger.getGlobal().log(Level.SEVERE, "Exception during openning of module dialog", e);
+        }
     }
 
-    moduleContainer.swap(index, index - 1);
+    /**
+     * Handles remove module button click.
+     */
+    @FXML
+    private void onRemoveButtonClick(ActionEvent event) {
+        var module = moduleTable.getSelectionModel().getSelectedItem();
+        if (module == null) {
+            return;
+        }
 
-    refreshTable();
-  }
+        if (!Dialogs.createYesOrNoDialog(
+                "Are you sure?",
+                "Do you really want to remove '" + module.getName() + "' from the project?")) {
+            return;
+        }
 
-  /** Moves module down. */
-  @FXML
-  private void onMoveDownButtonClick(ActionEvent event) {
-    int index = moduleTable.getSelectionModel().getSelectedIndex();
+        // Remove module from module container.
+        moduleContainer.remove(module);
 
-    if (index == -1 || index == moduleContainer.size() - 1) {
-      return;
+        refreshTable();
     }
 
-    moduleContainer.swap(index, index + 1);
+    /**
+     * Moves module up.
+     */
+    @FXML
+    private void onMoveUpButtonClick(ActionEvent event) {
+        int index = moduleTable.getSelectionModel().getSelectedIndex();
+        if (index <= 0) {
+            return;
+        }
 
-    refreshTable();
-  }
+        moduleContainer.swap(index, index - 1);
 
-  /** Refreshes table items. */
-  private void refreshTable() {
-    // modulesTable.refresh does not work - rows are not clickable.
-    moduleTable.setItems(FXCollections.observableList(moduleContainer.getList()));
-  }
+        refreshTable();
+    }
+
+    /**
+     * Moves module down.
+     */
+    @FXML
+    private void onMoveDownButtonClick(ActionEvent event) {
+        int index = moduleTable.getSelectionModel().getSelectedIndex();
+        if (index == -1 || index == moduleContainer.size() - 1) {
+            return;
+        }
+
+        moduleContainer.swap(index, index + 1);
+
+        refreshTable();
+    }
+
+    /**
+     * Initializes context menu of modules in table.
+     */
+    private void initContextMenu() {
+        var contextMenu = new ContextMenu();
+
+        var editItem = new MenuItem("Edit");
+        editItem.setOnAction(this::onEditButtonClick);
+
+        var removeItem = new MenuItem("Remove");
+        removeItem.setOnAction(this::onRemoveButtonClick);
+
+        contextMenu.getItems().addAll(editItem, removeItem);
+
+        moduleTable.setContextMenu(contextMenu);
+    }
+
+    /**
+     * Opens edit dialog when doubleclicking on table item.
+     */
+    private void onMouseClick(MouseEvent event) {
+        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+            onEditButtonClick(null);
+        }
+    }
+
+    /**
+     * Refreshes table items.
+     */
+    private void refreshTable() {
+        // modulesTable.refresh does not work - rows are not clickable.
+        moduleTable.setItems(FXCollections.observableList(moduleContainer.getList()));
+    }
 }

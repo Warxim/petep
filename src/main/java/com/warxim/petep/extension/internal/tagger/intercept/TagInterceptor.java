@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -17,45 +17,57 @@
 package com.warxim.petep.extension.internal.tagger.intercept;
 
 import com.warxim.petep.core.pdu.PDU;
-import com.warxim.petep.extension.internal.common.rule_group.RuleGroup;
+import com.warxim.petep.extension.internal.common.rulegroup.RuleGroup;
 import com.warxim.petep.extension.internal.tagger.rule.TagRule;
 import com.warxim.petep.helper.PetepHelper;
 import com.warxim.petep.interceptor.worker.Interceptor;
 
-/** Tag interceptor. */
+/**
+ * Tag interceptor.
+ * <p>Uses group of rules to tag PDUs.</p>
+ */
 public final class TagInterceptor extends Interceptor {
-  private final RuleGroup<TagRule> group;
+    private final RuleGroup<TagRule> group;
 
-  /** Tag interceptor constructor. */
-  public TagInterceptor(int id, TagInterceptorModule module, PetepHelper helper) {
-    super(id, module, helper);
+    /**
+     * Constructs tag interceptor.
+     * @param id Identifier of interceptor (index of the interceptor)
+     * @param module Parent module of the interceptor
+     * @param helper Helper for accessing running instance of PETEP core
+     */
+    public TagInterceptor(int id, TagInterceptorModule module, PetepHelper helper) {
+        super(id, module, helper);
 
-    this.group = module.getRuleGroup();
-  }
-
-  @Override
-  public boolean prepare() {
-    return true;
-  }
-
-  @Override
-  public boolean intercept(PDU pdu) {
-    for (TagRule rule : group.getRules()) {
-      if (rule.test(pdu)) {
-        // Drop PDU if the tag is "drop".
-        if (rule.getTag().equals("drop")) {
-          return false;
-        }
-
-        pdu.addTag(rule.getTag());
-      }
+        this.group = module.getRuleGroup();
     }
 
-    return true;
-  }
+    @Override
+    public boolean prepare() {
+        return true;
+    }
 
-  @Override
-  public void stop() {
-    // No action needed.
-  }
+    @Override
+    public boolean intercept(PDU pdu) {
+        if (pdu.hasTag("no_tagger") && !pdu.hasTag("tagger")) {
+            return true;
+        }
+
+        for (var rule : group.getRules()) {
+            if (rule.test(pdu)) {
+                // Drop PDU if the tag is "drop".
+                if (rule.getTag().equals("drop")) {
+                    return false;
+                }
+
+                pdu.addTag(rule.getTag());
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public void stop() {
+        // No action needed.
+    }
 }

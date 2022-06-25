@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,55 +16,71 @@
  */
 package com.warxim.petep.extension.internal.modifier.factory.internal.replace;
 
-import java.io.IOException;
 import com.warxim.petep.extension.internal.modifier.factory.ModifierConfigurator;
 import com.warxim.petep.extension.internal.modifier.factory.ModifierData;
 import com.warxim.petep.gui.control.BytesEditor;
 import com.warxim.petep.gui.dialog.Dialogs;
+import com.warxim.petep.util.GuiUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
+import java.io.IOException;
+
+/**
+ * Replacer configurator for configuring {@link ReplacerData}.
+ */
 public final class ReplacerConfigurator extends ModifierConfigurator {
-  @FXML
-  private TextField occurrenceInput;
+    @FXML
+    private TextField occurrenceInput;
+    @FXML
+    private BytesEditor whatInput;
+    @FXML
+    private BytesEditor withInput;
 
-  @FXML
-  private BytesEditor whatInput;
+    /**
+     * Constructs replacer configurator
+     * @throws IOException If the template could not be loaded
+     */
+    public ReplacerConfigurator() throws IOException {
+        super("/fxml/extension/internal/modifier/factory/Replace.fxml");
 
-  @FXML
-  private BytesEditor withInput;
+        occurrenceInput.setText("-1");
 
-  public ReplacerConfigurator() throws IOException {
-    super("/fxml/extension/internal/modifier/factory/Replace.fxml");
-
-    occurrenceInput.setText("-1");
-  }
-
-  @Override
-  public ModifierData getConfig() {
-    return new ReplacerData(Integer.parseInt(occurrenceInput.getText()), whatInput.getBytes(),
-        withInput.getBytes());
-  }
-
-  @Override
-  public void setConfig(ModifierData config) {
-    occurrenceInput.setText(String.valueOf(((ReplacerData) config).getOccurrence()));
-    whatInput.setBytes(((ReplacerData) config).getWhat());
-    withInput.setBytes(((ReplacerData) config).getWith());
-  }
-
-  @Override
-  public boolean isValid() {
-    if (occurrenceInput.getText().length() == 0) {
-      Dialogs.createErrorDialog("Occurrence required", "You have to enter occurrence.");
-      return false;
+        occurrenceInput.setTooltip(GuiUtils.createTooltip(
+                "Use -1 for replacing all occurrences or specific occurrence index (zero-based numbering)."
+        ));
     }
 
-    if (whatInput.getBytes().length == 0) {
-      Dialogs.createErrorDialog("What required", "You have to enter what.");
-      return false;
+    @Override
+    public ModifierData getConfig() {
+        return new ReplacerData(
+                Integer.parseInt(occurrenceInput.getText()),
+                whatInput.getBytes(),
+                whatInput.getCharset(),
+                withInput.getBytes(),
+                withInput.getCharset());
     }
 
-    return true;
-  }
+    @Override
+    public void setConfig(ModifierData config) {
+        var data = (ReplacerData) config;
+        occurrenceInput.setText(String.valueOf(data.getOccurrence()));
+        whatInput.setData(data.getWhat(), data.getWhatCharset());
+        withInput.setData(data.getWith(), data.getWithCharset());
+    }
+
+    @Override
+    public boolean isValid() {
+        if (occurrenceInput.getText().length() == 0) {
+            Dialogs.createErrorDialog("Occurrence required", "You have to enter occurrence.");
+            return false;
+        }
+
+        if (whatInput.getBytes().length == 0) {
+            Dialogs.createErrorDialog("What required", "You have to enter what.");
+            return false;
+        }
+
+        return true;
+    }
 }

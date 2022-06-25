@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -22,18 +22,34 @@ import com.warxim.petep.interceptor.factory.InterceptorModuleFactory;
 import com.warxim.petep.interceptor.worker.Interceptor;
 import com.warxim.petep.module.Module;
 
-/** Interceptor module provides interceptor workers when PETEP starts. */
+/**
+ * Interceptor module provides interceptor workers when PETEP starts.
+ * <p>Is created and configured by user in application settings.</p>
+ */
 @PetepAPI
 public abstract class InterceptorModule extends Module<InterceptorModuleFactory> {
-  public InterceptorModule(
-      InterceptorModuleFactory factory,
-      String code,
-      String name,
-      String description,
-      boolean enabled) {
-    super(factory, code, name, description, enabled);
-  }
+    /**
+     * Constructs interceptor module.
+     * @param factory Factory that created this module
+     * @param code Code of this module
+     * @param name Name of this module
+     * @param description Description of this module
+     * @param enabled {@code true} if the module should be used
+     */
+    protected InterceptorModule(
+            InterceptorModuleFactory factory,
+            String code,
+            String name,
+            String description,
+            boolean enabled) {
+        super(factory, code, name, description, enabled);
+    }
 
-  /** Creates interceptor with specified ID. */
-  public abstract Interceptor createInterceptor(int id, PetepHelper helper);
+    /**
+     * Creates interceptor with specified ID.
+     * @param id Identifier of the interceptor (index of the interceptor)
+     * @param helper Helper for allowing the interceptor to work with running PETEP core
+     * @return Created interceptor
+     */
+    public abstract Interceptor createInterceptor(int id, PetepHelper helper);
 }

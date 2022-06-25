@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -23,32 +23,36 @@ import com.warxim.petep.proxy.factory.ProxyModuleFactory;
 import com.warxim.petep.proxy.module.ProxyModule;
 import com.warxim.petep.proxy.worker.Proxy;
 
-/** TCP proxy module. */
+/**
+ * TCP proxy module.
+ */
 public final class HttpProxyModule extends ProxyModule implements Configurable<TcpConfig> {
-  private TcpConfig config;
+    private TcpConfig config;
 
-  /** TCP proxy module constructor. */
-  public HttpProxyModule(
-      ProxyModuleFactory factory,
-      String code,
-      String name,
-      String description,
-      boolean enabled) {
-    super(factory, code, name, description, enabled);
-  }
+    /**
+     * Constructs HTTP proxy module.
+     * @param factory Factory that created this module
+     * @param code Code of this module
+     * @param name Name of this module
+     * @param description Description of this module
+     * @param enabled {@code true} if the module should be used
+     */
+    public HttpProxyModule(ProxyModuleFactory factory, String code, String name, String description, boolean enabled) {
+        super(factory, code, name, description, enabled);
+    }
 
-  @Override
-  public Proxy createProxy(PetepHelper helper) {
-    return new HttpProxy(this, helper, config);
-  }
+    @Override
+    public Proxy createProxy(PetepHelper helper) {
+        return new HttpProxy(this, helper, config);
+    }
 
-  @Override
-  public TcpConfig saveConfig() {
-    return config;
-  }
+    @Override
+    public TcpConfig saveConfig() {
+        return config;
+    }
 
-  @Override
-  public void loadConfig(TcpConfig config) {
-    this.config = config;
-  }
+    @Override
+    public void loadConfig(TcpConfig config) {
+        this.config = config;
+    }
 }

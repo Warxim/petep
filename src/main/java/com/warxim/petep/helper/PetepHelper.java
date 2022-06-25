@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,49 +16,134 @@
  */
 package com.warxim.petep.helper;
 
-import java.util.List;
 import com.warxim.petep.core.PetepState;
+import com.warxim.petep.core.listener.ConnectionListener;
 import com.warxim.petep.core.pdu.PDU;
+import com.warxim.petep.exception.InactivePetepCoreException;
 import com.warxim.petep.extension.PetepAPI;
 import com.warxim.petep.interceptor.worker.Interceptor;
 import com.warxim.petep.proxy.worker.Proxy;
 
-/** PETEP helper. */
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * PETEP helper.
+ * <p>Allows extensions and modules to work with running instance of PETEP core.</p>
+ * <p>When PETEP core stops, this helper will stop working and will throw runtime exception when any method is called.</p>
+ */
 @PetepAPI
 public interface PetepHelper {
-  /*
-   * GENERAL
-   */
-  /** Returns PETEP state. */
-  PetepState getState();
+    /*
+     * GENERAL
+     */
+    /**
+     * Obtains current PETEP core state.
+     * @return Current state of PETEP core
+     */
+    PetepState getState();
 
-  /*
-   * PDUS
-   */
-  /** Processes PDU in PETEP. */
-  void processPdu(PDU pdu);
+    /*
+     * PDUS
+     */
+    /**
+     * Processes PDU in PETEP core.
+     * <p>Puts PDU into internal PETEP processing, which consists of various cofnigured interceptors.</p>
+     * @param pdu PDU to be processed
+     * @throws InactivePetepCoreException if the PETEP core is unavailable
+     */
+    void processPdu(PDU pdu);
 
-  /** Processes PDU in PETEP starting in specified interceptor. */
-  void processPdu(PDU pdu, int interceptorId);
+    /**
+     * Processes PDU internally by sending it in specified interceptor.
+     * <p>Sends PDU to appropriate interceptors.</p>
+     * @param pdu PDU to be processed
+     * @param interceptorId Interceptor identifier (zero-based numbering)
+     * @throws InactivePetepCoreException if the PETEP core is unavailable
+     */
+    void processPdu(PDU pdu, int interceptorId);
 
-  /** Sends PDU outside of the PETEP (to the Internet, ...). */
-  void sendPdu(PDU pdu);
+    /**
+     * Sends PDU outside of the PETEP (to the Internet, ...).
+     * @param pdu PDU to be sent
+     * @throws InactivePetepCoreException if the PETEP core is unavailable
+     */
+    void sendPdu(PDU pdu);
 
-  /*
-   * PROXIES
-   */
-  /** Returns list of proxies. */
-  List<Proxy> getProxies();
+    /*
+     * PROXIES
+     */
+    /**
+     * Obtains list of active proxies.
+     * @return List of proxies, which are enabled and running
+     * @throws InactivePetepCoreException if the PETEP core is unavailable
+     */
+    List<Proxy> getProxies();
 
-  /** Returns proxy by given code. */
-  Proxy getProxy(String code);
+    /**
+     * Obtains proxy by given code.
+     * @param code Code of the proxy
+     * @return Proxy
+     * @throws InactivePetepCoreException if the PETEP core is unavailable
+     * @throws InactivePetepCoreException if the PETEP core is unavailable
+     */
+    Optional<Proxy> getProxy(String code);
 
-  /*
-   * INTERCEPTORS
-   */
-  /** Returns list of interceptors in direction C2S. (Client -> Server) */
-  List<Interceptor> getInterceptorsC2S();
+    /*
+     * INTERCEPTORS
+     */
+    /**
+     * Obtains list of active interceptors in direction C2S. (Client -&gt; Server)
+     * @return List of interceptors, which are enabled
+     * @throws InactivePetepCoreException if the PETEP core is unavailable
+     */
+    List<Interceptor> getInterceptorsC2S();
 
-  /** Returns list of interceptors in direction S2C. (Client <- Server) */
-  List<Interceptor> getInterceptorsS2C();
+    /**
+     * Obtains list of active interceptors in direction S2C. (Client &lt;- Server)
+     * @return List of interceptors, which are enabled
+     * @throws InactivePetepCoreException if the PETEP core is unavailable
+     */
+    List<Interceptor> getInterceptorsS2C();
+
+    /**
+     * Obtains interceptor with given code in direction C2S (Client -&gt; Server).
+     * @param code Code of the interceptor
+     * @return Interceptor if it exists
+     * @throws InactivePetepCoreException if the PETEP core is unavailable
+     */
+    Optional<Interceptor> getInterceptorC2S(String code);
+
+    /**
+     * Obtains interceptor with given code in direction S2C (Client &lt;- Server).
+     * @param code Code of the interceptor
+     * @return Interceptor if it exists
+     * @throws InactivePetepCoreException if the PETEP core is unavailable
+     */
+    Optional<Interceptor> getInterceptorS2C(String code);
+
+    /*
+     * LISTENERS
+     */
+    /**
+     * Obtains main connection listener that calls all child listeners.
+     * <p>Any call to this listener will call all registered connection listeners.</p>
+     * @return Connection listener
+     * @throws InactivePetepCoreException if the PETEP core is unavailable
+     */
+    ConnectionListener getConnectionListener();
+
+    /**
+     * Registers connection listener.
+     * @param listener Listener to be registered
+     * @throws InactivePetepCoreException if the PETEP core is unavailable
+     */
+    void registerConnectionListener(ConnectionListener listener);
+
+    /**
+     * Unregisters connection listener.
+     * @param listener Listener to be unregistered
+     * @throws InactivePetepCoreException if the PETEP core is unavailable
+     */
+    void unregisterConnectionListener(ConnectionListener listener);
 }

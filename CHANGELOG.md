@@ -1,6 +1,18 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to this project will are documented in this changelog file.
+
+## [2.0.0] - 2022-01-01
+### Added
+- History extension
+- Repeater extension
+- Scripter extension
+- UDP extension
+- Tooltips, project presets, ...
+- fixed issues
+- refactored code
+- added tests
+- enhanced API
 
 ## [1.2.3] - 2020-09-01
 ### Added

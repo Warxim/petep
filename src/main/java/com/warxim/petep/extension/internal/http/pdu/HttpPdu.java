@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,68 +16,82 @@
  */
 package com.warxim.petep.extension.internal.http.pdu;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import com.warxim.petep.core.connection.Connection;
 import com.warxim.petep.core.pdu.PduDestination;
 import com.warxim.petep.extension.internal.tcp.proxy.base.TcpPdu;
 import com.warxim.petep.proxy.worker.Proxy;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * HTTP PDU base for both request and response PDUs.
+ */
+@Getter
+@Setter
 public abstract class HttpPdu extends TcpPdu {
-  protected String version;
-  protected Map<String, String> headers;
+    protected String version;
+    protected Map<String, String> headers;
 
-  public HttpPdu(
-      Proxy proxy,
-      Connection connection,
-      PduDestination destination,
-      byte[] buffer,
-      int size) {
-    super(proxy, connection, destination, buffer, size);
-    headers = new HashMap<>();
-  }
+    protected HttpPdu(Proxy proxy, Connection connection, PduDestination destination, byte[] buffer, int size, Charset charset) {
+        super(proxy, connection, destination, buffer, size, charset);
+        headers = new HashMap<>();
+    }
 
-  public HttpPdu(
-      Proxy proxy,
-      Connection connection,
-      PduDestination destination,
-      byte[] buffer,
-      int size,
-      Set<String> tags) {
-    super(proxy, connection, destination, buffer, size, tags);
-    headers = new HashMap<>();
-  }
+    protected HttpPdu(Proxy proxy,
+                   Connection connection,
+                   PduDestination destination,
+                   byte[] buffer,
+                   int size,
+                   Charset charset,
+                   Set<String> tags) {
+        super(proxy, connection, destination, buffer, size, charset, tags);
+        headers = new HashMap<>();
+    }
 
-  public String getVersion() {
-    return version;
-  }
+    /**
+     * Adds headers to existing headers.
+     * @param headers Headers to add
+     */
+    public void addHeaders(Map<String, String> headers) {
+        this.headers.putAll(headers);
+    }
 
-  public void setVersion(String version) {
-    this.version = version;
-  }
+    /**
+     * Replaces existing headers with new headers.
+     * @param headers Headers to set
+     */
+    public void setHeaders(Map<String, String> headers) {
+        this.headers = new HashMap<>(headers);
+    }
 
-  public Map<String, String> getHeaders() {
-    return headers;
-  }
+    /**
+     * Adds header to existing headers.
+     * @param name Header name to add
+     * @param value Header value to add
+     */
+    public void addHeader(String name, String value) {
+        headers.put(name, value);
+    }
 
-  public void addHeaders(Map<String, String> headers) {
-    this.headers.putAll(headers);
-  }
+    /**
+     * Removes header from headers.
+     * @param name Name of the header to remove
+     */
+    public void removeHeader(String name) {
+        headers.remove(name);
+    }
 
-  public void setHeaders(Map<String, String> headers) {
-    this.headers = headers;
-  }
-
-  public void addHeader(String name, String value) {
-    headers.put(name, value);
-  }
-
-  public void removeHeader(String name) {
-    headers.remove(name);
-  }
-
-  public String getHeader(String name) {
-    return headers.get(name);
-  }
+    /**
+     * Obtains a header value from headers.
+     * @param name Name of the header to get
+     * @return Header value or null if it does not exist
+     */
+    public String getHeader(String name) {
+        return headers.get(name);
+    }
 }

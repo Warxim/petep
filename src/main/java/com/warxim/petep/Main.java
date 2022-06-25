@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,58 +16,71 @@
  */
 package com.warxim.petep;
 
-import java.util.logging.Logger;
-import com.warxim.petep.bootstrap.CommandLineArguments;
-import com.warxim.petep.bootstrap.CommandLineBoostrap;
-import com.warxim.petep.bootstrap.GuiBootstrap;
-import com.warxim.petep.bootstrap.PetepBootstrap;
+import com.warxim.petep.bootstrap.*;
 import com.warxim.petep.common.ContextType;
 import com.warxim.petep.exception.CommandLineArgumentsException;
 import com.warxim.petep.wizard.PetepWizard;
 import javafx.application.Application;
 
-/** Application main class. */
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Application main class.
+ */
 public final class Main {
-  private Main() {}
-
-  public static void main(final String... args) {
-    if (args.length == 0) {
-      runWizard();
-    } else {
-      runPetep(args);
-    }
-  }
-
-  /** Runs PETEP project with specified arguments. */
-  public static void runPetep(final String... args) {
-    CommandLineArguments arguments;
-
-    // Parse arguments from command line.
-    try {
-      arguments = new CommandLineArguments(args);
-    } catch (CommandLineArgumentsException e) {
-      Logger.getGlobal().severe(e.getMessage());
-      Logger.getGlobal().info(CommandLineArguments.HELP);
-      return;
+    private Main() {
     }
 
-    // Choose bootstrap type.
-    PetepBootstrap bootstrap;
-    if (arguments.getContextType() == ContextType.GUI) {
-      bootstrap = new GuiBootstrap(arguments);
-    } else {
-      bootstrap = new CommandLineBoostrap(arguments);
+    /**
+     * Main entry method for the application.
+     * @param args Arguments provided by the user in the command line
+     */
+    public static void main(final String... args) {
+        if (args.length == 0) {
+            runWizard();
+        } else {
+            runPetep(args);
+        }
     }
 
-    if (!bootstrap.start()) {
-      Logger.getGlobal().severe("PETEP start failed!");
+    /**
+     * Runs PETEP project with specified arguments.
+     * @param args Arguments provided by the user in the command line
+     */
+    public static void runPetep(final String... args) {
+        CommandLineArguments arguments;
+
+        // Parse arguments from command line.
+        try {
+            arguments = new CommandLineArguments(args);
+        } catch (CommandLineArgumentsException e) {
+            Logger.getGlobal().severe(e.getMessage());
+            Logger.getGlobal().info(CommandLineArguments.HELP);
+            return;
+        }
+
+        // Choose bootstrap type.
+        PetepBootstrap bootstrap;
+        if (arguments.getContextType() == ContextType.GUI) {
+            bootstrap = new GuiBootstrap(arguments);
+        } else {
+            bootstrap = new CommandLineBoostrap(arguments);
+        }
+
+        try {
+            bootstrap.start();
+        } catch (BootstrapException e) {
+            Logger.getGlobal().log(Level.SEVERE, "Bootstrap exception occurred!", e);
+        }
     }
-  }
 
-  /** Runs project wizard. */
-  public static void runWizard() {
-    Logger.getGlobal().info("Running PETEP wizard.");
+    /**
+     * Runs project wizard.
+     */
+    public static void runWizard() {
+        Logger.getGlobal().info("Running PETEP wizard.");
 
-    new Thread(() -> Application.launch(PetepWizard.class)).start();
-  }
+        new Thread(() -> Application.launch(PetepWizard.class)).start();
+    }
 }

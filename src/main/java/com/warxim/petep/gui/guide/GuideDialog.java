@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,10 +16,6 @@
  */
 package com.warxim.petep.gui.guide;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import com.warxim.petep.gui.GuiBundle;
 import com.warxim.petep.gui.dialog.SimpleInfoDialog;
 import com.warxim.petep.util.WebUtils;
@@ -29,65 +25,79 @@ import javafx.concurrent.Worker;
 import javafx.concurrent.Worker.State;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
-import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
- * Guide dialog contains list view of all guides and handles their rendering using WebView
- * component.
+ * Guide dialog contains list view of all guides and handles their rendering using WebView component.
  */
 public final class GuideDialog extends SimpleInfoDialog {
-  @FXML
-  private ListView<Guide> guideList;
-  @FXML
-  private WebView webView;
+    @FXML
+    private ListView<Guide> guideList;
+    @FXML
+    private WebView webView;
 
-  public GuideDialog() throws IOException {
-    super("/fxml/guide/GuideDialog.fxml", "Guide");
+    /**
+     * Constructs guide dialog.
+     * @throws IOException If the dialog template could not be loaded
+     */
+    public GuideDialog() throws IOException {
+        super("/fxml/guide/GuideDialog.fxml", "Guide");
 
-    WebEngine webEngine = webView.getEngine();
+        var webEngine = webView.getEngine();
 
-    // Initialize list of guides.
-    guideList.setItems(
-        FXCollections.observableList(GuiBundle.getInstance().getGuideManager().getList()));
+        // Initialize list of guides.
+        guideList.setItems(FXCollections.observableList(GuiBundle.getInstance().getGuideManager().getList()));
 
-    // Run loadGuide(title, html) when Guide gets selected.
-    guideList.getSelectionModel().selectedItemProperty().addListener(this::hangleGuideChange);
+        // Run loadGuide(title, html) when Guide gets selected.
+        guideList.getSelectionModel().selectedItemProperty().addListener(this::hangleGuideChange);
 
-    webEngine.getLoadWorker().stateProperty().addListener(this::stateListener);
+        webEngine.getLoadWorker().stateProperty().addListener(this::stateListener);
 
-    // Load HTML template.
-    try {
-      webEngine.load(getClass().getResource("/html/guide/Guide.html").toURI().toURL().toString());
-    } catch (URISyntaxException e) {
-      Logger.getGlobal().log(Level.SEVERE, "Could not load guide dialog!", e);
-      return;
+        // Load HTML template.
+        try {
+            webEngine.load(getClass().getResource("/html/guide/Guide.html").toURI().toURL().toString());
+        } catch (URISyntaxException e) {
+            Logger.getGlobal().log(Level.SEVERE, "Could not load guide dialog!", e);
+            return;
+        }
+
+        // Enable JavaScript.
+        webEngine.setJavaScriptEnabled(true);
     }
 
-    // Enable JavaScript.
-    webEngine.setJavaScriptEnabled(true);
-  }
-
-  /** Runs loadGuide(title, html) when Guide gets selected. */
-  private void hangleGuideChange(
-      ObservableValue<? extends Guide> observable,
-      Guide oldValue,
-      Guide newValue) {
-    webView.getEngine()
-        .executeScript("loadGuide(" + WebUtils.toJavaScriptParam(newValue.getTitle()) + ", "
-            + WebUtils.toJavaScriptParam(newValue.getHtml()) + ")");
-  }
-
-  /** Registers guide utils to JavaScript. */
-  private void stateListener(
-      ObservableValue<? extends Worker.State> observable,
-      Worker.State oldValue,
-      Worker.State newValue) {
-    if (newValue == State.SUCCEEDED) {
-      guideList.getSelectionModel().selectFirst();
-      JSObject win = (JSObject) webView.getEngine().executeScript("window");
-      win.setMember("petep", new GuideJS());
+    /**
+     * Runs loadGuide(title, html) when Guide gets selected.
+     */
+    private void hangleGuideChange(
+            ObservableValue<? extends Guide> observable,
+            Guide oldValue,
+            Guide newValue) {
+        var script = "loadGuide("
+                + WebUtils.toJavaScriptParam(newValue.getTitle())
+                + ", "
+                + WebUtils.toJavaScriptParam(newValue.getHtml())
+                + ")";
+        webView.getEngine().executeScript(script);
     }
-  }
+
+    /**
+     * Registers guide utils to JavaScript.
+     */
+    private void stateListener(
+            ObservableValue<? extends Worker.State> observable,
+            Worker.State oldValue,
+            Worker.State newValue) {
+        if (newValue != State.SUCCEEDED) {
+            return;
+        }
+        guideList.getSelectionModel().selectFirst();
+        var window = (JSObject) webView.getEngine().executeScript("window");
+        window.setMember("petep", new GuideJS());
+    }
 }

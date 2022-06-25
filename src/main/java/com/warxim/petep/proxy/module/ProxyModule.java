@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -22,18 +22,33 @@ import com.warxim.petep.module.Module;
 import com.warxim.petep.proxy.factory.ProxyModuleFactory;
 import com.warxim.petep.proxy.worker.Proxy;
 
-/** Proxy module. */
+/**
+ * Proxy module provides proxy workers when PETEP starts.
+ * <p>Is created and configured by user in application settings.</p>
+ */
 @PetepAPI
 public abstract class ProxyModule extends Module<ProxyModuleFactory> {
-  public ProxyModule(
-      ProxyModuleFactory factory,
-      String code,
-      String name,
-      String description,
-      boolean enabled) {
-    super(factory, code, name, description, enabled);
-  }
+    /**
+     * Constructs proxy module.
+     * @param factory Factory that created this module
+     * @param code Code of this module
+     * @param name Name of this module
+     * @param description Description of this module
+     * @param enabled {@code true} if the module should be used
+     */
+    protected ProxyModule(
+            ProxyModuleFactory factory,
+            String code,
+            String name,
+            String description,
+            boolean enabled) {
+        super(factory, code, name, description, enabled);
+    }
 
-  /** Creates proxy worker. */
-  public abstract Proxy createProxy(PetepHelper helper);
+    /**
+     * Creates proxy worker.
+     * @param helper Helper for allowing the proxy to work with running PETEP core
+     * @return Created proxy
+     */
+    public abstract Proxy createProxy(PetepHelper helper);
 }

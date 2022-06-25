@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,21 +16,26 @@
  */
 package com.warxim.petep.gui.guide;
 
-import java.awt.Desktop;
+import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/** GuideJS is API for JavaScript that allows it to use useful Java functions. */
+/**
+ * GuideJS is API for JavaScript that allows it to use useful Java functions.
+ */
 public final class GuideJS {
-  /** Opens link in default desktop web browser. */
-  public void openLink(String url) {
-    try {
-      Desktop.getDesktop().browse(new URI(url));
-    } catch (IOException | URISyntaxException e) {
-      Logger.getGlobal().log(Level.SEVERE, "Could not open URL: " + url);
+    /**
+     * Opens link in default desktop web browser.
+     * @param url URL to be opened
+     */
+    public void openLink(String url) {
+        try {
+            Desktop.getDesktop().browse(new URI(url));
+        } catch (IOException | URISyntaxException e) {
+            Logger.getGlobal().log(Level.SEVERE, () -> String.format("Could not open URL '%s'!", url));
+        }
     }
-  }
 }

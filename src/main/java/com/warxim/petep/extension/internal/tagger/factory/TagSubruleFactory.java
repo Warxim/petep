@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,30 +16,51 @@
  */
 package com.warxim.petep.extension.internal.tagger.factory;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
 import com.warxim.petep.extension.PetepAPI;
 
-/** Tag subrule factory. */
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.Optional;
+
+/**
+ * Tag subrule factory.
+ */
 @PetepAPI
 public abstract class TagSubruleFactory {
-  /** Returns factory code (for configuration purposes). */
-  public abstract String getCode();
+    /**
+     * Obtains factory code (for configuration purposes).
+     * @return Factory code for identification of the factory
+     */
+    public abstract String getCode();
 
-  /** Returns factory name (visible for user). */
-  public abstract String getName();
+    /**
+     * Obtains factory name (visible for user).
+     * @return Factory name for displaying in GUI
+     */
+    public abstract String getName();
 
-  /** Creates subrule using given data. */
-  public abstract TagSubrule createSubrule(TagSubruleData data);
+    /**
+     * Creates subrule using given data.
+     * @param data Data for the subrule
+     * @return Created tag subrule
+     */
+    public abstract TagSubrule createSubrule(TagSubruleData data);
 
-  /** Creates config pane for subrule data. */
-  public abstract TagSubruleConfigurator createConfigPane() throws IOException;
+    /**
+     * Obtains type of configuration, so it can be deserialized from JSON configuration.
+     * @return Type of configuration for deserialization from JSON or empty optional if no configuration is needed
+     */
+    public abstract Optional<Type> getConfigType();
 
-  /** Returns type of configuration, so it can be deserialized from JSON configuration. */
-  public abstract Type getConfigType();
+    /**
+     * Creates config pane for subrule data.
+     * @return Tag subrule configurator for configuring modifier data or empty optional if no configurator is needed
+     * @throws IOException If there was problem with loading the configuration pane
+     */
+    public abstract Optional<TagSubruleConfigurator> createConfigPane() throws IOException;
 
-  @Override
-  public String toString() {
-    return getName();
-  }
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

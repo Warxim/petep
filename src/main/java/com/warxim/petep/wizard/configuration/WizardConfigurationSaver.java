@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,46 +16,47 @@
  */
 package com.warxim.petep.wizard.configuration;
 
+import com.google.gson.JsonArray;
+import com.warxim.petep.common.Constant;
+import com.warxim.petep.util.GsonUtils;
+import com.warxim.petep.wizard.project.WizardProjectDecorator;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.stream.JsonWriter;
-import com.warxim.petep.exception.ConfigurationException;
-import com.warxim.petep.wizard.project.WizardProjectDecorator;
 
-/** Static class for wizard configuration saving. */
+/**
+ * Static class for wizard configuration saving.
+ */
 public final class WizardConfigurationSaver {
-  private WizardConfigurationSaver() {}
-
-  /**
-   * Save wizard configuration.
-   *
-   * @throws ConfigurationException
-   */
-  public static void save(String path, Collection<WizardProjectDecorator> projects) {
-    // Gson with pretty printing.
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-    JsonArray list = new JsonArray(projects.size());
-
-    // Create list of projects in json.
-    for (WizardProjectDecorator project : projects) {
-      list.add(project.getPath());
+    private WizardConfigurationSaver() {
     }
 
-    // Write project list to configuration.
-    try (JsonWriter writer = gson.newJsonWriter(new FileWriter(path))) {
-      gson.toJson(list, writer);
-    } catch (NoSuchFileException e) {
-      Logger.getGlobal().info("PETEP wizard configuration doesn't exist.");
-    } catch (IOException e) {
-      Logger.getGlobal().log(Level.SEVERE, "PETEP wizard could not save configuration.", e);
+    /**
+     * Save wizard configuration.
+     * @param path Path to wizard configuration
+     * @param projects List or project decorators to save
+     */
+    public static void save(String path, Collection<WizardProjectDecorator> projects) {
+        // Gson with pretty printing.
+        var gson = GsonUtils.getGson();
+        var list = new JsonArray(projects.size());
+
+        // Create list of projects in json.
+        for (var project : projects) {
+            list.add(project.getPath());
+        }
+
+        // Write project list to configuration.
+        try (var writer = gson.newJsonWriter(new FileWriter(path, Constant.FILE_CHARSET))) {
+            gson.toJson(list, writer);
+        } catch (NoSuchFileException e) {
+            Logger.getGlobal().info("PETEP wizard configuration doesn't exist.");
+        } catch (IOException e) {
+            Logger.getGlobal().log(Level.SEVERE, "PETEP wizard could not save configuration.", e);
+        }
     }
-  }
 }

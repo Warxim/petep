@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -18,8 +18,18 @@ package com.warxim.petep.common;
 
 import com.warxim.petep.extension.PetepAPI;
 
-/** Context type represents the type of current PETEP context (GUI / Command Line). */
+/**
+ * Context type represents the type of current PETEP context (GUI / Command Line).
+ */
 @PetepAPI
 public enum ContextType {
-  COMMAND_LINE, GUI
+    /**
+     * PETEP started from command line.
+     */
+    COMMAND_LINE,
+
+    /**
+     * PETEP started with GUI.
+     */
+    GUI
 }

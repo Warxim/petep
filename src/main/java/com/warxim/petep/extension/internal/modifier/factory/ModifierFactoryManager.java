@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -19,26 +19,45 @@ package com.warxim.petep.extension.internal.modifier.factory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-/** Modifier factory manager. */
+/**
+ * Modifier factory manager.
+ */
 public final class ModifierFactoryManager {
-  private final Map<String, ModifierFactory> factories;
+    private final Map<String, ModifierFactory> factories;
 
-  /** MOdifier factory manager constructor. */
-  public ModifierFactoryManager() {
-    factories = new ConcurrentHashMap<>();
-  }
+    /**
+     * Modifier factory manager constructor.
+     */
+    public ModifierFactoryManager() {
+        factories = new ConcurrentHashMap<>();
+    }
 
-  public boolean registerFactory(ModifierFactory factory) {
-    return factories.putIfAbsent(factory.getCode(), factory) == null;
-  }
+    /**
+     * Registers modifier factory.
+     * @param factory Modifier factory to be registered
+     * @return {@code true} if the factory has been registered successfully
+     */
+    public boolean registerFactory(ModifierFactory factory) {
+        return factories.putIfAbsent(factory.getCode(), factory) == null;
+    }
 
-  public ModifierFactory getFactory(String code) {
-    return factories.get(code);
-  }
+    /**
+     * Gets modifier factory by code.
+     * @param code Code of modifier factory
+     * @return Modifier factory with given code or empty optional if it does not exist
+     */
+    public Optional<ModifierFactory> getFactory(String code) {
+        return Optional.ofNullable(factories.get(code));
+    }
 
-  public List<ModifierFactory> getFactories() {
-    return new ArrayList<>(factories.values());
-  }
+    /**
+     * Gets all registered modifier factories.
+     * @return List of registered modifier factories.
+     */
+    public List<ModifierFactory> getFactories() {
+        return new ArrayList<>(factories.values());
+    }
 }

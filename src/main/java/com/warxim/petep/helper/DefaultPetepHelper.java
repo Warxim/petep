@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,72 +16,121 @@
  */
 package com.warxim.petep.helper;
 
-import java.util.List;
 import com.warxim.petep.core.PETEP;
 import com.warxim.petep.core.PetepState;
+import com.warxim.petep.core.listener.ConnectionListener;
 import com.warxim.petep.core.pdu.PDU;
 import com.warxim.petep.core.pdu.PduDestination;
+import com.warxim.petep.exception.InactivePetepCoreException;
 import com.warxim.petep.interceptor.worker.Interceptor;
 import com.warxim.petep.proxy.worker.Proxy;
 
-/** Default implementation of PETEP helper. */
+import java.lang.ref.WeakReference;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Default implementation of PETEP helper.
+ * <p>
+ *     Stores weak reference to PETEP and everytime method is called, checks whether PETEP the reference has been cleared.
+ * </p>
+ */
 public final class DefaultPetepHelper implements PetepHelper {
-  private final PETEP petep;
+    private final WeakReference<PETEP> petepReference;
 
-  /** Constructor of default PETEP helper implementation. */
-  public DefaultPetepHelper(PETEP petep) {
-    this.petep = petep;
-  }
-
-  @Override
-  public PetepState getState() {
-    return petep.getState();
-  }
-
-  @Override
-  public void processPdu(PDU pdu) {
-    if (pdu.getDestination() == PduDestination.SERVER) {
-      petep.processC2S(pdu);
-    } else {
-      petep.processS2C(pdu);
+    /**
+     * Constructor of default PETEP helper implementation.
+     * @param petep PETEP core to wrap inside this helper
+     */
+    public DefaultPetepHelper(PETEP petep) {
+        this.petepReference = new WeakReference<>(petep);
     }
-  }
 
-  @Override
-  public void processPdu(PDU pdu, int interceptorId) {
-    if (pdu.getDestination() == PduDestination.SERVER) {
-      petep.processC2S(pdu, interceptorId);
-    } else {
-      petep.processS2C(pdu, interceptorId);
+    @Override
+    public PetepState getState() {
+        return getPetepOrThrowException().getState();
     }
-  }
 
-  @Override
-  public void sendPdu(PDU pdu) {
-    if (pdu.getDestination() == PduDestination.SERVER) {
-      petep.sendC2S(pdu);
-    } else {
-      petep.sendS2C(pdu);
+    @Override
+    public void processPdu(PDU pdu) {
+        if (pdu.getDestination() == PduDestination.SERVER) {
+            getPetepOrThrowException().processC2S(pdu);
+        } else {
+            getPetepOrThrowException().processS2C(pdu);
+        }
     }
-  }
 
-  @Override
-  public List<Proxy> getProxies() {
-    return petep.getProxyManager().getList();
-  }
+    @Override
+    public void processPdu(PDU pdu, int interceptorId) {
+        if (pdu.getDestination() == PduDestination.SERVER) {
+            getPetepOrThrowException().processC2S(pdu, interceptorId);
+        } else {
+            getPetepOrThrowException().processS2C(pdu, interceptorId);
+        }
+    }
 
-  @Override
-  public Proxy getProxy(String code) {
-    return petep.getProxyManager().get(code);
-  }
+    @Override
+    public void sendPdu(PDU pdu) {
+        if (pdu.getDestination() == PduDestination.SERVER) {
+            getPetepOrThrowException().sendC2S(pdu);
+        } else {
+            getPetepOrThrowException().sendS2C(pdu);
+        }
+    }
 
-  @Override
-  public List<Interceptor> getInterceptorsC2S() {
-    return petep.getInterceptorManagerC2S().getList();
-  }
+    @Override
+    public List<Proxy> getProxies() {
+        return getPetepOrThrowException().getProxyManager().getList();
+    }
 
-  @Override
-  public List<Interceptor> getInterceptorsS2C() {
-    return petep.getInterceptorManagerS2C().getList();
-  }
+    @Override
+    public Optional<Proxy> getProxy(String code) {
+        return Optional.ofNullable(getPetepOrThrowException().getProxyManager().get(code));
+    }
+
+    @Override
+    public List<Interceptor> getInterceptorsC2S() {
+        return getPetepOrThrowException().getInterceptorManagerC2S().getList();
+    }
+
+    @Override
+    public List<Interceptor> getInterceptorsS2C() {
+        return getPetepOrThrowException().getInterceptorManagerS2C().getList();
+    }
+
+    @Override
+    public Optional<Interceptor> getInterceptorC2S(String code) {
+        return Optional.ofNullable(getPetepOrThrowException().getInterceptorManagerC2S().get(code));
+    }
+
+    @Override
+    public Optional<Interceptor> getInterceptorS2C(String code) {
+        return Optional.ofNullable(getPetepOrThrowException().getInterceptorManagerS2C().get(code));
+    }
+
+    @Override
+    public ConnectionListener getConnectionListener() {
+        return getPetepOrThrowException().getConnectionListenerManager();
+    }
+
+    @Override
+    public void registerConnectionListener(ConnectionListener listener) {
+        getPetepOrThrowException().getConnectionListenerManager().registerListener(listener);
+    }
+
+    @Override
+    public void unregisterConnectionListener(ConnectionListener listener) {
+        getPetepOrThrowException().getConnectionListenerManager().unregisterListener(listener);
+    }
+
+    /**
+     * Obtains PETEP or throws runtime exception if it is null.
+     */
+    private PETEP getPetepOrThrowException() {
+        var petep = petepReference.get();
+        if (petep == null) {
+            throw new InactivePetepCoreException();
+        }
+        return petep;
+    }
 }

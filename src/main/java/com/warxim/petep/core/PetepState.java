@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -18,8 +18,33 @@ package com.warxim.petep.core;
 
 import com.warxim.petep.extension.PetepAPI;
 
-/** State of PETEP. */
+/**
+ * State of PETEP core.
+ */
 @PetepAPI
 public enum PetepState {
-  PREPARING, PREPARED, STARTING, STARTED, STOPPING, STOPPED
+    /**
+     * PETEP core and its components are preparing to start...
+     */
+    PREPARING,
+    /**
+     * PETEP core and its components are prepared for start...
+     */
+    PREPARED,
+    /**
+     * PETEP core is starting...
+     */
+    STARTING,
+    /**
+     * PETEP core is started and running...
+     */
+    STARTED,
+    /**
+     * PETEP core is stopping...
+     */
+    STOPPING,
+    /**
+     * PETEP core is stopped and inactive...
+     */
+    STOPPED
 }

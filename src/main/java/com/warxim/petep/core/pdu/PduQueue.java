@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,46 +16,72 @@
  */
 package com.warxim.petep.core.pdu;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import com.warxim.petep.extension.PetepAPI;
 
-/* Queue of PDUs. */
+import java.util.Optional;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+/**
+ * Queue of PDUs.
+ * <p>Based on {@link BlockingQueue}.</p>
+ */
 @PetepAPI
 public class PduQueue {
-  private final BlockingQueue<PDU> queue;
+    private final BlockingQueue<PDU> queue;
 
-  public PduQueue() {
-    queue = new LinkedBlockingQueue<>();
-  }
+    /**
+     * Constructs PDU queue.
+     */
+    public PduQueue() {
+        queue = new LinkedBlockingQueue<>();
+    }
 
-  /** Add PDU to queue. */
-  public void add(PDU pdu) {
-    queue.add(pdu);
-  }
+    /**
+     * Add PDU to queue.
+     * @param pdu PDU to be added to the queue
+     */
+    public void add(PDU pdu) {
+        queue.add(pdu);
+    }
 
-  /** Returns PDU from queue (blocks until there is PDU). */
-  public PDU take() throws InterruptedException {
-    return queue.take();
-  }
+    /**
+     * Obtains PDU from queue (blocks until there is PDU).
+     * @return PDU from queue
+     * @throws InterruptedException If interrupted while waiting
+     */
+    public PDU take() throws InterruptedException {
+        return queue.take();
+    }
 
-  /** Returns queue size. */
-  public int size() {
-    return queue.size();
-  }
+    /**
+     * Obtains and removes the head of the queue.
+     * @return PDU from queue or empty optional if the queue is empty
+     */
+    public Optional<PDU> poll() {
+        return Optional.ofNullable(queue.poll());
+    }
 
-  /** Clears queue. */
-  public void clear() {
-    queue.clear();
-  }
+    /**
+     * Get queue size.
+     * @return Size of the queue
+     */
+    public int size() {
+        return queue.size();
+    }
 
-  /** Returns true if the queue is empty. */
-  public boolean isEmpty() {
-    return queue.isEmpty();
-  }
+    /**
+     * Clears queue.
+     */
+    public void clear() {
+        queue.clear();
+    }
 
-  /** Retrieves and removes the head of the queue. */
-  public PDU poll() {
-    return queue.poll();
-  }
+    /**
+     * Checks if the queue is empty.
+     * @return {@code true} if the queue is empty
+     */
+    public boolean isEmpty() {
+        return queue.isEmpty();
+    }
 }

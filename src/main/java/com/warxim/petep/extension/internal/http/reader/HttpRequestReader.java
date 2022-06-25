@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,82 +16,95 @@
  */
 package com.warxim.petep.extension.internal.http.reader;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
+import com.warxim.petep.common.Constant;
 import com.warxim.petep.core.pdu.PduDestination;
 import com.warxim.petep.extension.internal.http.pdu.HttpRequestPdu;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+
+/**
+ * Http reader for reading requests.
+ */
 public final class HttpRequestReader extends HttpReader {
-  protected enum RequestLineState {
-    METHOD, PATH, VERSION
-  }
-
-  public HttpRequestReader(InputStream in, int maxLength, Charset defaultCharset) {
-    super(in, maxLength, defaultCharset);
-  }
-
-  @Override
-  public HttpRequestPdu read() throws IOException {
-    HttpRequestPdu request = new HttpRequestPdu(null, null, PduDestination.SERVER, null, 0);
-
-    if (internalState == null) {
-      if (!readRequestLine(request) || !readHeaders(request)) {
-        return null;
-      }
-
-      processHeaders(request);
-
-      readBody(request);
-    } else {
-      readBody(request);
+    /**
+     * Constructs HTTP request PDU reader.
+     * @param in Input stream for reading the data
+     * @param maxLength Maximal length of PDU body
+     * @param defaultCharset Default charset to set to PDUs
+     */
+    public HttpRequestReader(InputStream in, int maxLength, Charset defaultCharset) {
+        super(in, maxLength, defaultCharset);
     }
 
-    return request;
-  }
+    @Override
+    public HttpRequestPdu read() throws IOException {
+        var request = new HttpRequestPdu(null, null, PduDestination.SERVER, null, 0, Constant.DEFAULT_CHARSET);
 
-  private boolean readRequestLine(HttpRequestPdu request) throws IOException {
-    RequestLineState state = RequestLineState.METHOD;
+        if (internalBodyState == null) {
+            if (!readRequestLine(request) || !readHeaders(request)) {
+                return null;
+            }
 
-    StringBuilder builder = new StringBuilder();
+            processHeaders(request);
+        }
 
-    int currentByte;
-    while ((currentByte = in.read()) != -1) {
-      switch (state) {
-        case METHOD:
-          if (currentByte == ' ') {
-            request.setMethod(builder.toString());
-            builder.setLength(0);
-            state = RequestLineState.PATH;
-            break;
-          }
+        readBody(request);
 
-          builder.append((char) currentByte);
-          break;
-        case PATH:
-          if (currentByte == ' ') {
-            request.setPath(builder.toString());
-            builder.setLength(0);
-            state = RequestLineState.VERSION;
-            break;
-          }
-
-          builder.append((char) currentByte);
-          break;
-        case VERSION:
-          if (currentByte == '\r') {
-            // Skip \n.
-            skip(1);
-
-            request.setVersion(builder.toString());
-            return true;
-          }
-
-          builder.append((char) currentByte);
-          break;
-      }
+        return request;
     }
 
-    return false;
-  }
+    /**
+     * Reads request line.
+     */
+    private boolean readRequestLine(HttpRequestPdu request) throws IOException {
+        var state = RequestLineState.METHOD;
+        var builder = new StringBuilder();
+        int currentByte;
+        while ((currentByte = in.read()) != -1) {
+            switch (state) {
+                case METHOD:
+                    if (currentByte == ' ') {
+                        request.setMethod(builder.toString());
+                        builder.setLength(0);
+                        state = RequestLineState.PATH;
+                        break;
+                    }
+
+                    builder.append((char) currentByte);
+                    break;
+                case PATH:
+                    if (currentByte == ' ') {
+                        request.setPath(builder.toString());
+                        builder.setLength(0);
+                        state = RequestLineState.VERSION;
+                        break;
+                    }
+
+                    builder.append((char) currentByte);
+                    break;
+                case VERSION:
+                    if (currentByte == '\r') {
+                        // Skip \n.
+                        skip(1);
+
+                        request.setVersion(builder.toString());
+                        return true;
+                    }
+
+                    builder.append((char) currentByte);
+                    break;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Request line reading step (what are we reading now).
+     */
+    protected enum RequestLineState {
+        METHOD, PATH, VERSION
+    }
 }

@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,18 +16,32 @@
  */
 package com.warxim.booleanexpressioninterpreter;
 
-/** Logical OR expression. */
+/**
+ * Logical OR expression.
+ * <p>
+ *     Used for creating and solving expression:{@code left || right}.
+ * </p>
+ */
 public final class OrExpression implements Expression {
-  private final Expression left;
-  private final Expression right;
+    private final Expression left;
+    private final Expression right;
 
-  public OrExpression(Expression left, Expression right) {
-    this.left = left;
-    this.right = right;
-  }
+    /**
+     * Logical OR expression
+     * @param left expression on the left side of operator
+     * @param right expression on the right side of operator
+     */
+    public OrExpression(Expression left, Expression right) {
+        this.left = left;
+        this.right = right;
+    }
 
-  @Override
-  public boolean solve() {
-    return left.solve() || right.solve();
-  }
+    /**
+     * Solves the expression {@code left || right}
+     * @return result of the expression {@code left || right}
+     */
+    @Override
+    public boolean solve() {
+        return left.solve() || right.solve();
+    }
 }

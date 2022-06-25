@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,150 +16,137 @@
  */
 package com.warxim.petep.extension.internal.tcp.proxy.base;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.Security;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
+import com.warxim.petep.extension.internal.tcp.SslCertificateConfig;
+import com.warxim.petep.extension.internal.tcp.SslConfig;
+import com.warxim.petep.util.FileUtils;
+
 import javax.net.ServerSocketFactory;
 import javax.net.SocketFactory;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509ExtendedTrustManager;
-import com.warxim.petep.extension.internal.tcp.SslCertificateConfig;
-import com.warxim.petep.extension.internal.tcp.SslConfig;
-import com.warxim.petep.util.FileUtils;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.security.*;
+import java.security.cert.CertificateException;
 
-/** TCP socket factory. */
+/**
+ * TCP socket factory.
+ * <p>Creates TCP sockets according to the configuration.</p>
+ */
 public final class TcpSocketFactory {
-  // Factories
-  private final ServerSocketFactory serverSocketFactory;
-  private final SocketFactory clientSocketFactory;
+    // Factories
+    private final ServerSocketFactory serverSocketFactory;
+    private final SocketFactory clientSocketFactory;
 
-  /** TCP socket factory constructor. */
-  public TcpSocketFactory(SslConfig server, SslConfig client)
-      throws NoSuchAlgorithmException, KeyManagementException, UnrecoverableKeyException,
-      KeyStoreException, IOException, CertificateException {
-    TrustManager[] truster;
+    /**
+     * TCP socket factory constructor.
+     * @param server SSL configuration for server
+     * @param client SSL configuration for client
+     * @throws TcpProxyException If the socket factory could not be initialized
+     */
+    public TcpSocketFactory(SslConfig server, SslConfig client) throws TcpProxyException {
+        try {
+            TrustManager[] truster;
 
-    if (server != null || client != null) {
-      // Unset disabled algorithms.
-      Security.setProperty("jdk.tls.disabledAlgorithms", "");
+            if (server != null || client != null) {
+                // Unset disabled algorithms.
+                Security.setProperty("jdk.tls.disabledAlgorithms", "");
 
-      truster = createTrustManagers();
-    } else {
-      truster = null;
+                truster = createTrustManagers();
+            } else {
+                truster = null;
+            }
+
+            // Initialize server socket factory.
+            if (server != null) {
+                var serverSslContext = SSLContext.getInstance(server.getAlgorithm());
+                serverSslContext.init(
+                        getKeyManagers(server.getCertificateConfig()),
+                        truster,
+                        new SecureRandom());
+                serverSocketFactory = serverSslContext.getServerSocketFactory();
+            } else {
+                serverSocketFactory = ServerSocketFactory.getDefault();
+            }
+
+            // Initialize client socket factory.
+            if (client != null) {
+                var clientSslContext = SSLContext.getInstance(client.getAlgorithm());
+                clientSslContext.init(
+                        getKeyManagers(client.getCertificateConfig()),
+                        truster,
+                        new SecureRandom());
+                clientSocketFactory = clientSslContext.getSocketFactory();
+            } else {
+                clientSocketFactory = SocketFactory.getDefault();
+            }
+        } catch (UnrecoverableKeyException
+                | CertificateException
+                | NoSuchAlgorithmException
+                | IOException
+                | KeyStoreException
+                | KeyManagementException e) {
+            throw new TcpProxyException("Could not initialize TCP socket factory!", e);
+        }
     }
 
-    // Initialize server socket factory.
-    if (server != null) {
-      SSLContext serverSslContext = SSLContext.getInstance(server.getAlgorithm());
-      serverSslContext.init(getKeyManagers(server.getCertificateConfig()), truster,
-          new java.security.SecureRandom());
-      serverSocketFactory = serverSslContext.getServerSocketFactory();
-    } else {
-      serverSocketFactory = ServerSocketFactory.getDefault();
+    /**
+     * Creates key managers.
+     */
+    private static KeyManager[] getKeyManagers(SslCertificateConfig config)
+            throws NoSuchAlgorithmException, CertificateException, IOException, KeyStoreException, UnrecoverableKeyException {
+        if (config == null) {
+            return new KeyManager[0];
+        }
+
+        // Create key manager factory.
+        var keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
+
+        // Initialize key stores.
+        try (var in = new FileInputStream(FileUtils.getProjectFileAbsolutePath(config.getKeyStore()))) {
+            var keyStore = KeyStore.getInstance(config.getKeyStoreType());
+
+            keyStore.load(in, config.getKeyStorePassword().toCharArray());
+
+            keyManagerFactory.init(keyStore, config.getKeyPassword().toCharArray());
+        }
+
+        return keyManagerFactory.getKeyManagers();
     }
 
-    // Initialize client socket factory.
-    if (client != null) {
-      SSLContext clientSslContext = SSLContext.getInstance(client.getAlgorithm());
-      clientSslContext.init(getKeyManagers(client.getCertificateConfig()), truster,
-          new java.security.SecureRandom());
-      clientSocketFactory = clientSslContext.getSocketFactory();
-    } else {
-      clientSocketFactory = SocketFactory.getDefault();
-    }
-  }
-
-  /** Creates key managers. */
-  private static final KeyManager[] getKeyManagers(SslCertificateConfig config)
-      throws NoSuchAlgorithmException, CertificateException, IOException, KeyStoreException,
-      UnrecoverableKeyException {
-    if (config == null) {
-      return null;
+    /**
+     * Creates trust manager that trusts everything.
+     */
+    private static TrustManager[] createTrustManagers() {
+        return new TrustManager[] {
+                new TrustEveryoneTrustManager()
+        };
     }
 
-    // Create key manager factory.
-    KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
-
-    // Initialize key stores.
-    try (FileInputStream in =
-        new FileInputStream(FileUtils.getProjectFileAbsolutePath(config.getKeyStore()))) {
-      KeyStore keyStore = KeyStore.getInstance(config.getKeyStoreType());
-
-      keyStore.load(in, config.getKeyStorePassword().toCharArray());
-
-      keyManagerFactory.init(keyStore, config.getKeyPassword().toCharArray());
+    /**
+     * Creates server socket for specified host and port.
+     * @param host Host on which to bind the socket
+     * @param port Port on which to bind the socket
+     * @return Created server socket
+     * @throws IOException If the socket could not be created
+     */
+    public ServerSocket createServerSocket(String host, int port) throws IOException {
+        return serverSocketFactory.createServerSocket(port, 0, InetAddress.getByName(host));
     }
 
-    return keyManagerFactory.getKeyManagers();
-  }
-
-  /** Creates trust manager that trusts everything. */
-  private static final TrustManager[] createTrustManagers() {
-    return new TrustManager[] {new X509ExtendedTrustManager() {
-      @Override
-      public void checkClientTrusted(X509Certificate[] x509Certificates, String s) {
-        // Trust everyone.
-      }
-
-      @Override
-      public void checkServerTrusted(X509Certificate[] x509Certificates, String s) {
-        // Trust everyone.
-      }
-
-      @Override
-      public X509Certificate[] getAcceptedIssuers() {
-        return null;
-      }
-
-      @Override
-      public void checkClientTrusted(X509Certificate[] x509Certificates, String s, Socket socket) {
-        // Trust everyone.
-      }
-
-      @Override
-      public void checkServerTrusted(X509Certificate[] x509Certificates, String s, Socket socket) {
-        // Trust everyone.
-      }
-
-      @Override
-      public void checkClientTrusted(
-          X509Certificate[] x509Certificates,
-          String s,
-          SSLEngine sslEngine) {
-        // Trust everyone.
-      }
-
-      @Override
-      public void checkServerTrusted(
-          X509Certificate[] x509Certificates,
-          String s,
-          SSLEngine sslEngine) {
-        // Trust everyone.
-      }
-    }};
-  }
-
-  /** Creates server socket for specified ip and port. */
-  public ServerSocket createServerSocket(String ip, int port) throws IOException {
-    return serverSocketFactory.createServerSocket(port, 0, InetAddress.getByName(ip));
-  }
-
-  /** Creates socket for specified ip and port. */
-  public Socket createSocket(String ip, int port) throws IOException {
-    return clientSocketFactory.createSocket(ip, port);
-  }
+    /**
+     * Creates socket for specified host and port.
+     * @param host Host on which to bind the socket
+     * @param port Port on which to bind the socket
+     * @return Created client socket
+     * @throws IOException If the socket could not be created
+     */
+    public Socket createSocket(String host, int port) throws IOException {
+        return clientSocketFactory.createSocket(host, port);
+    }
 }

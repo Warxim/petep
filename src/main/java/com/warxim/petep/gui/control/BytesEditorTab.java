@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,12 +16,32 @@
  */
 package com.warxim.petep.gui.control;
 
-import java.nio.charset.Charset;
 import com.warxim.petep.extension.PetepAPI;
 
+import java.nio.charset.Charset;
+
+/**
+ * Interface for bytes editor tab.
+ */
 @PetepAPI
 public interface BytesEditorTab {
-  void setBytes(byte[] bytes, int size, Charset charset);
+    /**
+     * Sets bytes to the tab.
+     * @param bytes Bytes to be set
+     * @param size Size of the data in bytes to be set
+     * @param charset Charset of the data
+     */
+    void setBytes(byte[] bytes, int size, Charset charset);
 
-  byte[] getBytes();
+    /**
+     * Obtains bytes from the tab.
+     * @return Byte array
+     */
+    byte[] getBytes();
+
+    /**
+     * Changes editability of the data.
+     * @param value {@code true} if the data in the tab should be editable
+     */
+    void setEditable(boolean value);
 }

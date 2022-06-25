@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,14 +16,21 @@
  */
 package com.warxim.petep.proxy.serizalization;
 
-import java.util.Map;
 import com.warxim.petep.core.pdu.PDU;
 import com.warxim.petep.extension.PetepAPI;
 
-/** Proxy serializer. */
+import java.util.Map;
+
+/**
+ * Proxy serializer for serializing PDU metadata to map.
+ */
 @PetepAPI
 @FunctionalInterface
 public interface ProxySerializer {
-  /** Serializes PDU meta data to string. */
-  Map<String, String> serializePduMetadata(PDU pdu);
+    /**
+     * Serializes PDU meta data to map of strings.
+     * @param pdu PDU with metadata to be deserialized
+     * @return Metadata map (key = metadata code, value = metadata value)
+     */
+    Map<String, String> serializePduMetadata(PDU pdu);
 }

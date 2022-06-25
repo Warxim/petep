@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -21,18 +21,26 @@ import com.warxim.petep.extension.internal.tagger.factory.TagSubrule;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleData;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleFactory;
 
+/**
+ * Tag subrule for checking whether the PDU comes from specified proxy.
+ */
 public final class ProxyTagSubrule extends TagSubrule {
-  public ProxyTagSubrule(TagSubruleFactory factory, TagSubruleData data) {
-    super(factory, data);
-  }
+    /**
+     * Constructs tag subrule for Proxy subrule.
+     * @param factory Factory that created this subrule
+     * @param data Data for the subrule
+     */
+    public ProxyTagSubrule(TagSubruleFactory factory, TagSubruleData data) {
+        super(factory, data);
+    }
 
-  @Override
-  public boolean test(PDU pdu) {
-    return pdu.getProxy().getModule().getCode().equals(((ProxyData) data).getProxyCode());
-  }
+    @Override
+    public boolean test(PDU pdu) {
+        return pdu.getProxy().getCode().equals(((ProxyData) data).getProxyCode());
+    }
 
-  @Override
-  public String toString() {
-    return "Proxy " + ((ProxyData) data).getProxyCode();
-  }
+    @Override
+    public String toString() {
+        return "Proxy " + ((ProxyData) data).getProxyCode();
+    }
 }

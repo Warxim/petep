@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,47 +16,61 @@
  */
 package com.warxim.petep.wizard.project;
 
-import java.util.Date;
 import com.warxim.petep.project.Project;
+import lombok.Data;
 
-/** Project decorator (containing project, path to the project and date of project file changes). */
+import java.time.Instant;
+
+/**
+ * Project decorator (containing project, path to the project and date of project file changes).
+ */
+@Data
 public final class WizardProjectDecorator {
-  private String path;
-  private Date date;
-  private Project project;
+    private String path;
+    private Instant created;
+    private Project project;
 
-  /** Project decorator constructor. */
-  public WizardProjectDecorator(Project project, String path, Date date) {
-    this.project = project;
-    this.path = path;
-    this.date = date;
-  }
+    /**
+     * Project decorator constructor.
+     * @param project Project to be wrapped
+     * @param path Path to the project
+     * @param date Instant of creation/update of the project
+     */
+    public WizardProjectDecorator(Project project, String path, Instant date) {
+        this.project = project;
+        this.path = path;
+        this.created = date;
+    }
 
-  public String getPath() {
-    return path;
-  }
+    /**
+     * Obtains name of the project.
+     * @return Project name
+     */
+    public String getName() {
+        return project.getName();
+    }
 
-  public Date getDate() {
-    return date;
-  }
+    /**
+     * Obtains description of the project.
+     * @return Project description
+     */
+    public String getDescription() {
+        return project.getDescription();
+    }
 
-  public String getName() {
-    return project.getName();
-  }
+    /**
+     * Sets time of creation of this project (when it has been created/modified).
+     * @param created Project creation/update time
+     */
+    public void setCreated(Instant created) {
+        this.created = created;
+    }
 
-  public String getDescription() {
-    return project.getDescription();
-  }
-
-  public Project getProject() {
-    return project;
-  }
-
-  public void setProject(Project project) {
-    this.project = project;
-  }
-
-  public void setDate(Date date) {
-    this.date = date;
-  }
+    /**
+     * Sets underlying project.
+     * @param project Project
+     */
+    public void setProject(Project project) {
+        this.project = project;
+    }
 }

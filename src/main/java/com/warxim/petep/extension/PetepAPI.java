@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,14 +16,15 @@
  */
 package com.warxim.petep.extension;
 
-import static java.lang.annotation.RetentionPolicy.SOURCE;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import static java.lang.annotation.RetentionPolicy.SOURCE;
+
 /**
- * Annotation signaling that the annotated element is part of extension API and should be used to
- * generate PetepLib.jar for extensions.
+ * Annotation signaling that the annotated element is part of extension API
+ * and should be used to generate PetepLib.jar for extensions.
  */
 @Retention(SOURCE)
 @Target(ElementType.TYPE)

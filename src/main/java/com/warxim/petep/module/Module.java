@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -17,50 +17,44 @@
 package com.warxim.petep.module;
 
 import com.warxim.petep.extension.PetepAPI;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-/** Module base class. */
+/**
+ * Module base class.
+ * @param <F> Type of parent factory of the module
+ */
+@Getter
+@AllArgsConstructor
 @PetepAPI
 public abstract class Module<F extends ModuleFactory<?>> {
-  protected final String code;
-  protected final String name;
-  protected final String description;
-  protected final boolean enabled;
-  protected final F factory;
+    /**
+     * Parent factory, which produced this module
+     */
+    protected final F factory;
 
-  /** Module constructor. */
-  public Module(F factory, String code, String name, String description, boolean enabled) {
-    this.code = code;
-    this.name = name;
-    this.description = description;
-    this.enabled = enabled;
-    this.factory = factory;
-  }
+    /**
+     * Unique code of the module
+     */
+    protected final String code;
 
-  /*
-   * GETTERS
-   */
-  public final boolean isEnabled() {
-    return enabled;
-  }
+    /**
+     * Name of the module for displaying in the GUI
+     */
+    protected final String name;
 
-  public final String getCode() {
-    return code;
-  }
+    /**
+     * Description of the module
+     */
+    protected final String description;
 
-  public final String getName() {
-    return name;
-  }
+    /**
+     * Whether the module is enabled and should be used in running PETEP core or not
+     */
+    protected final boolean enabled;
 
-  public final String getDescription() {
-    return description;
-  }
-
-  public final F getFactory() {
-    return factory;
-  }
-
-  @Override
-  public String toString() {
-    return name + " (" + code + ")";
-  }
+    @Override
+    public String toString() {
+        return name + " (" + code + ")";
+    }
 }

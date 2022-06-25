@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,38 +16,46 @@
  */
 package com.warxim.petep.extension.internal.tagger.factory.internal.has_tag;
 
-import java.io.IOException;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleConfigurator;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleData;
 import com.warxim.petep.gui.dialog.Dialogs;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
+import java.io.IOException;
+
+/**
+ * Configurator for configuring "hasTag" subrule data.
+ */
 public final class HasTagSubruleConfigurator extends TagSubruleConfigurator {
-  @FXML
-  private TextField tagInput;
+    @FXML
+    private TextField tagInput;
 
-  public HasTagSubruleConfigurator() throws IOException {
-    super("/fxml/extension/internal/tagger/factory/HasTagSubrule.fxml");
-  }
-
-  @Override
-  public TagSubruleData getConfig() {
-    return new HasTagData(tagInput.getText());
-  }
-
-  @Override
-  public void setConfig(TagSubruleData config) {
-    tagInput.setText(((HasTagData) config).getTag());
-  }
-
-  @Override
-  public boolean isValid() {
-    if (tagInput.getText().length() == 0) {
-      Dialogs.createErrorDialog("Tag required", "You have to enter tag.");
-      return false;
+    /**
+     * Constructs tag subrule configurator for HasTag subrule.
+     * @throws IOException If the template could not be loaded
+     */
+    public HasTagSubruleConfigurator() throws IOException {
+        super("/fxml/extension/internal/tagger/factory/HasTagSubrule.fxml");
     }
 
-    return true;
-  }
+    @Override
+    public TagSubruleData getConfig() {
+        return new HasTagData(tagInput.getText());
+    }
+
+    @Override
+    public void setConfig(TagSubruleData config) {
+        tagInput.setText(((HasTagData) config).getTag());
+    }
+
+    @Override
+    public boolean isValid() {
+        if (tagInput.getText().length() == 0) {
+            Dialogs.createErrorDialog("Tag required", "You have to enter tag.");
+            return false;
+        }
+
+        return true;
+    }
 }

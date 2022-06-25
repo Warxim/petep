@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.warxim.petep.gui.control.BytesEditor?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane prefHeight="337.0" prefWidth="557.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="14.0" layoutY="14.0" styleClass="input-label" text="Proxy:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="15.0" />
+      <Label layoutX="11.0" layoutY="108.0" styleClass="input-label" text="Destination:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="105.0" />
+      <Label layoutX="12.0" layoutY="45.0" styleClass="input-label" text="Interceptor:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="45.0" />
+      <Label layoutX="12.0" layoutY="75.0" styleClass="input-label" text="Connection:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="75.0" />
+      <Label layoutX="14.0" layoutY="153.0" styleClass="input-label" text="Size:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="135.0" />
+      <Label layoutX="9.0" layoutY="165.0" styleClass="input-label" text="Tags:" AnchorPane.topAnchor="165.0" />
+      <Button layoutX="638.0" layoutY="160.0" mnemonicParsing="false" onAction="#onTagsChooseClick" prefHeight="26.0" prefWidth="60.0" text="Choose" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="160.0" />
+      <ComboBox fx:id="proxyInput" layoutX="343.0" layoutY="10.0" prefWidth="150.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <ComboBox fx:id="interceptorInput" layoutX="347.0" layoutY="37.0" prefWidth="150.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0" />
+      <ComboBox fx:id="connectionInput" layoutX="90.0" layoutY="75.0" prefHeight="26.0" prefWidth="407.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="70.0" />
+      <ComboBox fx:id="destinationInput" layoutX="90.0" layoutY="103.0" prefHeight="26.0" prefWidth="407.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="100.0" />
+      <TextField fx:id="tagsInput" layoutX="90.0" layoutY="160.0" prefHeight="26.0" prefWidth="341.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="70.0" />
+      <HBox alignment="CENTER_LEFT" layoutX="90.0" layoutY="128.0" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="406.0" spacing="10.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="130.0">
+         <children>
+            <Label minWidth="30.0" prefHeight="16.0" prefWidth="30.0" text="From:" />
+            <TextField fx:id="fromSizeInput" maxWidth="1.7976931348623157E308" prefHeight="26.0" HBox.hgrow="ALWAYS" />
+            <Label minWidth="30.0" prefHeight="16.0" prefWidth="30.0" text="To:" />
+            <TextField fx:id="toSizeInput" maxWidth="1.7976931348623157E308" prefHeight="26.0" HBox.hgrow="ALWAYS" />
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </HBox>
+      <BytesEditor fx:id="dataInput" layoutX="90.0" layoutY="193.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="190.0" />
+      <Label layoutX="9.0" layoutY="190.0" styleClass="input-label" text="Data:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="195.0" />
+      <RadioButton fx:id="containsDataInput" layoutX="90.0" layoutY="307.0" mnemonicParsing="false" selected="true" text="Contains" AnchorPane.bottomAnchor="10.0">
+         <toggleGroup>
+            <ToggleGroup fx:id="dataFilterTypeInput" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton fx:id="startsWithDataInput" layoutX="173.0" layoutY="310.0" mnemonicParsing="false" text="Starts with" textAlignment="CENTER" toggleGroup="$dataFilterTypeInput" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="175.0" />
+      <RadioButton fx:id="endsWithDataInput" layoutX="260.0" layoutY="310.0" mnemonicParsing="false" text="Ends with" textAlignment="CENTER" toggleGroup="$dataFilterTypeInput" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="270.0" />
+      <CheckBox fx:id="negativeSearchDataInput" layoutX="417.0" layoutY="310.0" mnemonicParsing="false" text="Negative data search" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+   </children>
+</AnchorPane>

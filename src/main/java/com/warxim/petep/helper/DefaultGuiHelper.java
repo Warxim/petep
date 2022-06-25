@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -22,47 +22,62 @@ import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 
-/** Default GUI helper implementation. */
+/**
+ * Default GUI helper implementation.
+ */
 public final class DefaultGuiHelper implements GuiHelper {
-  private final GuiBundle bundle;
+    private final GuiBundle bundle;
 
-  /** Constructor of default GUI helper. */
-  public DefaultGuiHelper(GuiBundle bundle) {
-    this.bundle = bundle;
-  }
+    /**
+     * Constructor of default GUI helper.
+     * @param bundle Bundle to wrap inside this helper
+     */
+    public DefaultGuiHelper(GuiBundle bundle) {
+        this.bundle = bundle;
+    }
 
-  @Override
-  public void registerTab(String title, Node node) {
-    Platform.runLater(() -> bundle.getApplicationController().registerTab(title, node));
-  }
+    @Override
+    public void registerTab(String title, Node node) {
+        Platform.runLater(() -> bundle.getApplicationController().registerTab(title, node));
+    }
 
-  @Override
-  public void registerSettingsTab(String title, Node node) {
-    Platform.runLater(() -> bundle.getSettingsController().registerTab(title, node));
-  }
+    @Override
+    public void registerTab(String title, Node node, Integer order) {
+        Platform.runLater(() -> bundle.getApplicationController().registerTab(title, node, order));
+    }
 
-  @Override
-  public void unregisterTab(Node node) {
-    Platform.runLater(() -> bundle.getApplicationController().unregisterTab(node));
-  }
+    @Override
+    public void registerSettingsTab(String title, Node node) {
+        Platform.runLater(() -> bundle.getSettingsController().registerTab(title, node));
+    }
 
-  @Override
-  public void unregisterSettingsTab(Node node) {
-    Platform.runLater(() -> bundle.getSettingsController().unregisterTab(node));
-  }
+    @Override
+    public void registerSettingsTab(String title, Node node, Integer order) {
+        Platform.runLater(() -> bundle.getSettingsController().registerTab(title, node, order));
+    }
 
-  @Override
-  public void registerGuide(Guide guide) {
-    bundle.getGuideManager().add(guide);
-  }
+    @Override
+    public void unregisterTab(Node node) {
+        Platform.runLater(() -> bundle.getApplicationController().unregisterTab(node));
+    }
 
-  @Override
-  public void unregisterGuide(Guide guide) {
-    bundle.getGuideManager().remove(guide);
-  }
+    @Override
+    public void unregisterSettingsTab(Node node) {
+        Platform.runLater(() -> bundle.getSettingsController().unregisterTab(node));
+    }
 
-  @Override
-  public Image getPetepIcon() {
-    return GuiBundle.getInstance().getPetepIcon();
-  }
+    @Override
+    public void registerGuide(Guide guide) {
+        bundle.getGuideManager().add(guide);
+    }
+
+    @Override
+    public void unregisterGuide(Guide guide) {
+        bundle.getGuideManager().remove(guide);
+    }
+
+    @Override
+    public Image getPetepIcon() {
+        return GuiBundle.getInstance().getPetepIcon();
+    }
 }

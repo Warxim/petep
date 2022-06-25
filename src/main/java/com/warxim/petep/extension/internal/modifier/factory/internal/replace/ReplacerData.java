@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -17,29 +17,23 @@
 package com.warxim.petep.extension.internal.modifier.factory.internal.replace;
 
 import com.warxim.petep.extension.internal.modifier.factory.ModifierData;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
-public final class ReplacerData extends ModifierData {
-  /** 0 = replace all, 1 .. n = replace n-th occurrence. */
-  private final int occurrence;
+import java.nio.charset.Charset;
 
-  private final byte[] what;
-  private final byte[] with;
-
-  public ReplacerData(int occurrence, byte[] what, byte[] with) {
-    this.occurrence = occurrence;
-    this.what = what;
-    this.with = with;
-  }
-
-  public int getOccurrence() {
-    return occurrence;
-  }
-
-  public byte[] getWhat() {
-    return what;
-  }
-
-  public byte[] getWith() {
-    return with;
-  }
+/**
+ * Replacer data for replacing bytes in PDUs.
+ */
+@Value
+@EqualsAndHashCode(callSuper=false)
+public class ReplacerData extends ModifierData {
+    /**
+     * Which occurrence to replace (-1 for all, zero-numbered).
+     */
+    int occurrence;
+    byte[] what;
+    Charset whatCharset;
+    byte[] with;
+    Charset withCharset;
 }

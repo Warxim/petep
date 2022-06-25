@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<fx:root prefHeight="296.0" prefWidth="313.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="11.0" layoutY="58.0" styleClass="input-label" text="Proxy IP:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="58.0" />
+      <TextField fx:id="proxyIpInput" layoutX="86.0" layoutY="53.0" prefHeight="26.0" prefWidth="237.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" />
+      <Label layoutX="10.0" layoutY="88.0" styleClass="input-label" text="Proxy port:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="88.0" />
+      <TextField fx:id="proxyPortInput" layoutX="86.0" layoutY="83.0" prefHeight="26.0" prefWidth="237.0" AnchorPane.leftAnchor="86.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="83.0" />
+      <Label layoutX="11.0" layoutY="33.0" styleClass="h3" text="Proxy" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="33.0" />
+      <Label layoutX="11.0" layoutY="148.0" styleClass="input-label" text="Target IP:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="148.0" />
+      <TextField fx:id="targetIpInput" layoutX="86.0" layoutY="143.0" prefHeight="26.0" prefWidth="237.0" AnchorPane.leftAnchor="86.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="143.0" />
+      <Label layoutX="11.0" layoutY="178.0" styleClass="input-label" text="Target port:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="178.0" />
+      <TextField fx:id="targetPortInput" layoutX="86.0" layoutY="173.0" prefHeight="26.0" prefWidth="237.0" AnchorPane.leftAnchor="86.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="173.0" />
+      <Label layoutX="11.0" layoutY="123.0" styleClass="h3" text="Target" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="123.0" />
+      <Label layoutX="10.0" layoutY="212.0" styleClass="h3" text="Other" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="212.0" />
+      <Label layoutX="10.0" layoutY="237.0" styleClass="input-label" text="Buffer size:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="237.0" />
+      <TextField fx:id="bufferSizeInput" layoutX="85.0" layoutY="232.0" prefHeight="26.0" prefWidth="237.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="232.0" />
+      <Label layoutX="11.0" layoutY="14.0" styleClass="h2" text="UDP" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <Label layoutX="10.0" layoutY="267.0" styleClass="input-label" text="Charset:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="267.0" />
+      <TextField fx:id="charsetInput" layoutX="85.0" layoutY="262.0" prefHeight="26.0" prefWidth="237.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="262.0" />
+   </children>
+</fx:root>

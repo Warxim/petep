@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,13 +16,22 @@
  */
 package com.warxim.petep.extension.internal.modifier.factory;
 
-import java.io.IOException;
 import com.warxim.petep.extension.PetepAPI;
 import com.warxim.petep.gui.component.ConfigPane;
 
+import java.io.IOException;
+
+/**
+ * Modifier configurator for configurating modifier data.
+ */
 @PetepAPI
 public abstract class ModifierConfigurator extends ConfigPane<ModifierData> {
-  public ModifierConfigurator(String template) throws IOException {
-    super(template);
-  }
+    /**
+     * Constructs modifier configurator.
+     * @param template Path to JavaFX template for this configurator
+     * @throws IOException If the template could not be loaded
+     */
+    protected ModifierConfigurator(String template) throws IOException {
+        super(template);
+    }
 }

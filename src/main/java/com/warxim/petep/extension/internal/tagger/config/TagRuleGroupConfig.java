@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,30 +16,16 @@
  */
 package com.warxim.petep.extension.internal.tagger.config;
 
+import lombok.Value;
+
 import java.util.List;
 
-/** Configuration of group of tag rules. */
-public final class TagRuleGroupConfig {
-  private final String code;
-  private final String name;
-  private final List<TagRuleConfig> rules;
-
-  /** Tag rule group config. */
-  public TagRuleGroupConfig(String code, String name, List<TagRuleConfig> rules) {
-    this.code = code;
-    this.name = name;
-    this.rules = rules;
-  }
-
-  public String getCode() {
-    return code;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public List<TagRuleConfig> getRules() {
-    return rules;
-  }
+/**
+ * Configuration of group of tag rules.
+ */
+@Value
+public class TagRuleGroupConfig {
+    String code;
+    String name;
+    List<TagRuleConfig> rules;
 }

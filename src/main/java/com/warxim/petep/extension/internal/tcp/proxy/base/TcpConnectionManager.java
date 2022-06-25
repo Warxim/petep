@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,8 +16,18 @@
  */
 package com.warxim.petep.extension.internal.tcp.proxy.base;
 
-import com.warxim.petep.core.connection.DefaultConnectionManager;
+import com.warxim.petep.core.connection.IntegerBasedConnectionManager;
+import com.warxim.petep.helper.PetepHelper;
 
-/** TCP connection manager. */
-public class TcpConnectionManager extends DefaultConnectionManager {
+/**
+ * TCP connection manager.
+ */
+public class TcpConnectionManager extends IntegerBasedConnectionManager {
+    /**
+     * Constructs connection manager based on integer codes.
+     * @param helper PETEP helper for currently running core
+     */
+    public TcpConnectionManager(PetepHelper helper) {
+        super(helper);
+    }
 }

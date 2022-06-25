@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,91 +16,106 @@
  */
 package com.warxim.petep.bootstrap;
 
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import com.warxim.petep.Bundle;
 import com.warxim.petep.core.PetepManager;
 import com.warxim.petep.core.PetepState;
 import com.warxim.petep.exception.ConfigurationException;
 
-/** Bootstrap for command line mode. */
+import java.nio.charset.Charset;
+import java.util.Scanner;
+import java.util.logging.Logger;
+
+/**
+ * Bootstrap for command line mode.
+ * <p>
+ *     Starts PETEP in NOGUI mode (automatically starts PETEP core and allows user only to stop/restart the core.)
+ * </p>
+ * <p>
+ *     No configuration can be done using the command line, everything has to be done using GUI or manually in json files.
+ * </p>
+ */
 public final class CommandLineBoostrap extends PetepBootstrap {
-  public CommandLineBoostrap(CommandLineArguments arguments) {
-    super(arguments);
-  }
-
-  @Override
-  public boolean start() {
-    if (!super.start()) {
-      return false;
+    /**
+     * Constructs bootstrap for command line mode.
+     * @param arguments Arguments for starting the application
+     */
+    public CommandLineBoostrap(CommandLineArguments arguments) {
+        super(arguments);
     }
 
-    Logger.getGlobal().info("Starting PETEP without GUI.");
+    @Override
+    public void start() throws BootstrapException {
+        super.start();
 
-    Scanner scanner = new Scanner(System.in);
-    PetepManager petepManager = Bundle.getInstance().getPetepManager();
-    boolean running = true;
+        Logger.getGlobal().info("Starting PETEP without GUI.");
 
-    while (running) {
-      // Start PETEP.
-      petepManager.start();
+        var scanner = new Scanner(System.in, Charset.defaultCharset());
+        var petepManager = Bundle.getInstance().getPetepManager();
+        var running = true;
 
-      // Run input loop.
-      running = runInputLoop(scanner);
+        while (running) {
+            // Start PETEP.
+            petepManager.start();
 
-      // Stop PETEP.
-      petepManager.stop();
+            // Run input loop.
+            running = runInputLoop(scanner);
 
-      // Wait till the PETEP core stops, so that it can start again.
-      waitForPetepTermination(petepManager);
+            // Stop PETEP.
+            petepManager.stop();
+
+            // Wait till the PETEP core stops, so that it can start again.
+            waitForPetepTermination(petepManager);
+        }
+
+        // Save PETEP. (Saving stores etc.)
+        try {
+            Bundle.getInstance().save();
+        } catch (ConfigurationException e) {
+            throw new BootstrapException("Exception occurred during saving of the project!", e);
+        }
+
+        Bundle.getInstance().destroy();
     }
 
-    // Save PETEP. (Saving stores etc.)
-    try {
-      Bundle.getInstance().save();
-    } catch (ConfigurationException e) {
-      Logger.getGlobal().log(Level.SEVERE, "Exception occured -> ", e);
-      return false;
+    /**
+     * Returns true if PETEP should continue running.
+     */
+    private static boolean runInputLoop(Scanner scanner) {
+        while (scanner.hasNextLine()) {
+            var line = scanner.nextLine();
+
+            switch (line) {
+                // Stop PETEP.
+                case "stop":
+                case "quit":
+                case "exit":
+                case "shutdown":
+                    return false;
+
+                // Restart PETEP.
+                case "restart":
+                    return true;
+
+                // Show help.
+                default:
+                    Logger.getGlobal().severe("Unknown command! Use 'stop' or 'restart'!");
+            }
+        }
+        return false;
     }
 
-    return true;
-  }
-
-  /** Returns true if PETEP should continue running. */
-  private static boolean runInputLoop(Scanner scanner) {
-    while (scanner.hasNextLine()) {
-      String line = scanner.nextLine();
-
-      switch (line) {
-        // Stop PETEP.
-        case "stop":
-        case "quit":
-        case "exit":
-        case "shutdown":
-          return false;
-
-        // Restart PETEP.
-        case "restart":
-          return true;
-
-        // Show help.
-        default:
-          Logger.getGlobal().severe("Unknown command! Use 'stop' or 'restart'!");
-      }
+    /**
+     * Waits till the PETEP core stops.
+     */
+    private static void waitForPetepTermination(PetepManager petepManager) {
+        while (petepManager.getState() != PetepState.STOPPED) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                // Interrupted.
+                break;
+            }
+        }
     }
-    return false;
-  }
-
-  /** Waits till the PETEP core stops. */
-  private static void waitForPetepTermination(PetepManager petepManager) {
-    while (petepManager.getState() != PetepState.STOPPED) {
-      try {
-        Thread.sleep(100);
-      } catch (InterruptedException e) {
-        // Interrupted.
-        break;
-      }
-    }
-  }
 }

@@ -1,0 +1,85 @@
+[
+  {
+    "path": "logger"
+  },
+  {
+    "path": "udp"
+  },
+  {
+    "path": "tcp"
+  },
+  {
+    "path": "http"
+  },
+  {
+    "path": "external_http_proxy",
+    "store": {
+      "serverIp": "127.0.0.1",
+      "serverPort": 8181,
+      "proxyIp": "127.0.0.1",
+      "proxyPort": 8080
+    }
+  },
+  {
+    "path": "connection_view"
+  },
+  {
+    "path": "tagger",
+    "store": {
+      "groups": [
+        {
+          "code": "default",
+          "name": "Default",
+          "rules": []
+        }
+      ]
+    }
+  },
+  {
+    "path": "catcher"
+  },
+  {
+    "path": "modifier",
+    "store": {
+      "groups": [
+        {
+          "code": "default",
+          "name": "Default",
+          "rules": []
+        }
+      ]
+    }
+  },
+  {
+    "path": "history"
+  },
+  {
+    "path": "scripter",
+    "store": {
+      "groups": [
+        {
+          "code": "default",
+          "name": "Default",
+          "rules": [
+            {
+              "name": "File script",
+              "description": "",
+              "language": "js",
+              "enabled": true,
+              "type": "FILE",
+              "data": {
+                "path": "scripts/main.js"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "path": "repeater",
+    "store": {
+      "tabs": []
+    }
+  }
+]

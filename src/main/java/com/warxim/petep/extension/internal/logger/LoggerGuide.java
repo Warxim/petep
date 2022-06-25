@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -18,15 +18,17 @@ package com.warxim.petep.extension.internal.logger;
 
 import com.warxim.petep.gui.guide.Guide;
 
-/** Logger guide. */
+/**
+ * Logger guide.
+ */
 public final class LoggerGuide extends Guide {
-  @Override
-  public String getTitle() {
-    return "Logger";
-  }
+    @Override
+    public String getTitle() {
+        return "Logger";
+    }
 
-  @Override
-  public String getHtml() {
-    return loadHtmlResource("/html/guide/internal/LoggerGuide.html");
-  }
+    @Override
+    public String getHtml() {
+        return loadHtmlResource("/html/guide/internal/LoggerGuide.html");
+    }
 }

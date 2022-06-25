@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -22,19 +22,27 @@ import com.warxim.petep.extension.internal.tagger.factory.TagSubruleData;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleFactory;
 import com.warxim.petep.util.PduUtils;
 
+/**
+ * Tag subrule for checking whether the PDU contains specified data.
+ */
 public final class ContainsTagSubrule extends TagSubrule {
-  public ContainsTagSubrule(TagSubruleFactory factory, TagSubruleData data) {
-    super(factory, data);
-  }
-
-  @Override
-  public boolean test(PDU pdu) {
-    ContainsData data = (ContainsData) this.data;
-
-    if (data.getIndex() == -1) {
-      return PduUtils.contains(pdu, data.getData());
-    } else {
-      return PduUtils.containsAt(pdu, data.getData(), data.getIndex());
+    /**
+     * Constructs tag subrule for Contains subrule.
+     * @param factory Factory that created this subrule
+     * @param data Data for the subrule
+     */
+    public ContainsTagSubrule(TagSubruleFactory factory, TagSubruleData data) {
+        super(factory, data);
     }
-  }
+
+    @Override
+    public boolean test(PDU pdu) {
+        ContainsData data = (ContainsData) this.data;
+
+        if (data.getIndex() == -1) {
+            return PduUtils.contains(pdu, data.getData());
+        } else {
+            return PduUtils.containsAt(pdu, data.getData(), data.getIndex());
+        }
+    }
 }

@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,36 +16,41 @@
  */
 package com.warxim.petep.extension.internal.tagger.factory.internal.size;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubrule;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleConfigurator;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleData;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleFactory;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.Optional;
+
+/**
+ * Tag subrule factory for creating "size" subrules.
+ */
 public final class SizeSubruleFactory extends TagSubruleFactory {
-  @Override
-  public String getCode() {
-    return "size";
-  }
+    @Override
+    public String getCode() {
+        return "size";
+    }
 
-  @Override
-  public String getName() {
-    return "Size ...";
-  }
+    @Override
+    public String getName() {
+        return "Size ...";
+    }
 
-  @Override
-  public TagSubrule createSubrule(TagSubruleData data) {
-    return new SizeTagSubrule(this, data);
-  }
+    @Override
+    public TagSubrule createSubrule(TagSubruleData data) {
+        return new SizeTagSubrule(this, data);
+    }
 
-  @Override
-  public TagSubruleConfigurator createConfigPane() throws IOException {
-    return new SizeSubruleConfigurator();
-  }
+    @Override
+    public Optional<TagSubruleConfigurator> createConfigPane() throws IOException {
+        return Optional.of(new SizeSubruleConfigurator());
+    }
 
-  @Override
-  public Type getConfigType() {
-    return SizeData.class;
-  }
+    @Override
+    public Optional<Type> getConfigType() {
+        return Optional.of(SizeData.class);
+    }
 }

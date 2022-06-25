@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<SplitPane dividerPositions="0.5" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <items>
+      <AnchorPane fx:id="pduPane" prefHeight="400.0" prefWidth="600.0">
+
+</AnchorPane>
+      <AnchorPane fx:id="historyPane" prefHeight="400.0" prefWidth="600.0" />
+   </items>
+</SplitPane>

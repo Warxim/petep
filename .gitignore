@@ -1,16 +1,16 @@
 # Gradle
 .gradle
-# Eclipse, ...
+gradle**
+# Eclipse, Idea, ...
 .settings
+.idea
 bin
 build
 doc
-# Testing
 ext/**
 projects
 .project
 petep.json
 .classpath
-src/test/**
 
 !ext/README.txt

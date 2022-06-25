@@ -1,19 +1,37 @@
 <p>Welcome to PETEP guide!</p>
+
 <h2>About PETEP</h2>
-<p>PETEP is open-source tool for testing application communication developed by Michal Válka (Warxim).</p>
-<p><strong>PETEP website</strong>: <a href="http://petep.warxim.com/" onclick="petep.openLink('http://petep.warxim.com/');return false;">PETEP</a></p>
-<p><strong>Author's website</strong>: <a href="http://warxim.com/" onclick="petep.openLink('http://warxim.com/');return false;">Michal Válka (Warxim)</a></p>
-<p>Be aware that this is a simplified guide. For more information, please go to the PETEP website.</p>
+<p>
+	PETEP is an open-source Java application with graphical user interface.
+	It allows testers to setup proxies and interceptors to manage the traffic transmitted between client and server.
+	Currently only TCP, UDP and basic HTTP & Websocket protocols are supported officially (with SSL/TLS support), but other protocols might be implemented easily using extensions.
+</p>
+<p>
+	<strong>PETEP website</strong>:
+	<a href="http://petep.warxim.com/" onclick="petep.openLink('http://petep.warxim.com/');return false;">PETEP</a>
+</p>
+<p>
+	<strong>Author's website</strong>:
+	<a href="http://warxim.com/" onclick="petep.openLink('http://warxim.com/');return false;">Michal Válka (Warxim)</a>
+</p>
+<p>Be aware that this is a simplified guide. For more information, please go to the PETEP website, where you can find both user and development guides.</p>
+
 <h3>Extensibility</h3>
-<p>One of core properties of PETEP is its extensibility. Extensions can be written in Java using PetepLib.jar library - for more information about extension development, please check out PETEP website using your web browser.</p>
+<p>
+	One of core properties of PETEP is its extensibility.
+	Extensions can be written in Java using PetepLib.jar library - for more information about extension development,
+	please check out PETEP website using your web browser.
+</p>
+
 <h4>Proxy extensions</h4>
-<p>Proxy extensions allow you to implement your own proxies for other protocols (TCP, UDP, SMTP, ...). Data from these protocols will be transmitted through the PETEP core and its modules.</p>
+<p>Proxy extensions allow you to implement your own proxies for other protocols (SMTP, ...). Data from these protocols will be transmitted through the PETEP core and its modules.</p>
 <p>Internal proxy extensions:</p>
 <ul>
-	<li><strong>TCP proxy</strong>: simple TCP proxy.</li>
-	<li><strong>HTTP proxy</strong>: very simple HTTP proxy with basic WebSockets support.</li>
-	<li><strong>Test proxy</strong>: for testing purposes.</li>
+	<li><strong>TCP proxy</strong>: simple TCP support (with basic SSL/TLS support).</li>
+	<li><strong>UDP proxy</strong>: simple UDP support.</li>
+	<li><strong>HTTP proxy</strong>: simple HTTP & WebSocket protocol support (with basic SSL/TLS support).</li>
 </ul>
+
 <h4>Intercept extensions</h4>
 <p>Intercept extensions allow you to implement your own intercepting module which can modify PDUs, create GUI tabs etc.</p>
 <p>Internal intercept extensions:</p>
@@ -23,5 +41,8 @@
 	<li><strong>Logger</strong>: logs PDUs to plain-text files.</li>
 	<li><strong>Modifier</strong>: modification rules for automatic data replacements etc.</li>
 	<li><strong>Tagger</strong>: tag rules for automatic PDUs tagging.</li>
+	<li><strong>History</strong>: database of intercepted PDUs with filtering.</li>
+	<li><strong>Scripter</strong>: scripting support based on GraalVM polyglot engine (JavaScript supported out-of-the-box).</li>
+	<li><strong>Repeater</strong>: manual PDU repeating support.</li>
 	<li><strong>Catcher</strong>: manual PDU intercept editor.</li>
 </ul>

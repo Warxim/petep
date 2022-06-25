@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- PetepAPI -->
+
+<?import com.warxim.petep.gui.control.BytesEditor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<fx:root prefHeight="438.0" prefWidth="680.0" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label alignment="TOP_CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="37.0" styleClass="input-label" text="Proxy:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="37.0" />
+        <TextField fx:id="proxyField" alignment="TOP_LEFT" editable="false" layoutX="90.0" layoutY="34.0" prefHeight="17.0" prefWidth="491.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="34.0" />
+        <Label alignment="TOP_CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="62.0" styleClass="input-label" text="Connection:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="62.0" />
+        <TextField fx:id="connectionField" alignment="TOP_LEFT" editable="false" layoutX="90.0" layoutY="59.0" prefHeight="17.0" prefWidth="491.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="59.0" />
+        <Label alignment="TOP_CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="87.0" styleClass="input-label" text="Destination:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="87.0" />
+        <TextField fx:id="destinationField" alignment="TOP_LEFT" editable="false" layoutX="90.0" layoutY="84.0" prefHeight="17.0" prefWidth="491.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="84.0" />
+        <Label alignment="TOP_CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="112.0" styleClass="input-label" text="Interceptor:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="112.0" />
+        <TextField fx:id="interceptorField" alignment="TOP_LEFT" editable="false" layoutX="90.0" layoutY="109.0" prefHeight="17.0" prefWidth="491.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="109.0" />
+        <Label alignment="TOP_CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="137.0" styleClass="input-label" text="Size:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="137.0" />
+        <TextField fx:id="sizeField" alignment="TOP_LEFT" editable="false" layoutX="90.0" layoutY="134.0" prefHeight="17.0" prefWidth="491.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="134.0" />
+        <Label alignment="TOP_CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="162.0" styleClass="input-label" text="Tags:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="162.0" />
+        <TextField fx:id="tagsField" editable="false" layoutX="90.0" layoutY="159.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="159.0" />
+        <Label alignment="TOP_CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="187.0" styleClass="input-label" text="Data:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="187.0" />
+        <BytesEditor fx:id="bytesEditor" editable="false" layoutX="90.0" layoutY="187.0" prefHeight="141.0" prefWidth="476.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="187.0" />
+        <Label alignment="TOP_CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="332.0" styleClass="input-label" text="Metadata:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="332.0" />
+        <TextArea fx:id="metadataArea" editable="false" layoutX="90.0" layoutY="329.0" prefHeight="138.0" prefWidth="182.0" styleClass="monospaced" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="329.0" />
+      <Label layoutX="20.0" layoutY="24.0" styleClass="h3" text="PDU View" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+    </children>
+</fx:root>

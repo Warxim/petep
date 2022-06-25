@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,38 +16,15 @@
  */
 package com.warxim.petep.extension.internal.tcp;
 
-/** SSL certificate configuration. */
-public final class SslCertificateConfig {
-  private final String keyStore;
-  private final String keyStoreType;
-  private final String keyStorePassword;
-  private final String keyPassword;
+import lombok.Value;
 
-  /** SSL certificate configuration constructor. */
-  public SslCertificateConfig(
-      String keyStore,
-      String keyStoreType,
-      String keyStorePassword,
-      String keyPassword) {
-    this.keyStore = keyStore;
-    this.keyStoreType = keyStoreType;
-    this.keyStorePassword = keyStorePassword;
-    this.keyPassword = keyPassword;
-  }
-
-  public String getKeyStore() {
-    return keyStore;
-  }
-
-  public String getKeyStoreType() {
-    return keyStoreType;
-  }
-
-  public String getKeyStorePassword() {
-    return keyStorePassword;
-  }
-
-  public String getKeyPassword() {
-    return keyPassword;
-  }
+/**
+ * SSL certificate configuration.
+ */
+@Value
+public class SslCertificateConfig {
+    String keyStore;
+    String keyStoreType;
+    String keyStorePassword;
+    String keyPassword;
 }

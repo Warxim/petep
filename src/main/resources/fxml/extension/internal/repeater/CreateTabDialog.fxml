@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.warxim.petep.gui.control.pdueditor.PduEditor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="444.0" prefWidth="543.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="10.0" layoutY="45.0" prefHeight="16.0" prefWidth="77.0" styleClass="input-label" text="Tab Name:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="13.0" />
+      <TextField fx:id="nameInput" layoutX="104.0" layoutY="40.0" prefHeight="26.0" prefWidth="400.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <PduEditor fx:id="pduEditor" layoutX="10.0" layoutY="44.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0" />
+   </children>
+</AnchorPane>

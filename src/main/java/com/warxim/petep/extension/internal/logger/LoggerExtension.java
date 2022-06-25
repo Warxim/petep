@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,12 +16,6 @@
  */
 package com.warxim.petep.extension.internal.logger;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Logger;
 import com.warxim.petep.core.listener.PetepListener;
 import com.warxim.petep.extension.Extension;
 import com.warxim.petep.helper.ExtensionHelper;
@@ -29,42 +23,67 @@ import com.warxim.petep.helper.GuiHelper;
 import com.warxim.petep.helper.PetepHelper;
 import com.warxim.petep.interceptor.worker.Interceptor;
 
-/** Logger extension. */
-public final class LoggerExtension extends Extension {
-  private ExecutorService executor;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
-  /** Logger extension constructor. */
-  public LoggerExtension(String path) {
-    super(path);
+/**
+ * Logger extension.
+ */
+public final class LoggerExtension extends Extension implements PetepListener {
+    private ExecutorService executor;
 
-    executor = null;
+    /**
+     * Logger extension constructor.
+     * @param path Path to the extension
+     */
+    public LoggerExtension(String path) {
+        super(path);
 
-    Logger.getGlobal().info("Logger extension created.");
-  }
+        executor = null;
 
-  @Override
-  public void init(ExtensionHelper helper) {
-    helper.registerInterceptorModuleFactory(new LoggerInterceptorModuleFactory(this));
+        Logger.getGlobal().info("Logger extension created.");
+    }
 
-    helper.registerPetepListener(new PetepListener() {
-      /** Creates workfer for each log file. */
-      private void processInterceptors(
-          List<Interceptor> interceptors,
-          Map<String, LoggerWorker> workers) {
-        for (Interceptor interceptor : interceptors) {
-          if (interceptor instanceof LoggerInterceptor) {
-            // Get or create a log worker
-            LoggerWorker worker = workers.computeIfAbsent(
-                ((LoggerInterceptorModule) interceptor.getModule()).getConfig().getPath(),
-                LoggerWorker::new);
+    @Override
+    public void init(ExtensionHelper helper) {
+        helper.registerInterceptorModuleFactory(new LoggerInterceptorModuleFactory(this));
 
-            ((LoggerInterceptor) interceptor).setWorker(worker);
-          }
-        }
-      }
+        helper.registerPetepListener(this);
 
-      @Override
-      public void beforePrepare(PetepHelper helper) {
+        Logger.getGlobal().info("Logger extension registered.");
+    }
+
+    @Override
+    public String getCode() {
+        return "logger";
+    }
+
+    @Override
+    public String getName() {
+        return "Logger";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Internal logger extension.";
+    }
+
+    @Override
+    public String getVersion() {
+        return "1.0";
+    }
+
+    @Override
+    public void initGui(GuiHelper helper) {
+        helper.registerGuide(new LoggerGuide());
+    }
+
+    @Override
+    public void beforeCorePrepare(PetepHelper helper) {
         Map<String, LoggerWorker> workers = new HashMap<>();
 
         // Process interceptors.
@@ -73,51 +92,41 @@ public final class LoggerExtension extends Extension {
         processInterceptors(helper.getInterceptorsS2C(), workers);
 
         if (workers.isEmpty()) {
-          return;
+            return;
         }
 
         // Start workers.
         executor = Executors.newCachedThreadPool();
 
         for (LoggerWorker worker : workers.values()) {
-          executor.submit(worker);
+            executor.submit(worker);
         }
-      }
+    }
 
-      @Override
-      public void afterStop(PetepHelper helper) {
+    @Override
+    public void afterCoreStop(PetepHelper helper) {
         if (executor != null) {
-          executor.shutdownNow();
-          executor = null;
+            executor.shutdownNow();
+            executor = null;
         }
-      }
-    });
+    }
 
-    Logger.getGlobal().info("Logger extension registered.");
-  }
+    /**
+     * Creates worker for each log file and set them to interceptors.
+     */
+    private void processInterceptors(
+            List<Interceptor> interceptors,
+            Map<String, LoggerWorker> workers) {
+        for (var interceptor : interceptors) {
+            if (interceptor instanceof LoggerInterceptor) {
+                // Get or create a log worker
+                var worker = workers.computeIfAbsent(
+                        ((LoggerInterceptorModule) interceptor.getModule()).getConfig().getPath(),
+                        LoggerWorker::new
+                );
 
-  @Override
-  public String getCode() {
-    return "logger";
-  }
-
-  @Override
-  public String getName() {
-    return "Logger";
-  }
-
-  @Override
-  public String getDescription() {
-    return "Internal logger extension.";
-  }
-
-  @Override
-  public String getVersion() {
-    return "1.0";
-  }
-
-  @Override
-  public void initGui(GuiHelper helper) {
-    helper.registerGuide(new LoggerGuide());
-  }
+                ((LoggerInterceptor) interceptor).setWorker(worker);
+            }
+        }
+    }
 }

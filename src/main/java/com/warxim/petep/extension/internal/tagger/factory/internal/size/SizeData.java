@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -17,15 +17,15 @@
 package com.warxim.petep.extension.internal.tagger.factory.internal.size;
 
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleData;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
-public final class SizeData extends TagSubruleData {
-  private final int size;
-
-  public SizeData(int size) {
-    this.size = size;
-  }
-
-  public int getSize() {
-    return size;
-  }
+/**
+ * Tag subrule data for "size" subrule.
+ */
+@Value
+@EqualsAndHashCode(callSuper=true)
+public class SizeData extends TagSubruleData {
+    int size;
 }
+

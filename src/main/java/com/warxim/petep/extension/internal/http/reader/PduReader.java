@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,16 +16,29 @@
  */
 package com.warxim.petep.extension.internal.http.reader;
 
-import java.io.IOException;
-import java.io.InputStream;
 import com.warxim.petep.core.pdu.PDU;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+/**
+ * Reader of PDUs for HTTP extension.
+ */
 public abstract class PduReader {
-  protected final InputStream in;
+    protected final InputStream in;
 
-  public PduReader(InputStream in) {
-    this.in = in;
-  }
+    /**
+     * Constructs PDU reader.
+     * @param in Input stream for reading the data
+     */
+    protected PduReader(InputStream in) {
+        this.in = in;
+    }
 
-  public abstract PDU read() throws IOException;
+    /**
+     * Reads PDU from input stream.
+     * @return Read PDU
+     * @throws IOException If read fails because of various reasons
+     */
+    public abstract PDU read() throws IOException;
 }

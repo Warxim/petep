@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,6 @@
  */
 package com.warxim.petep.bootstrap;
 
-import java.util.logging.Logger;
 import com.warxim.petep.gui.GuiBundle;
 import com.warxim.petep.gui.PetepGui;
 import com.warxim.petep.gui.dialog.Dialogs;
@@ -24,33 +23,45 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
-/** Bootstrap for GUI mode. */
+import java.util.logging.Logger;
+
+/**
+ * Bootstrap for GUI mode.
+ */
 public final class GuiBootstrap extends PetepBootstrap {
-  public GuiBootstrap(CommandLineArguments arguments) {
-    super(arguments);
-  }
-
-  @Override
-  public boolean start() {
-    if (!super.start()) {
-      return false;
+    /**
+     * Constructs bootstrap for GUI mode.
+     * @param arguments Arguments for starting the application
+     */
+    public GuiBootstrap(CommandLineArguments arguments) {
+        super(arguments);
     }
 
-    Logger.getGlobal().info("Starting PETEP with GUI.");
+    @Override
+    public void start() throws BootstrapException {
+        try {
+            super.start();
+        } catch (BootstrapException e) {
+            Platform.runLater(() -> {
+                Dialogs.createExceptionDialog("Exception: " + e.getCause().getClass().getSimpleName(), e.getMessage(), e);
+                Platform.setImplicitExit(true);
+            });
+            throw e;
+        }
 
-    if (arguments.isFromWizard()) {
-      // Run PETEP using existing Application instance.
-      Platform.runLater(() -> new PetepGui().start(new Stage()));
+        Logger.getGlobal().info("Starting PETEP with GUI.");
 
-      // Re-enable implicit exit.
-      Platform.runLater(() -> Platform.setImplicitExit(true));
-    } else {
-      // Run PETEP using new Application instance.
-      new Thread(() -> Application.launch(PetepGui.class)).start();
+        Dialogs.setDefaultIcon(GuiBundle.getInstance().getPetepIcon());
+
+        if (arguments.isFromWizard()) {
+            // Run PETEP using existing Application instance.
+            Platform.runLater(() -> new PetepGui().start(new Stage()));
+
+            // Re-enable implicit exit.
+            Platform.runLater(() -> Platform.setImplicitExit(true));
+        } else {
+            // Run PETEP using new Application instance.
+            new Thread(() -> Application.launch(PetepGui.class)).start();
+        }
     }
-
-    Dialogs.setDefaultIcon(GuiBundle.getInstance().getPetepIcon());
-
-    return true;
-  }
 }

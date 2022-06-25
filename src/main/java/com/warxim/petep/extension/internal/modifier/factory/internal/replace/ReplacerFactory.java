@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,36 +16,41 @@
  */
 package com.warxim.petep.extension.internal.modifier.factory.internal.replace;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
 import com.warxim.petep.extension.internal.modifier.factory.Modifier;
 import com.warxim.petep.extension.internal.modifier.factory.ModifierConfigurator;
 import com.warxim.petep.extension.internal.modifier.factory.ModifierData;
 import com.warxim.petep.extension.internal.modifier.factory.ModifierFactory;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.Optional;
+
+/**
+ * Factory for creating Replacer modifier rule.
+ */
 public final class ReplacerFactory extends ModifierFactory {
-  @Override
-  public String getCode() {
-    return "replace";
-  }
+    @Override
+    public String getCode() {
+        return "replace";
+    }
 
-  @Override
-  public String getName() {
-    return "Replace";
-  }
+    @Override
+    public String getName() {
+        return "Replace";
+    }
 
-  @Override
-  public Type getConfigType() {
-    return ReplacerData.class;
-  }
+    @Override
+    public Modifier createModifier(ModifierData data) {
+        return new Replacer(this, data);
+    }
 
-  @Override
-  public Modifier createModifier(ModifierData data) {
-    return new Replacer(this, data);
-  }
+    @Override
+    public Optional<Type> getConfigType() {
+        return Optional.of(ReplacerData.class);
+    }
 
-  @Override
-  public ModifierConfigurator createConfigPane() throws IOException {
-    return new ReplacerConfigurator();
-  }
+    @Override
+    public Optional<ModifierConfigurator> createConfigPane() throws IOException {
+        return Optional.of(new ReplacerConfigurator());
+    }
 }

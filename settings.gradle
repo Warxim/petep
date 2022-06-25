@@ -14,14 +14,14 @@ gradle.ext.GUI = true
 gradle.ext.testProjectDirectory = './projects/test_project'
 
 // Include external extensions to gradle build?
-gradle.ext.extensions = false
+gradle.ext.extensions = true
 
 // Path to extensions to automatically include (useful for extension development).
-gradle.ext.extensionsDirectory = '../petep_extensions/'
+gradle.ext.extensionsDirectory = '../petep-extensions/'
 
 // Include extensions
 if (gradle.ext.extensions) {
-	file(gradle.ext.extensionsDirectory).eachDir { f -> 
-		includeBuild f.path
-	}
+    file(gradle.ext.extensionsDirectory).eachDir {
+        f -> includeBuild f.path
+    }
 }

@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -21,18 +21,26 @@ import com.warxim.petep.extension.internal.tagger.factory.TagSubrule;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleData;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleFactory;
 
+/**
+ * Tag subrule for checking whether the PDU data have certain size.
+ */
 public final class SizeTagSubrule extends TagSubrule {
-  public SizeTagSubrule(TagSubruleFactory factory, TagSubruleData data) {
-    super(factory, data);
-  }
+    /**
+     * Constructs tag subrule for Size subrule.
+     * @param factory Factory that created this subrule
+     * @param data Data for the subrule
+     */
+    public SizeTagSubrule(TagSubruleFactory factory, TagSubruleData data) {
+        super(factory, data);
+    }
 
-  @Override
-  public boolean test(PDU pdu) {
-    return pdu.getSize() == ((SizeData) data).getSize();
-  }
+    @Override
+    public boolean test(PDU pdu) {
+        return pdu.getSize() == ((SizeData) data).getSize();
+    }
 
-  @Override
-  public String toString() {
-    return "Size equals " + ((SizeData) data).getSize();
-  }
+    @Override
+    public String toString() {
+        return "Size equals " + ((SizeData) data).getSize();
+    }
 }

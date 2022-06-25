@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -18,7 +18,11 @@ package com.warxim.petep.extension.internal.modifier.factory;
 
 import com.warxim.petep.extension.PetepAPI;
 
-/** Processor data. */
+/**
+ * Modifier data base class
+ * <p>Modifier data can contain any serializable data.</p>
+ * <p>Data should be immutable!</p>
+ */
 @PetepAPI
-public class ModifierData {
+public abstract class ModifierData {
 }

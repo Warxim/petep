@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,37 +16,24 @@
  */
 package com.warxim.petep.interceptor.worker;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import com.warxim.petep.helper.PetepHelper;
-import com.warxim.petep.interceptor.module.InterceptorModule;
 import com.warxim.petep.interceptor.module.InterceptorModuleContainer;
 import com.warxim.petep.module.ModuleWorkerManager;
 
-/** Interceptor manager. */
+/**
+ * Interceptor manager.
+ * <p>Manages active interceptors for running core.</p>
+ */
 public final class InterceptorManager extends ModuleWorkerManager<Interceptor> {
-  public InterceptorManager(PetepHelper helper, InterceptorModuleContainer container) {
-    Map<String, Interceptor> tempMap = new HashMap<>((int) (container.size() / 0.75) + 1, 0.75f);
-    List<Interceptor> tempList = new ArrayList<>(container.size());
-
-    // Create interceptors using modules.
-    for (InterceptorModule module : container.getList()) {
-      // Skip disabled interceptor.
-      if (!module.isEnabled()) {
-        continue;
-      }
-
-      // Create interceptor.
-      Interceptor interceptor = module.createInterceptor(tempList.size(), helper);
-      tempList.add(interceptor);
-      tempMap.put(module.getCode(), interceptor);
+    /**
+     * Constructs interceptor manager.
+     * <p>Creates list and map of interceptor workers by generating workers using enabled modules.</p>
+     * @param container Container containing modules for generation
+     * @param helper PETEP helper for currently running core
+     */
+    public InterceptorManager(
+            PetepHelper helper,
+            InterceptorModuleContainer container) {
+        super(container, ((module, index) -> module.createInterceptor(index, helper)));
     }
-
-    // Create unmodifiable collections.
-    map = Collections.unmodifiableMap(tempMap);
-    list = Collections.unmodifiableList(tempList);
-  }
 }

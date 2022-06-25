@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,17 +16,27 @@
  */
 package com.warxim.petep.wizard.configuration;
 
-import java.io.File;
-import java.io.IOException;
+import com.warxim.petep.common.Constant;
 import com.warxim.petep.util.FileUtils;
 
-/** Static class for project directory creation. */
-public final class WizardProjectDirectoryCreator {
-  private WizardProjectDirectoryCreator() {}
+import java.io.IOException;
 
-  /** Creates project directory from template (./project_template). */
-  public static void create(String path) throws IOException {
-    FileUtils.copyDirectory(
-        new File(FileUtils.getApplicationDirectory(), "./project_template").getPath(), path);
-  }
+/**
+ * Static class for project directory creation.
+ */
+public final class WizardProjectDirectoryCreator {
+    private WizardProjectDirectoryCreator() {
+    }
+
+    /**
+     * Creates project directory from template (./project_template).
+     * @param path Path to project directory
+     * @throws IOException If the creation failed
+     */
+    public static void create(String path) throws IOException {
+        FileUtils.copyDirectory(
+                FileUtils.getApplicationFileAbsolutePath(Constant.PROJECT_TEMPLATE_DIRECTORY),
+                path
+        );
+    }
 }

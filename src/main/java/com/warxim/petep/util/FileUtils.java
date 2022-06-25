@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,8 +16,12 @@
  */
 package com.warxim.petep.util;
 
+import com.warxim.petep.Main;
+import com.warxim.petep.extension.PetepAPI;
+
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,139 +29,227 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
-import com.warxim.petep.Main;
-import com.warxim.petep.extension.PetepAPI;
 
-/** File utils. */
+/**
+ * File utils.
+ */
 @PetepAPI
 public final class FileUtils {
-  private static final String APP_DIR = initApplicationDirectory();
+    /**
+     * Application directory path
+     */
+    private static final String APP_DIR = initApplicationDirectory();
 
-  private FileUtils() {}
-
-  /** Returns application directory. */
-  public static String getApplicationDirectory() {
-    return APP_DIR;
-  }
-
-  /** Returns application file. */
-  public static File getApplicationFile(String path) {
-    if (Paths.get(path).isAbsolute()) {
-      // Absolute path
-      return new File(path);
+    private FileUtils() {
     }
 
-    // Relative path
-    return new File(FileUtils.getApplicationDirectory(), path);
-  }
-
-  /** Returns application file absolute path. */
-  public static String getApplicationFileAbsolutePath(String path) {
-    if (Paths.get(path).isAbsolute()) {
-      // Absolute path
-      return path;
+    /**
+     * Obtains application directory.
+     * @return Current application directory
+     */
+    public static String getApplicationDirectory() {
+        return APP_DIR;
     }
 
-    // Relative path
-    return new File(FileUtils.getApplicationDirectory(), path).getAbsolutePath();
-  }
-
-  public static String applicationRelativize(Path path) {
-    try {
-      return Paths.get(APP_DIR).relativize(path).toString();
-    } catch (IllegalArgumentException e) {
-      return path.toString();
-    }
-  }
-
-  public static String applicationRelativize(String path) {
-    return applicationRelativize(Paths.get(path));
-  }
-
-  public static String projectRelativize(Path path) {
-    try {
-      return Paths.get(getProjectDirectory()).relativize(path).toString();
-    } catch (IllegalArgumentException e) {
-      return path.toString();
-    }
-  }
-
-  public static String projectRelativize(String path) {
-    return projectRelativize(Paths.get(path));
-  }
-
-  /** Returns project path. */
-  public static File getProjectFile(String path) {
-    if (Paths.get(path).isAbsolute()) {
-      // Absolute path
-      return new File(path);
+    /**
+     * Obtains application file.
+     * @param path Path relative to application directory
+     * @return File at given path, which is relative to application directory
+     */
+    public static File getApplicationFile(String path) {
+        return new File(getApplicationFileAbsolutePath(path));
     }
 
-    // Relative path
-    return new File(FileUtils.getProjectDirectory(), path);
-  }
+    /**
+     * Obtains application file absolute path
+     * @param path Path relative to application directory
+     * @return Absolute path of application file
+     */
+    public static String getApplicationFileAbsolutePath(String path) {
+        if (Paths.get(path).isAbsolute()) {
+            // Absolute path
+            return path;
+        }
 
-  /** Returns absolute path of project file. */
-  public static String getProjectFileAbsolutePath(String path) {
-    if (Paths.get(path).isAbsolute()) {
-      // Absolute path
-      return path;
+        // Relative path
+        return Paths.get(getApplicationDirectory()).resolve(path).normalize().toString();
     }
 
-    // Relative path
-    return new File(FileUtils.getProjectDirectory(), path).getAbsolutePath();
-  }
+    /**
+     * Relativizes given path to application directory path
+     * @param path Absolute path to relativize
+     * @return Path relative to application directory
+     */
+    public static String applicationRelativize(Path path) {
+        try {
+            var applicationDirectoryPath = Paths.get(getApplicationDirectory());
 
-  /** Returns project directory. */
-  public static String getProjectDirectory() {
-    return System.getProperty("user.dir");
-  }
+            // Resolve path
+            path = applicationDirectoryPath.resolve(path).normalize();
 
-  /** Sets working directory (used internally). */
-  public static void setProjectDirectory(String directory) {
-    System.setProperty("user.dir", directory);
-  }
-
-  /** Returns true if the specified directory is empty. */
-  public static boolean isDirectoryEmpty(File directory) {
-    return directory.list().length == 0;
-  }
-
-  /** Copies directory from source to destination. */
-  public static void copyDirectory(String source, String destination) throws IOException {
-    copyDirectory(Path.of(source), Path.of(destination));
-  }
-
-  /** Copies directory from source to destination. */
-  public static void copyDirectory(Path source, Path destination) throws IOException {
-    try (Stream<Path> stream = Files.walk(source)) {
-      stream.forEach(src -> copy(src, destination.resolve(source.relativize(src))));
-    }
-  }
-
-  /** Copies from source to destination and replace existing. */
-  private static void copy(Path source, Path destination) {
-    try {
-      Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
-    } catch (IOException e) {
-      throw new RuntimeException(e.getMessage(), e);
-    }
-  }
-
-  /** Initializes application directory. */
-  private static String initApplicationDirectory() {
-    try {
-      Path path = Paths.get(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-
-      if (path.toString().toLowerCase().endsWith(".jar")) {
-        return path.getParent().getParent().toString();
-      }
-
-      return getProjectDirectory();
-    } catch (URISyntaxException e) {
-      Logger.getGlobal().severe(e.getMessage());
+            // Relativize the path
+            return applicationDirectoryPath.relativize(path).toString();
+        } catch (IllegalArgumentException e) {
+            return path.toString();
+        }
     }
 
-    return "";
-  }
+    /**
+     * Relativizes given path to application directory path
+     * @param path Absolute path to relativize
+     * @return Path relative to application directory
+     */
+    public static String applicationRelativize(String path) {
+        return applicationRelativize(Paths.get(path));
+    }
+
+    /**
+     * Relativizes given path to project directory path
+     * @param path Absolute path to relativize
+     * @return Path relative to project directory
+     */
+    public static String projectRelativize(Path path) {
+        try {
+            var projectDirectoryPath = Paths.get(getProjectDirectory());
+
+            // Resolve path
+            path = projectDirectoryPath.resolve(path).normalize();
+
+            // Relativize the path
+            return projectDirectoryPath.relativize(path).toString();
+        } catch (IllegalArgumentException e) {
+            return path.toString();
+        }
+    }
+
+    /**
+     * Relativizes given path to project directory path
+     * @param path Absolute path to relativize
+     * @return Path relative to project directory
+     */
+    public static String projectRelativize(String path) {
+        return projectRelativize(Paths.get(path));
+    }
+
+    /**
+     * Obtains project file.
+     * @param path Path relative to project directory
+     * @return File at given path, which is relative to project directory
+     */
+    public static File getProjectFile(String path) {
+        return new File(getProjectFileAbsolutePath(path));
+    }
+
+    /**
+     * Obtains project file absolute path
+     * @param path Path relative to project directory
+     * @return Absolute path of project file
+     */
+    public static String getProjectFileAbsolutePath(String path) {
+        if (Paths.get(path).isAbsolute()) {
+            // Absolute path
+            return path;
+        }
+
+        // Relative path
+        return Paths.get(getProjectDirectory()).resolve(path).normalize().toString();
+    }
+
+    /**
+     * Obtains absolute path by concatenating root and path
+     * @param root Path to root
+     * @param path Relative path
+     * @return Absolute path of project file
+     */
+    public static String getFileAbsolutePath(String root, String path) {
+        if (Paths.get(path).isAbsolute()) {
+            // Absolute path
+            return path;
+        }
+
+        // Relative path
+        return Paths.get(root).resolve(path).normalize().toString();
+    }
+
+    /**
+     * Obtains project directory.
+     * @return Current project director
+     */
+    public static String getProjectDirectory() {
+        return System.getProperty("user.dir");
+    }
+
+    /**
+     * Sets working directory (used internally).
+     * @param directory Directory to be set
+     */
+    public static void setProjectDirectory(String directory) {
+        System.setProperty("user.dir", directory);
+    }
+
+    /**
+     * Checks whether the specified directory is empty.
+     * @param directory Directory to check for emptiness
+     * @return {@code true} if the directory is empty
+     */
+    public static boolean isDirectoryEmpty(File directory) {
+        return directory.list().length == 0;
+    }
+
+    /**
+     * Copies directory from source to destination.
+     * @param source Source path
+     * @param destination Destination path
+     * @throws IOException If the copy failed
+     */
+    public static void copyDirectory(String source, String destination) throws IOException {
+        copyDirectory(Path.of(source), Path.of(destination));
+    }
+
+    /**
+     * Copies directory from source to destination.
+     * @param source Source path
+     * @param destination Destination path
+     * @throws IOException If the copy failed
+     */
+    public static void copyDirectory(Path source, Path destination) throws IOException {
+        try (Stream<Path> stream = Files.walk(source)) {
+            stream.forEach(src -> copy(src, destination.resolve(source.relativize(src))));
+        } catch (UncheckedIOException e) {
+            throw e.getCause();
+        }
+    }
+
+    /**
+     * Copies from source to destination and replace existing.
+     * @param source Source path
+     * @param destination Destination path
+     */
+    private static void copy(Path source, Path destination) {
+        try {
+            Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Initializes application directory.
+     * @return Path to application directory
+     */
+    private static String initApplicationDirectory() {
+        try {
+            var path = Paths.get(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+
+            if (path.toString().toLowerCase().endsWith(".jar")) {
+                return path.getParent().getParent().toString();
+            }
+
+            return getProjectDirectory();
+        } catch (URISyntaxException e) {
+            Logger.getGlobal().severe(e.getMessage());
+        }
+
+        return "";
+    }
 }

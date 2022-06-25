@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,44 +16,52 @@
  */
 package com.warxim.petep.extension.internal.tagger.factory.internal.size;
 
-import java.io.IOException;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleConfigurator;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleData;
 import com.warxim.petep.gui.dialog.Dialogs;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
+import java.io.IOException;
+
+/**
+ * Configurator for configuring "size" subrule data.
+ */
 public final class SizeSubruleConfigurator extends TagSubruleConfigurator {
-  @FXML
-  private TextField sizeInput;
+    @FXML
+    private TextField sizeInput;
 
-  public SizeSubruleConfigurator() throws IOException {
-    super("/fxml/extension/internal/tagger/factory/SizeSubrule.fxml");
-  }
-
-  @Override
-  public TagSubruleData getConfig() {
-    return new SizeData(Integer.parseInt(sizeInput.getText()));
-  }
-
-  @Override
-  public void setConfig(TagSubruleData config) {
-    sizeInput.setText(String.valueOf(((SizeData) config).getSize()));
-  }
-
-  @Override
-  public boolean isValid() {
-    try {
-      int size = Integer.parseInt(sizeInput.getText());
-      if (size < 0) {
-        Dialogs.createErrorDialog("Invalid size", "Size has to be number greater or equal to 0.");
-        return false;
-      }
-    } catch (NumberFormatException e) {
-      Dialogs.createErrorDialog("Invalid size", "Size has to be number greater or equal to 0.");
-      return false;
+    /**
+     * Constructs tag subrule configurator for Size subrule.
+     * @throws IOException If the template could not be loaded
+     */
+    public SizeSubruleConfigurator() throws IOException {
+        super("/fxml/extension/internal/tagger/factory/SizeSubrule.fxml");
     }
 
-    return true;
-  }
+    @Override
+    public TagSubruleData getConfig() {
+        return new SizeData(Integer.parseInt(sizeInput.getText()));
+    }
+
+    @Override
+    public void setConfig(TagSubruleData config) {
+        sizeInput.setText(String.valueOf(((SizeData) config).getSize()));
+    }
+
+    @Override
+    public boolean isValid() {
+        try {
+            int size = Integer.parseInt(sizeInput.getText());
+            if (size < 0) {
+                Dialogs.createErrorDialog("Invalid size", "Size has to be number greater or equal to 0.");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            Dialogs.createErrorDialog("Invalid size", "Size has to be number greater or equal to 0.");
+            return false;
+        }
+
+        return true;
+    }
 }

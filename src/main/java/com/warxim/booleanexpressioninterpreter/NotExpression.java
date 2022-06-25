@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,16 +16,29 @@
  */
 package com.warxim.booleanexpressioninterpreter;
 
-/** Logical NOT expression. */
+/**
+ * Logical NOT expression.
+ * <p>
+ *     Used for creating and solving expression: {@code !expression}.
+ * </p>
+ */
 public final class NotExpression implements Expression {
-  private final Expression expression;
+    private final Expression expression;
 
-  public NotExpression(Expression expression) {
-    this.expression = expression;
-  }
+    /**
+     * Logical NOT expression
+     * @param expression expression, whose result is going to be negated
+     */
+    public NotExpression(Expression expression) {
+        this.expression = expression;
+    }
 
-  @Override
-  public boolean solve() {
-    return !expression.solve();
-  }
+    /**
+     * Solves the expression {@code !expression}
+     * @return result of the expression {@code !expression}
+     */
+    @Override
+    public boolean solve() {
+        return !expression.solve();
+    }
 }

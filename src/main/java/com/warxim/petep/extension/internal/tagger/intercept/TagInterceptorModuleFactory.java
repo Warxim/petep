@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,45 +16,39 @@
  */
 package com.warxim.petep.extension.internal.tagger.intercept;
 
-import java.io.IOException;
 import com.warxim.petep.extension.Extension;
-import com.warxim.petep.extension.internal.common.rule_group.config.RuleInterceptorConfig;
-import com.warxim.petep.extension.internal.common.rule_group.gui.RuleInterceptorConfigurator;
-import com.warxim.petep.extension.internal.tagger.TaggerExtension;
-import com.warxim.petep.gui.component.ConfigPane;
-import com.warxim.petep.interceptor.factory.InterceptorModuleFactory;
+import com.warxim.petep.extension.internal.common.rulegroup.intercept.RuleInterceptorModuleFactory;
+import com.warxim.petep.extension.internal.tagger.rule.TagRule;
 import com.warxim.petep.interceptor.module.InterceptorModule;
-import com.warxim.petep.persistence.Configurator;
 
-/** Tag interceptor module. */
-public final class TagInterceptorModuleFactory extends InterceptorModuleFactory
-    implements Configurator<RuleInterceptorConfig> {
-  /** Tag interceptor module constructor. */
-  public TagInterceptorModuleFactory(Extension extension) {
-    super(extension);
-  }
+/**
+ * Tag interceptor module.
+ */
+public final class TagInterceptorModuleFactory extends RuleInterceptorModuleFactory<TagRule> {
+    /**
+     * Tag interceptor module constructor.
+     * @param extension Extension that owns this factory
+     */
+    public TagInterceptorModuleFactory(Extension extension) {
+        super(extension);
+    }
 
-  @Override
-  public String getCode() {
-    return "tagger";
-  }
+    @Override
+    public String getCode() {
+        return "tagger";
+    }
 
-  @Override
-  public String getName() {
-    return "Tagger";
-  }
+    @Override
+    public String getName() {
+        return "Tagger";
+    }
 
-  @Override
-  public InterceptorModule createModule(
-      String code,
-      String name,
-      String description,
-      boolean enabled) {
-    return new TagInterceptorModule(this, code, name, description, enabled);
-  }
-
-  @Override
-  public ConfigPane<RuleInterceptorConfig> createConfigPane() throws IOException {
-    return new RuleInterceptorConfigurator<>(((TaggerExtension) extension).getRuleGroupManager());
-  }
+    @Override
+    public InterceptorModule createModule(
+            String code,
+            String name,
+            String description,
+            boolean enabled) {
+        return new TagInterceptorModule(this, code, name, description, enabled);
+    }
 }

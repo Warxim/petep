@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,13 +16,17 @@
  */
 package com.warxim.petep.extension.internal.tagger.rule;
 
-import com.warxim.petep.extension.internal.common.rule_group.RuleGroup;
-import com.warxim.petep.extension.internal.common.rule_group.RuleGroupManager;
+import com.warxim.petep.extension.internal.common.rulegroup.RuleGroup;
+import com.warxim.petep.extension.internal.common.rulegroup.RuleGroupManager;
 
-/** Tag rule group manager. */
+/**
+ * Tag rule group manager.
+ */
 public final class TagRuleGroupManager extends RuleGroupManager<RuleGroup<TagRule>> {
-  /** Tag rule group manager constructor. */
-  public TagRuleGroupManager() {
-    super();
-  }
+    /**
+     * Tag rule group manager constructor.
+     */
+    public TagRuleGroupManager() {
+        super();
+    }
 }

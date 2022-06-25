@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="477.0" prefWidth="633.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label prefWidth="578.0" styleClass="header-2" text="Project info" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <Label layoutX="10.0" layoutY="70.0" styleClass="input-label" text="Name:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="70.0" />
+      <Label layoutX="10.0" layoutY="100.0" styleClass="input-label" text="Description:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="100.0" />
+      <TextField fx:id="nameInput" layoutX="85.0" layoutY="66.0" prefHeight="25.0" prefWidth="487.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="66.0" />
+      <TextArea fx:id="descriptionInput" layoutX="85.0" layoutY="96.0" prefHeight="95.0" prefWidth="538.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="96.0" />
+      <RadioButton fx:id="presetRadioInput" layoutX="85.0" layoutY="200.0" mnemonicParsing="false" selected="true" text="Preset" AnchorPane.leftAnchor="85.0" AnchorPane.topAnchor="200.0">
+         <toggleGroup>
+            <ToggleGroup fx:id="structureToggleGroup" />
+         </toggleGroup></RadioButton>
+      <RadioButton fx:id="customRadioInput" layoutX="85.0" layoutY="228.0" mnemonicParsing="false" text="Custom" toggleGroup="$structureToggleGroup" AnchorPane.leftAnchor="85.0" AnchorPane.topAnchor="228.0" />
+      <Label layoutX="10.0" layoutY="200.0" styleClass="input-label" text="Structure:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="200.0" />
+      <ComboBox fx:id="presetInput" layoutX="185.0" layoutY="196.0" prefHeight="25.0" prefWidth="439.0" AnchorPane.leftAnchor="185.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="196.0" />
+      <AnchorPane fx:id="customPanel" disable="true" layoutY="254.0" prefHeight="223.0" prefWidth="633.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="254.0">
+         <children>
+            <Label prefWidth="578.0" styleClass="header-2" text="Extensions" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <ListView fx:id="extensionsList" layoutY="35.0" prefHeight="202.0" prefWidth="503.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="120.0" AnchorPane.topAnchor="35.0" />
+            <Button layoutX="519.0" layoutY="35.0" mnemonicParsing="false" onAction="#onAddInternalButtonClick" prefHeight="24.0" prefWidth="100.0" text="Add Internal" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="35.0" />
+            <Button layoutX="519.0" layoutY="95.0" mnemonicParsing="false" onAction="#onRemoveButtonClick" prefHeight="24.0" prefWidth="100.0" text="Remove" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="95.0" />
+            <Button layoutX="519.0" layoutY="65.0" mnemonicParsing="false" onAction="#onAddExternalButtonClick" prefHeight="24.0" prefWidth="100.0" text="Add External" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="65.0" />
+         </children>
+      </AnchorPane>
+      <Label layoutX="10.0" layoutY="40.0" styleClass="input-label" text="Path:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="40.0" />
+      <TextField fx:id="pathInput" layoutX="85.0" layoutY="36.0" prefHeight="25.0" prefWidth="510.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="36.0" />
+      <Button fx:id="pathButton" layoutX="572.0" layoutY="36.0" mnemonicParsing="false" onAction="#onPathButtonClick" prefHeight="26.0" prefWidth="25.0" text="..." AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="36.0" />
+   </children>
+</AnchorPane>

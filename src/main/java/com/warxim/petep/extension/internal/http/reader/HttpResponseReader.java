@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,81 +16,94 @@
  */
 package com.warxim.petep.extension.internal.http.reader;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
+import com.warxim.petep.common.Constant;
 import com.warxim.petep.core.pdu.PduDestination;
 import com.warxim.petep.extension.internal.http.pdu.HttpResponsePdu;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+
+/**
+ * Http reader for reading responses.
+ */
 public final class HttpResponseReader extends HttpReader {
-  protected enum StatusLineState {
-    VERSION, STATUS_CODE, STATUS_MESSAGE
-  }
-
-  public HttpResponseReader(InputStream in, int maxLength, Charset defaultCharset) {
-    super(in, maxLength, defaultCharset);
-  }
-
-  @Override
-  public HttpResponsePdu read() throws IOException {
-    HttpResponsePdu response = new HttpResponsePdu(null, null, PduDestination.CLIENT, null, 0);
-
-    if (internalState == null) {
-      if (!readStatusLine(response) || !readHeaders(response)) {
-        return null;
-      }
-
-      processHeaders(response);
-
-      readBody(response);
-    } else {
-      readBody(response);
+    /**
+     * Constructs HTTP response PDU reader.
+     * @param in Input stream for reading the data
+     * @param maxLength Maximal length of PDU body
+     * @param defaultCharset Default charset to set to PDUs
+     */
+    public HttpResponseReader(InputStream in, int maxLength, Charset defaultCharset) {
+        super(in, maxLength, defaultCharset);
     }
 
-    return response;
-  }
+    @Override
+    public HttpResponsePdu read() throws IOException {
+        var response = new HttpResponsePdu(null, null, PduDestination.CLIENT, null, 0, Constant.DEFAULT_CHARSET);
 
-  private boolean readStatusLine(HttpResponsePdu response) throws IOException {
-    StatusLineState state = StatusLineState.VERSION;
+        if (internalBodyState == null) {
+            if (!readStatusLine(response) || !readHeaders(response)) {
+                return null;
+            }
 
-    StringBuilder builder = new StringBuilder();
+            processHeaders(response);
+        }
+        
+        readBody(response);
 
-    int currentByte;
-    while ((currentByte = in.read()) != -1) {
-      switch (state) {
-        case VERSION:
-          if (currentByte == ' ') {
-            response.setVersion(builder.toString());
-            builder.setLength(0);
-            state = StatusLineState.STATUS_CODE;
-            break;
-          }
-
-          builder.append((char) currentByte);
-          break;
-        case STATUS_CODE:
-          if (currentByte == ' ') {
-            response.setStatusCode(Integer.parseInt(builder.toString()));
-            builder.setLength(0);
-            state = StatusLineState.STATUS_MESSAGE;
-            break;
-          }
-
-          builder.append((char) currentByte);
-          break;
-        case STATUS_MESSAGE:
-          if (currentByte == '\r') {
-            // Skip \n.
-            skip(1);
-
-            response.setStatusMessage(builder.toString());
-            return true;
-          }
-
-          builder.append((char) currentByte);
-          break;
-      }
+        return response;
     }
-    return false;
-  }
+
+    /**
+     * Reads status line.
+     */
+    private boolean readStatusLine(HttpResponsePdu response) throws IOException {
+        var state = StatusLineState.VERSION;
+        var builder = new StringBuilder();
+        int currentByte;
+        while ((currentByte = in.read()) != -1) {
+            switch (state) {
+                case VERSION:
+                    if (currentByte == ' ') {
+                        response.setVersion(builder.toString());
+                        builder.setLength(0);
+                        state = StatusLineState.STATUS_CODE;
+                        break;
+                    }
+
+                    builder.append((char) currentByte);
+                    break;
+                case STATUS_CODE:
+                    if (currentByte == ' ') {
+                        response.setStatusCode(Integer.parseInt(builder.toString()));
+                        builder.setLength(0);
+                        state = StatusLineState.STATUS_MESSAGE;
+                        break;
+                    }
+
+                    builder.append((char) currentByte);
+                    break;
+                case STATUS_MESSAGE:
+                    if (currentByte == '\r') {
+                        // Skip \n.
+                        skip(1);
+
+                        response.setStatusMessage(builder.toString());
+                        return true;
+                    }
+
+                    builder.append((char) currentByte);
+                    break;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Status line reading step (what are we reading now).
+     */
+    protected enum StatusLineState {
+        VERSION, STATUS_CODE, STATUS_MESSAGE
+    }
 }

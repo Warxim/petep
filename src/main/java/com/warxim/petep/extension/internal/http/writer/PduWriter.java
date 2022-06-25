@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,16 +16,29 @@
  */
 package com.warxim.petep.extension.internal.http.writer;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import com.warxim.petep.core.pdu.PDU;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
+/**
+ * PDU writer for writing PDUs to output stream.
+ */
 public abstract class PduWriter {
-  protected final OutputStream out;
+    protected final OutputStream out;
 
-  public PduWriter(OutputStream out) {
-    this.out = out;
-  }
+    /**
+     * Writes PDUs to output stream.
+     * @param out Output stream to whcih to write PDUs
+     */
+    protected PduWriter(OutputStream out) {
+        this.out = out;
+    }
 
-  public abstract void write(PDU pdu) throws IOException;
+    /**
+     * Writes PDU to output stream.
+     * @param pdu PDU to write to output stream
+     * @throws IOException If write fails because of various reasons
+     */
+    public abstract void write(PDU pdu) throws IOException;
 }

@@ -4,11 +4,9 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<fx:root prefHeight="66.0" prefWidth="533.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="37.0" prefWidth="533.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutY="6.0" styleClass="input-label" text="Header name:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
       <TextField fx:id="nameInput" layoutX="97.0" layoutY="6.0" prefHeight="25.0" prefWidth="426.0" AnchorPane.leftAnchor="95.0" AnchorPane.rightAnchor="10.0" />
-      <Label layoutX="10.0" layoutY="39.0" styleClass="input-label" text="Header value:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="39.0" />
-      <TextField fx:id="valueInput" layoutX="102.0" layoutY="31.0" prefHeight="25.0" prefWidth="426.0" AnchorPane.leftAnchor="95.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="35.0" />
    </children>
 </fx:root>

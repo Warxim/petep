@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,20 +16,15 @@
  */
 package com.warxim.petep.extension.internal.modifier;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.warxim.petep.extension.Extension;
-import com.warxim.petep.extension.internal.common.rule_group.RuleGroup;
-import com.warxim.petep.extension.internal.common.rule_group.gui.RuleGroupsGuiFactory;
+import com.warxim.petep.extension.internal.common.rulegroup.RuleGroup;
+import com.warxim.petep.extension.internal.common.rulegroup.RuleGroupManagerProvider;
+import com.warxim.petep.extension.internal.common.rulegroup.gui.RuleGroupsGuiFactory;
 import com.warxim.petep.extension.internal.modifier.config.ModifierConfig;
 import com.warxim.petep.extension.internal.modifier.config.ModifyRuleConfig;
 import com.warxim.petep.extension.internal.modifier.config.ModifyRuleGroupConfig;
+import com.warxim.petep.extension.internal.modifier.factory.ModifierData;
 import com.warxim.petep.extension.internal.modifier.factory.ModifierFactory;
 import com.warxim.petep.extension.internal.modifier.factory.ModifierFactoryManager;
 import com.warxim.petep.extension.internal.modifier.factory.internal.replace.ReplacerFactory;
@@ -37,136 +32,177 @@ import com.warxim.petep.extension.internal.modifier.gui.ModifierController;
 import com.warxim.petep.extension.internal.modifier.intercept.ModifierInterceptorModuleFactory;
 import com.warxim.petep.extension.internal.modifier.rule.ModifyRule;
 import com.warxim.petep.extension.internal.modifier.rule.ModifyRuleGroupManager;
+import com.warxim.petep.gui.common.GuiConstant;
 import com.warxim.petep.helper.ExtensionHelper;
 import com.warxim.petep.helper.GuiHelper;
 import com.warxim.petep.persistence.Storable;
+import com.warxim.petep.util.GsonUtils;
 
-public final class ModifierExtension extends Extension
-    implements Storable<ModifierConfig>, ModifierApi {
-  private final ModifierFactoryManager moduleManager;
-  private final ModifyRuleGroupManager groupManager;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-  private ExtensionHelper helper;
-  private ModifierConfig config;
+/**
+ * Modifier extension.
+ * <p>Adds support for creating automatic modification rules.</p>
+ */
+public final class ModifierExtension extends Extension implements Storable<ModifierConfig>, RuleGroupManagerProvider<ModifyRule>, ModifierApi {
+    private final ModifierFactoryManager moduleManager;
+    private final ModifyRuleGroupManager groupManager;
 
-  public ModifierExtension(String path) {
-    super(path);
+    private ExtensionHelper extensionHelper;
+    private ModifierConfig config;
 
-    moduleManager = new ModifierFactoryManager();
-    groupManager = new ModifyRuleGroupManager();
-  }
+    /**
+     * Constructs modifier extension.
+     * @param path Path to the extension
+     */
+    public ModifierExtension(String path) {
+        super(path);
 
-  @Override
-  public void init(ExtensionHelper helper) {
-    this.helper = helper;
-
-    moduleManager.registerFactory(new ReplacerFactory());
-
-    initGroupManager();
-
-    helper.registerInterceptorModuleFactory(new ModifierInterceptorModuleFactory(this));
-  }
-
-  @Override
-  public void initGui(GuiHelper helper) {
-    try {
-      helper.registerTab("Modifier", RuleGroupsGuiFactory
-          .createRoleGroupsNode(new ModifierController(groupManager, this.helper, moduleManager)));
-    } catch (IOException e) {
-      Logger.getGlobal().log(Level.SEVERE, "Could not load modifier tab!", e);
+        moduleManager = new ModifierFactoryManager();
+        groupManager = new ModifyRuleGroupManager();
     }
 
-    helper.registerGuide(new ModifierGuide());
-  }
+    @Override
+    public void init(ExtensionHelper helper) {
+        this.extensionHelper = helper;
 
-  @Override
-  public String getCode() {
-    return "modifier";
-  }
+        moduleManager.registerFactory(new ReplacerFactory());
 
-  @Override
-  public String getName() {
-    return "Modifier";
-  }
+        initGroupManager();
 
-  @Override
-  public String getDescription() {
-    return "Process PDUs using different algorithms for replacing etc.";
-  }
-
-  @Override
-  public String getVersion() {
-    return "0.5";
-  }
-
-  public ModifyRuleGroupManager getRuleGroupManager() {
-    return groupManager;
-  }
-
-  @Override
-  public ModifierConfig saveStore() {
-    List<ModifyRuleGroupConfig> groups = new ArrayList<>(groupManager.size());
-
-    for (RuleGroup<ModifyRule> group : groupManager.getList()) {
-      List<ModifyRuleConfig> rules = new ArrayList<>(group.size());
-
-      for (ModifyRule rule : group.getRules()) {
-        rules.add(new ModifyRuleConfig(rule.getName(), rule.getDescription(), rule.isEnabled(),
-            rule.getTag(), rule.getModifier().getFactory().getCode(),
-            rule.getModifier().getData()));
-      }
-
-      groups.add(new ModifyRuleGroupConfig(group.getCode(), group.getName(), rules));
+        helper.registerInterceptorModuleFactory(new ModifierInterceptorModuleFactory(this));
     }
 
-    return new ModifierConfig(groups);
-  }
-
-  @Override
-  public void loadStore(ModifierConfig store) {
-    config = store;
-  }
-
-  private void initGroupManager() {
-    Gson gson = new GsonBuilder().create();
-
-    if (config != null) {
-      // Process groups.
-      for (ModifyRuleGroupConfig groupConfig : config.getGroups()) {
-        RuleGroup<ModifyRule> group = new RuleGroup<>(groupConfig.getCode(), groupConfig.getName());
-
-        // Process rules.
-        for (ModifyRuleConfig ruleConfig : groupConfig.getRules()) {
-          ModifierFactory module = moduleManager.getFactory(ruleConfig.getFactoryCode());
-
-          // No module found.
-          if (module == null) {
-            Logger.getGlobal()
-                .severe("Could not load module " + ruleConfig.getFactoryCode() + " - rule "
-                    + ruleConfig.getName() + " not loaded!");
-            continue;
-          }
-
-          // Add rule.
-          try {
-            group.addRule(new ModifyRule(ruleConfig.getName(), ruleConfig.getDescription(),
-                ruleConfig.isEnabled(), ruleConfig.getTag(), module
-                    .createModifier(gson.fromJson(ruleConfig.getData(), module.getConfigType()))));
-          } catch (JsonParseException e) {
-            Logger.getGlobal()
-                .log(Level.SEVERE, "Could not load rule " + ruleConfig.getName() + "!", e);
-          }
+    @Override
+    public void initGui(GuiHelper helper) {
+        try {
+            helper.registerTab(
+                    "Modifier",
+                    RuleGroupsGuiFactory.createRoleGroupsNode(
+                            new ModifierController(groupManager, this.extensionHelper, moduleManager)),
+                    GuiConstant.MODIFIER_TAB_ORDER);
+        } catch (IOException e) {
+            Logger.getGlobal().log(Level.SEVERE, "Could not load modifier tab!", e);
         }
 
-        groupManager.add(group);
-      }
-
-      config = null;
+        helper.registerGuide(new ModifierGuide());
     }
-  }
 
-  @Override
-  public boolean registerModifierFactory(ModifierFactory module) {
-    return moduleManager.registerFactory(module);
-  }
+    @Override
+    public String getCode() {
+        return "modifier";
+    }
+
+    @Override
+    public String getName() {
+        return "Modifier";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Process PDUs using different algorithms for replacing etc.";
+    }
+
+    @Override
+    public String getVersion() {
+        return "1.0";
+    }
+
+    @Override
+    public ModifyRuleGroupManager getRuleGroupManager() {
+        return groupManager;
+    }
+
+    @Override
+    public ModifierConfig saveStore() {
+        var groups = new LinkedList<ModifyRuleGroupConfig>();
+
+        for (var group : groupManager.getList()) {
+            var rules = new LinkedList<ModifyRuleConfig>();
+
+            for (var rule : group.getRules()) {
+                rules.add(new ModifyRuleConfig(
+                        rule.getName(),
+                        rule.getDescription(),
+                        rule.isEnabled(),
+                        rule.getTag(),
+                        rule.getModifier().getFactory().getCode(),
+                        rule.getModifier().getData()));
+            }
+
+            groups.add(new ModifyRuleGroupConfig(group.getCode(), group.getName(), rules));
+        }
+
+        return new ModifierConfig(groups);
+    }
+
+    @Override
+    public void loadStore(ModifierConfig store) {
+        config = store;
+    }
+
+    @Override
+    public boolean registerModifierFactory(ModifierFactory module) {
+        return moduleManager.registerFactory(module);
+    }
+
+    /**
+     * Initializes group manager from configuration.
+     */
+    private void initGroupManager() {
+        if (config == null) {
+            return;
+        }
+
+        var gson = GsonUtils.getGson();
+
+        // Process groups.
+        for (var groupConfig : config.getGroups()) {
+            var group = new RuleGroup<ModifyRule>(groupConfig.getCode(), groupConfig.getName());
+
+            // Process rules.
+            for (var ruleConfig : groupConfig.getRules()) {
+                var maybeFactory = moduleManager.getFactory(ruleConfig.getFactoryCode());
+                if (maybeFactory.isEmpty()) {
+                    Logger.getGlobal()
+                            .severe(() -> "Could not load module "
+                                    + ruleConfig.getFactoryCode()
+                                    + " - rule "
+                                    + ruleConfig.getName()
+                                    + " not loaded!");
+                    continue;
+                }
+                var factory = maybeFactory.get();
+
+                // Add rule.
+                try {
+                    ModifierData modifierData;
+                    if (factory.getConfigType().isPresent()) {
+                        modifierData = gson.fromJson(ruleConfig.getData(), factory.getConfigType().get());
+                    } else {
+                        modifierData = null;
+                    }
+                    var modifier = factory.createModifier(modifierData);
+                    group.addRule(new ModifyRule(
+                            ruleConfig.getName(),
+                            ruleConfig.getDescription(),
+                            ruleConfig.isEnabled(),
+                            ruleConfig.getTag(),
+                            modifier));
+                } catch (JsonParseException e) {
+                    Logger.getGlobal().log(
+                            Level.SEVERE,
+                            e,
+                            () -> "Could not load rule " + ruleConfig.getName() + "!");
+                }
+            }
+
+            groupManager.add(group);
+        }
+
+        config = null;
+    }
 }

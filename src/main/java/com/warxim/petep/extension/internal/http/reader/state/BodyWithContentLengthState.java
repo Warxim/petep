@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,28 +16,24 @@
  */
 package com.warxim.petep.extension.internal.http.reader.state;
 
-public final class BodyWithContentLengthState extends InternalState {
-  private int contentLength;
-  private boolean chunked;
+import lombok.Getter;
+import lombok.Setter;
 
-  public BodyWithContentLengthState(int contentLength) {
-    this.contentLength = contentLength;
-    this.chunked = false;
-  }
+/**
+ * State for body with content length header.
+ */
+@Getter
+@Setter
+public final class BodyWithContentLengthState implements InternalBodyState {
+    private int contentLength;
+    private boolean chunked;
 
-  public int getContentLength() {
-    return contentLength;
-  }
-
-  public void setContentLength(int contentLength) {
-    this.contentLength = contentLength;
-  }
-
-  public boolean isChunked() {
-    return chunked;
-  }
-
-  public void setChunked(boolean chunked) {
-    this.chunked = chunked;
-  }
+    /**
+     * Constructs body state for content-length based body length.
+     * @param contentLength Content length value
+     */
+    public BodyWithContentLengthState(int contentLength) {
+        this.contentLength = contentLength;
+        this.chunked = false;
+    }
 }

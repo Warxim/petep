@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -17,28 +17,35 @@
 package com.warxim.petep.wizard.project;
 
 import com.google.gson.JsonElement;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-/** Project extension. */
+/**
+ * Project extension.
+ */
+@Getter
+@AllArgsConstructor
 public final class WizardProjectExtension {
-  private final String path;
-  private final JsonElement store;
+    /**
+     * Extension path / internal code
+     */
+    private final String path;
 
-  /** Project extension constructor. */
-  public WizardProjectExtension(String path, JsonElement store) {
-    this.path = path;
-    this.store = store;
-  }
+    /**
+     * Extension store
+     */
+    private final JsonElement store;
 
-  public String getPath() {
-    return path;
-  }
+    /**
+     * Extension config
+     */
+    private final JsonElement config;
 
-  /** Returns extension store. */
-  public JsonElement getStore() {
-    return store;
-  }
-
-  public String toString() {
-    return path;
-  }
+    /**
+     * Converts the wizard project extension to string for display purposes.
+     * @return Path to the project
+     */
+    public String toString() {
+        return path;
+    }
 }

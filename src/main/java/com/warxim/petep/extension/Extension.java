@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -18,32 +18,84 @@ package com.warxim.petep.extension;
 
 import com.warxim.petep.helper.ExtensionHelper;
 import com.warxim.petep.helper.GuiHelper;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-/** Superclass for extensions. */
+/**
+ * Superclass for extensions.
+ * <p>Each extension is identified by its code, so it has to be unique across the whole application.</p>
+ */
+@Getter
 @PetepAPI
+@AllArgsConstructor
 public abstract class Extension {
-  /** Path where the extension .jar file is located. */
-  protected final String path;
+    /**
+     * Path where the extension .jar file is located.
+     */
+    private final String path;
 
-  public Extension(String path) {
-    this.path = path;
-  }
+    /**
+     * Initializes the extension.
+     * @param helper Helper for working with PETEP
+     */
+    public void init(ExtensionHelper helper) {}
 
-  public final String getPath() {
-    return path;
-  }
+    /**
+     * Runs before extensions are initialized.
+     * @param helper Helper for working with PETEP
+     */
+    public void beforeInit(ExtensionHelper helper) {}
 
-  /** Initializes the extension. */
-  public abstract void init(ExtensionHelper helper);
+    /**
+     * Runs after extensions are initialized.
+     * @param helper Helper for working with PETEP
+     */
+    public void afterInit(ExtensionHelper helper) {}
 
-  /** Initializes the extension GUI. */
-  public abstract void initGui(GuiHelper helper);
+    /**
+     * Initializes the extension GUI.
+     * @param helper Helper for working with PETEP GUI
+     */
+    public void initGui(GuiHelper helper) {}
 
-  public abstract String getCode();
+    /**
+     * Runs before extension GUIs are initialized.
+     * @param helper Helper for working with PETEP GUI
+     */
+    public void beforeInitGui(GuiHelper helper) {}
 
-  public abstract String getName();
+    /**
+     * Runs after extension GUIs are initialized.
+     * @param helper Helper for working with PETEP GUI
+     */
+    public void afterInitGui(GuiHelper helper) {}
 
-  public abstract String getDescription();
+    /**
+     * Destroys the extension.
+     */
+    public void destroy() {}
 
-  public abstract String getVersion();
+    /**
+     * Obtains extension code.
+     * @return Code of the extension
+     */
+    public abstract String getCode();
+
+    /**
+     * Obtains extension name.
+     * @return Name of the extension
+     */
+    public abstract String getName();
+
+    /**
+     * Obtains extension description.
+     * @return Description of the extension
+     */
+    public abstract String getDescription();
+
+    /**
+     * Obtains extension version.
+     * @return Version of the extension
+     */
+    public abstract String getVersion();
 }

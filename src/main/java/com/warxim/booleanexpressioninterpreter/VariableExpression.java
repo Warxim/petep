@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,21 +16,35 @@
  */
 package com.warxim.booleanexpressioninterpreter;
 
-/** Variable expression. */
+/**
+ * Variable expression.
+ * <p>
+ *     Represents constant value (true/false).
+ * </p>
+ */
 public final class VariableExpression implements Expression {
-  private boolean expression;
+    private boolean expression;
 
-  public VariableExpression(boolean expression) {
-    this.expression = expression;
-  }
+    /**
+     * Variable expression.
+     * @param expression constant value of the expression
+     */
+    public VariableExpression(boolean expression) {
+        this.expression = expression;
+    }
 
-  /** Sets value of expression. */
-  public void setValue(boolean expression) {
-    this.expression = expression;
-  }
+    /**
+     * Sets value of expression.
+     */
+    public void setValue(boolean expression) {
+        this.expression = expression;
+    }
 
-  @Override
-  public boolean solve() {
-    return expression;
-  }
+    /**
+     * @return Saved constant value
+     */
+    @Override
+    public boolean solve() {
+        return expression;
+    }
 }

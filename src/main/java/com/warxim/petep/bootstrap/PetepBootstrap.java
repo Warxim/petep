@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,47 +16,47 @@
  */
 package com.warxim.petep.bootstrap;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import com.warxim.petep.Bundle;
 import com.warxim.petep.exception.ConfigurationException;
 import com.warxim.petep.util.FileUtils;
 
-/** Super class for bootstraps */
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Super class for bootstraps
+ */
 public abstract class PetepBootstrap {
-  protected CommandLineArguments arguments;
+    protected CommandLineArguments arguments;
 
-  /**
-   * PetepBootstrap constructor.
-   *
-   * @param arguments arguments
-   */
-  public PetepBootstrap(CommandLineArguments arguments) {
-    this.arguments = arguments;
-  }
-
-  /**
-   * Starts PETEP project (loads assets etc.
-   *
-   * @return <code>true</code> if start was successful
-   */
-  public boolean start() {
-    try {
-      // Initialize utils.
-      FileUtils.setProjectDirectory(
-          FileUtils.getApplicationFileAbsolutePath(arguments.getProjectPath()));
-
-      // Load PETEP bundle.
-      Bundle.getInstance().load(arguments);
-
-      Logger.getGlobal()
-          .log(Level.INFO, () -> "Loaded project " + Bundle.getInstance().getProject().getName()
-              + " (" + arguments.getProjectPath() + ")!");
-
-      return true;
-    } catch (ConfigurationException e) {
-      Logger.getGlobal().log(Level.SEVERE, "Project configuration exception occured!", e);
-      return false;
+    /**
+     * Constructs PetepBoostrap.
+     * @param arguments Arguments for starting the application
+     */
+    protected PetepBootstrap(CommandLineArguments arguments) {
+        this.arguments = arguments;
     }
-  }
+
+    /**
+     * Starts PETEP project (loads assets etc.)
+     * @throws BootstrapException Exception signalizing that boostrap failed
+     */
+    public void start() throws BootstrapException {
+        try {
+            // Initialize utils.
+            FileUtils.setProjectDirectory(
+                    FileUtils.getApplicationFileAbsolutePath(arguments.getProjectPath()));
+
+            // Load PETEP bundle.
+            Bundle.getInstance().load(arguments);
+
+            Logger.getGlobal().log(
+                    Level.INFO,
+                    () -> "Loaded project " + Bundle.getInstance().getProject().getName() + " (" + arguments.getProjectPath() + ")!");
+        } catch (ConfigurationException e) {
+            throw new BootstrapException("Project configuration exception occured!", e);
+        } catch (RuntimeException e) {
+            throw new BootstrapException("Unexpected exception occurred!", e);
+        }
+    }
 }

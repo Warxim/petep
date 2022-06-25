@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,30 +16,35 @@
  */
 package com.warxim.petep.extension.internal.tagger.gui.rule;
 
-import java.io.IOException;
-import com.warxim.petep.extension.internal.tagger.factory.TagSubrule;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleFactoryManager;
 import com.warxim.petep.extension.internal.tagger.rule.TagRule;
 
-/** Edit tag rule dialog. */
+import java.io.IOException;
+
+/**
+ * Edit tag rule dialog.
+ */
 public final class EditTagRuleDialog extends TagRuleDialog {
-  /** Edit tag rule dialog constructor. */
-  public EditTagRuleDialog(TagSubruleFactoryManager moduleManager, TagRule rule)
-      throws IOException {
-    super("Edit tag rule", "Save", moduleManager);
+    /**
+     * Constructs tag rule dialog for editing.
+     * @param factoryManager Manager of tag subrule factories
+     * @param rule Rule to be edited
+     * @throws IOException If the dialog template could not be loaded
+     */
+    public EditTagRuleDialog(TagSubruleFactoryManager factoryManager, TagRule rule)
+            throws IOException {
+        super("Edit tag rule", "Save", factoryManager);
 
-    nameInput.setText(rule.getName());
-    descriptionInput.setText(rule.getDescription());
-    tagInput.setText(rule.getTag());
-    enabledInput.setSelected(rule.isEnabled());
-    expressionInput.setText(rule.getExpressionString());
+        nameInput.setText(rule.getName());
+        descriptionInput.setText(rule.getDescription());
+        tagInput.setText(rule.getTag());
+        enabledInput.setSelected(rule.isEnabled());
+        expressionInput.setText(rule.getExpressionString());
 
-    for (TagSubrule subrule : rule.getSubrules()) {
-      subrules.add(subrule);
+        subrules.addAll(rule.getSubrules());
+
+        if (!generateExpression().equals(rule.getExpressionString())) {
+            customExpressionInput.setSelected(true);
+        }
     }
-
-    if (!generateExpression().equals(rule.getExpressionString())) {
-      customExpressionInput.setSelected(true);
-    }
-  }
 }

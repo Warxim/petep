@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,34 +16,46 @@
  */
 package com.warxim.petep.extension.internal.http.writer;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import com.warxim.petep.core.pdu.PDU;
 import com.warxim.petep.extension.internal.http.pdu.HttpPdu;
 import com.warxim.petep.extension.internal.http.pdu.HttpRequestPdu;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+
+/**
+ * Http writer for writing {@link HttpRequestPdu} to output stream.
+ */
 public final class HttpRequestWriter extends HttpWriter {
-  public HttpRequestWriter(OutputStream out) {
-    super(out);
-  }
-
-  @Override
-  public void write(PDU request) throws IOException {
-    writeRequestLine((HttpRequestPdu) request);
-    writeHeaders((HttpPdu) request);
-    writeBody((HttpPdu) request);
-  }
-
-  private void writeRequestLine(HttpRequestPdu request) throws IOException {
-    if (request.getVersion() == null) {
-      return;
+    /**
+     * Writes HTTP request PDUs to output stream.
+     * @param out Output stream to whcih to write PDUs
+     */
+    public HttpRequestWriter(OutputStream out) {
+        super(out);
     }
 
-    out.write(request.getMethod().getBytes());
-    out.write(' ');
-    out.write(request.getPath().getBytes());
-    out.write(' ');
-    out.write(request.getVersion().getBytes());
-    out.write("\r\n".getBytes());
-  }
+    @Override
+    public void write(PDU request) throws IOException {
+        writeRequestLine((HttpRequestPdu) request);
+        writeHeaders((HttpPdu) request);
+        writeBody((HttpPdu) request);
+    }
+
+    /**
+     * Writes request line from PDU to output stream.
+     */
+    private void writeRequestLine(HttpRequestPdu request) throws IOException {
+        if (request.getVersion() == null) {
+            return;
+        }
+
+        out.write(request.getMethod().getBytes(StandardCharsets.ISO_8859_1));
+        out.write(' ');
+        out.write(request.getPath().getBytes(StandardCharsets.ISO_8859_1));
+        out.write(' ');
+        out.write(request.getVersion().getBytes(StandardCharsets.ISO_8859_1));
+        out.write("\r\n".getBytes(StandardCharsets.ISO_8859_1));
+    }
 }

@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,65 +16,68 @@
  */
 package com.warxim.petep.configuration;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.nio.file.NoSuchFileException;
-import java.util.Collection;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonWriter;
 import com.warxim.petep.common.Constant;
 import com.warxim.petep.exception.ConfigurationException;
 import com.warxim.petep.extension.Extension;
 import com.warxim.petep.persistence.Configurable;
 import com.warxim.petep.persistence.Storable;
 import com.warxim.petep.util.ExtensionUtils;
+import com.warxim.petep.util.GsonUtils;
 
-/** Static class for saving extensions. */
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
+import java.util.Collection;
+
+/**
+ * Static class for saving extensions.
+ */
 public final class ExtensionsSaver {
-
-  private ExtensionsSaver() {}
-
-  /** Saves extensions to specified path. */
-  public static void save(String path, Collection<Extension> extensions)
-      throws ConfigurationException {
-    // Enable pretty printing.
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    JsonArray list = new JsonArray(extensions.size());
-
-    for (Extension extension : extensions) {
-      JsonObject object = new JsonObject();
-
-      // Save extension path.
-      object.addProperty(Constant.CONFIG_ITEM_PATH, extension.getPath());
-
-      // Save extension store.
-      Type storeType = ExtensionUtils.getStoreType(extension);
-      if (storeType != null) {
-        object.add(Constant.CONFIG_ITEM_STORE,
-            gson.toJsonTree(((Storable<?>) extension).saveStore(), storeType));
-      }
-
-      // Save extension config.
-      Type configType = ExtensionUtils.getConfigType(extension);
-      if (configType != null) {
-        object.add(Constant.CONFIG_ITEM_CONFIG,
-            gson.toJsonTree(((Configurable<?>) extension).saveConfig(), configType));
-      }
-
-      list.add(object);
+    private ExtensionsSaver() {
     }
 
-    // Write json to specified path.
-    try (JsonWriter writer = gson.newJsonWriter(new FileWriter(path))) {
-      gson.toJson(list, writer);
-    } catch (NoSuchFileException e) {
-      throw new ConfigurationException("Could not found extensions configuration!", e);
-    } catch (IOException e) {
-      throw new ConfigurationException("Could not save extensions configuration!", e);
+    /**
+     * Saves extensions to specified path.
+     * @param path Path to extensions.json configuration file
+     * @param extensions Extensions to be saved into the configuration file
+     * @throws ConfigurationException If the extensions could not be saved
+     */
+    public static void save(String path, Collection<Extension> extensions)
+            throws ConfigurationException {
+        // Enable pretty printing.
+        var gson = GsonUtils.getGson();
+        var list = new JsonArray(extensions.size());
+
+        for (var extension : extensions) {
+            var object = new JsonObject();
+
+            // Save extension path.
+            object.addProperty(Constant.CONFIG_ITEM_PATH, extension.getPath());
+
+            // Save extension store.
+            var maybeStoreType = ExtensionUtils.getStoreType(extension);
+            if (maybeStoreType.isPresent()) {
+                object.add(Constant.CONFIG_ITEM_STORE, gson.toJsonTree(((Storable<?>) extension).saveStore(), maybeStoreType.get()));
+            }
+
+            // Save extension config.
+            var maybeConfigType = ExtensionUtils.getConfigType(extension);
+            if (maybeConfigType.isPresent()) {
+                object.add(Constant.CONFIG_ITEM_CONFIG, gson.toJsonTree(((Configurable<?>) extension).saveConfig(), maybeConfigType.get()));
+            }
+
+            list.add(object);
+        }
+
+        // Write json to specified path.
+        try (var writer = gson.newJsonWriter(new FileWriter(path, Constant.FILE_CHARSET))) {
+            gson.toJson(list, writer);
+        } catch (NoSuchFileException e) {
+            throw new ConfigurationException("Could not found extensions configuration!", e);
+        } catch (IOException e) {
+            throw new ConfigurationException("Could not save extensions configuration!", e);
+        }
     }
-  }
 }

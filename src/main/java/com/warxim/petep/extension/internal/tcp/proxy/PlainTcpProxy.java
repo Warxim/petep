@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,21 +16,38 @@
  */
 package com.warxim.petep.extension.internal.tcp.proxy;
 
-import java.net.Socket;
+import com.warxim.petep.core.pdu.PDU;
 import com.warxim.petep.extension.internal.tcp.TcpConfig;
 import com.warxim.petep.extension.internal.tcp.proxy.base.TcpConnection;
+import com.warxim.petep.extension.internal.tcp.proxy.base.TcpPdu;
 import com.warxim.petep.extension.internal.tcp.proxy.base.TcpProxy;
 import com.warxim.petep.helper.PetepHelper;
 import com.warxim.petep.proxy.module.ProxyModule;
 
-/** TCP Proxy. */
-public final class PlainTcpProxy extends TcpProxy {
-  public PlainTcpProxy(ProxyModule module, PetepHelper helper, TcpConfig config) {
-    super(module, helper, config);
-  }
+import java.net.Socket;
 
-  @Override
-  protected TcpConnection createConnection(Socket socket) {
-    return new PlainTcpConnection(connectionManager.nextId(), this, socket);
-  }
+/**
+ * TCP Proxy.
+ * <p>Simple implementation for basic TCP support.</p>
+ */
+public final class PlainTcpProxy extends TcpProxy  {
+    /**
+     * Constructs plain TCP proxy
+     * @param module Parent module of the worker
+     * @param helper Helper for accessing running instance of PETEP core
+     * @param config TCP configuration
+     */
+    public PlainTcpProxy(ProxyModule module, PetepHelper helper, TcpConfig config) {
+        super(module, helper, config);
+    }
+
+    @Override
+    protected TcpConnection createConnection(Socket socket) {
+        return new PlainTcpConnection(connectionManager.nextCode(), this, socket);
+    }
+
+    @Override
+    public boolean supports(PDU pdu) {
+        return pdu.getClass().equals(TcpPdu.class);
+    }
 }

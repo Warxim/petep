@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="75.0" prefWidth="390.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+     <Label layoutX="10.0" layoutY="15.0" prefHeight="16.0" prefWidth="77.0" styleClass="input-label" text="Code:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="15.0" />
+      <TextField fx:id="codeInput" layoutX="85.0" layoutY="10.0" prefHeight="26.0" prefWidth="400.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <Label layoutX="10.0" layoutY="45.0" prefHeight="16.0" prefWidth="77.0" styleClass="input-label" text="Name:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="45.0" />
+      <TextField fx:id="nameInput" layoutX="104.0" layoutY="40.0" prefHeight="26.0" prefWidth="400.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0" />
+          </children>
+</AnchorPane>

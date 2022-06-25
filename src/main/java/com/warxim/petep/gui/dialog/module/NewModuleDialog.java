@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,34 +16,44 @@
  */
 package com.warxim.petep.gui.dialog.module;
 
-import java.io.IOException;
 import com.warxim.petep.gui.dialog.Dialogs;
 import com.warxim.petep.module.Module;
 import com.warxim.petep.module.ModuleContainer;
 import com.warxim.petep.module.ModuleFactory;
 import com.warxim.petep.module.ModuleFactoryManager;
 
-/** New module dialog. */
-public final class NewModuleDialog<M extends Module<F>, F extends ModuleFactory<M>>
-    extends ModuleDialog<M, F> {
-  public NewModuleDialog(ModuleFactoryManager<F> factoryManager, ModuleContainer<M> moduleContainer)
-      throws IOException {
-    super("New module", "Save", factoryManager, moduleContainer);
-  }
+import java.io.IOException;
 
-  @Override
-  protected boolean isValid() {
-    if (!super.isValid()) {
-      return false;
+/**
+ * New module dialog.
+ * @param <M> Type of the module
+ * @param <F> Type of the module factory
+ */
+public final class NewModuleDialog<M extends Module<F>, F extends ModuleFactory<M>> extends ModuleDialog<M, F> {
+    /**
+     * Constructs module dialog for creation.
+     * @param factoryManager Manager of module factories for working with factories
+     * @param moduleContainer Module container for adding/removing modules
+     * @throws IOException If the dialog template could not be loaded
+     */
+    public NewModuleDialog(ModuleFactoryManager<F> factoryManager,
+                           ModuleContainer<M> moduleContainer) throws IOException {
+        super("New module", "Save", factoryManager, moduleContainer);
     }
 
-    // Determine whether the code is already in use.
-    if (moduleContainer.contains(codeInput.getText())) {
-      Dialogs.createErrorDialog("Code reserved",
-          "You have entered code that is reserved by other module.");
-      return false;
-    }
+    @Override
+    protected boolean isValid() {
+        if (!super.isValid()) {
+            return false;
+        }
 
-    return true;
-  }
+        // Determine whether the code is already in use.
+        if (moduleContainer.contains(codeInput.getText())) {
+            Dialogs.createErrorDialog("Code reserved",
+                    "You have entered code that is reserved by other module.");
+            return false;
+        }
+
+        return true;
+    }
 }

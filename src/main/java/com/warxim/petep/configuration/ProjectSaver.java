@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,29 +16,37 @@
  */
 package com.warxim.petep.configuration;
 
+import com.warxim.petep.common.Constant;
+import com.warxim.petep.exception.ConfigurationException;
+import com.warxim.petep.project.Project;
+import com.warxim.petep.util.GsonUtils;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.stream.JsonWriter;
-import com.warxim.petep.exception.ConfigurationException;
-import com.warxim.petep.project.Project;
 
-/** Static class for project saving. */
+/**
+ * Static class for project saving.
+ */
 public final class ProjectSaver {
-  private ProjectSaver() {}
-
-  /** Saves project to specified path. */
-  public static void save(String path, Project project) throws ConfigurationException {
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-    try (JsonWriter writer = gson.newJsonWriter(new FileWriter(path))) {
-      gson.toJson(gson.toJsonTree(project), writer);
-    } catch (NoSuchFileException e) {
-      throw new ConfigurationException("Could not found project configuration!", e);
-    } catch (IOException e) {
-      throw new ConfigurationException("Could not save project configuration!", e);
+    private ProjectSaver() {
     }
-  }
+
+    /**
+     * Saves project to specified path.
+     * @param path Path to project configuration file
+     * @param project Project to be stored
+     * @throws ConfigurationException If the project could not be saved
+     */
+    public static void save(String path, Project project) throws ConfigurationException {
+        var gson = GsonUtils.getGson();
+
+        try (var writer = gson.newJsonWriter(new FileWriter(path, Constant.FILE_CHARSET))) {
+            gson.toJson(gson.toJsonTree(project), writer);
+        } catch (NoSuchFileException e) {
+            throw new ConfigurationException("Could not found project configuration!", e);
+        } catch (IOException e) {
+            throw new ConfigurationException("Could not save project configuration!", e);
+        }
+    }
 }

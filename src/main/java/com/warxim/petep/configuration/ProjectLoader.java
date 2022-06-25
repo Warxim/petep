@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,30 +16,40 @@
  */
 package com.warxim.petep.configuration;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.NoSuchFileException;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
+import com.warxim.petep.common.Constant;
 import com.warxim.petep.exception.ConfigurationException;
 import com.warxim.petep.project.Project;
+import com.warxim.petep.util.GsonUtils;
 
-/** Static class for project loading. */
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
+
+/**
+ * Static class for project loading.
+ */
 public final class ProjectLoader {
-  private ProjectLoader() {}
-
-  /** Loads project from specified path. */
-  public static Project load(String path) throws ConfigurationException {
-    try (JsonReader reader = new JsonReader(new FileReader(path))) {
-      return new GsonBuilder().create().fromJson(JsonParser.parseReader(reader), Project.class);
-    } catch (JsonParseException e) {
-      throw new ConfigurationException("Could not parse project configuration!", e);
-    } catch (NoSuchFileException e) {
-      throw new ConfigurationException("Could not find project configuration!", e);
-    } catch (IOException e) {
-      throw new ConfigurationException("Could not load project configuration!", e);
+    private ProjectLoader() {
     }
-  }
+
+    /**
+     * Loads project from specified path.
+     * @param path Path to project configuration file
+     * @return Loaded project
+     * @throws ConfigurationException If the project could not be loaded
+     */
+    public static Project load(String path) throws ConfigurationException {
+        try (var reader = new JsonReader(new FileReader(path, Constant.FILE_CHARSET))) {
+            return GsonUtils.getGson().fromJson(JsonParser.parseReader(reader), Project.class);
+        } catch (JsonParseException e) {
+            throw new ConfigurationException("Could not parse project configuration!", e);
+        } catch (NoSuchFileException e) {
+            throw new ConfigurationException("Could not find project configuration!", e);
+        } catch (IOException e) {
+            throw new ConfigurationException("Could not load project configuration!", e);
+        }
+    }
 }

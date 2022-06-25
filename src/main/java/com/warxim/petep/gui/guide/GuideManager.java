@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,39 +16,57 @@
  */
 package com.warxim.petep.gui.guide;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.warxim.petep.gui.guide.internal.BasicsGuide;
 import com.warxim.petep.gui.guide.internal.DiagramGuide;
 import com.warxim.petep.gui.guide.internal.IntroductionGuide;
 import com.warxim.petep.gui.guide.internal.TipsAndTricksGuide;
 
-/** Manages guides. */
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * Manages all guides.
+ */
 public final class GuideManager {
-  private final List<Guide> guides;
+    private final List<Guide> guides;
 
-  public GuideManager() {
-    guides = new ArrayList<>();
+    /**
+     * Constructs guide manager.
+     */
+    public GuideManager() {
+        guides = new ArrayList<>();
 
-    // Load internal guides.
-    add(new IntroductionGuide());
-    add(new BasicsGuide());
-    add(new TipsAndTricksGuide());
-    add(new DiagramGuide());
-  }
+        // Load internal guides.
+        add(new IntroductionGuide());
+        add(new BasicsGuide());
+        add(new TipsAndTricksGuide());
+        add(new DiagramGuide());
+    }
 
-  /** Adds guide to the manager. */
-  public synchronized boolean add(Guide guide) {
-    return guides.add(guide);
-  }
+    /**
+     * Adds guide to the manager.
+     * @param guide Guide to be added
+     * @return {@code true} if the guide was successfully added
+     */
+    public synchronized boolean add(Guide guide) {
+        return guides.add(guide);
+    }
 
-  /** Removes guide from the manager. */
-  public synchronized boolean remove(Guide guide) {
-    return guides.remove(guide);
-  }
+    /**
+     * Removes guide from the manager.
+     * @param guide Guide to be removed
+     * @return {@code true} if the guide was successfully removed (the manager contained the guide)
+     */
+    public synchronized boolean remove(Guide guide) {
+        return guides.remove(guide);
+    }
 
-  /** Returns list of guides. */
-  public List<Guide> getList() {
-    return guides;
-  }
+    /**
+     * Obtains list of guides that are present in the manager.
+     * @return Unmodifiable list of guides
+     */
+    public List<Guide> getList() {
+        return Collections.unmodifiableList(guides);
+    }
 }

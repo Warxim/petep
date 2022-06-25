@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,13 +16,23 @@
  */
 package com.warxim.petep.extension.internal.tagger.factory;
 
-import java.io.IOException;
 import com.warxim.petep.extension.PetepAPI;
 import com.warxim.petep.gui.component.ConfigPane;
 
+import java.io.IOException;
+
+/**
+ * Base configurator class for tag subrules.
+ * <p>Implementation should contain JavaFX controls for configuring the tag subrule data for specific factory.</p>
+ */
 @PetepAPI
 public abstract class TagSubruleConfigurator extends ConfigPane<TagSubruleData> {
-  public TagSubruleConfigurator(String template) throws IOException {
-    super(template);
-  }
+    /**
+     * Constructs tag subrule configurator.
+     * @param template Path to FXML template
+     * @throws IOException If the template could not be loaded
+     */
+    protected TagSubruleConfigurator(String template) throws IOException {
+        super(template);
+    }
 }

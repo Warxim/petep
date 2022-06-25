@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,49 +16,35 @@
  */
 package com.warxim.petep.extension.internal.tagger.intercept;
 
-import com.warxim.petep.extension.internal.common.rule_group.RuleGroup;
-import com.warxim.petep.extension.internal.common.rule_group.config.RuleInterceptorConfig;
-import com.warxim.petep.extension.internal.common.rule_group.intercept.RuleInterceptorModule;
-import com.warxim.petep.extension.internal.tagger.TaggerExtension;
+import com.warxim.petep.extension.internal.common.rulegroup.intercept.RuleInterceptorModule;
 import com.warxim.petep.extension.internal.tagger.rule.TagRule;
 import com.warxim.petep.helper.PetepHelper;
 import com.warxim.petep.interceptor.factory.InterceptorModuleFactory;
 import com.warxim.petep.interceptor.worker.Interceptor;
-import com.warxim.petep.persistence.Configurable;
 
-/** Tag interceptor module. */
-public final class TagInterceptorModule extends RuleInterceptorModule<TagRule>
-    implements Configurable<RuleInterceptorConfig> {
-  private RuleGroup<TagRule> group;
+/**
+ * Tag interceptor module.
+ */
+public final class TagInterceptorModule extends RuleInterceptorModule<TagRule> {
+    /**
+     * Tag interceptor module constructor.
+     * @param factory Factory that created this module
+     * @param code Code of this module
+     * @param name Name of this module
+     * @param description Description of this module
+     * @param enabled {@code true} if the module should be used
+     */
+    public TagInterceptorModule(
+            InterceptorModuleFactory factory,
+            String code,
+            String name,
+            String description,
+            boolean enabled) {
+        super(factory, code, name, description, enabled);
+    }
 
-  /** Tag interceptor module constructor. */
-  public TagInterceptorModule(
-      InterceptorModuleFactory factory,
-      String code,
-      String name,
-      String description,
-      boolean enabled) {
-    super(factory, code, name, description, enabled);
-  }
-
-  @Override
-  public Interceptor createInterceptor(int id, PetepHelper helper) {
-    return new TagInterceptor(id, this, helper);
-  }
-
-  @Override
-  public RuleInterceptorConfig saveConfig() {
-    return new RuleInterceptorConfig(group.getCode());
-  }
-
-  @Override
-  public void loadConfig(RuleInterceptorConfig config) {
-    group = ((TaggerExtension) factory.getExtension()).getRuleGroupManager()
-        .get(config.getRuleGroupCode());
-  }
-
-  @Override
-  public RuleGroup<TagRule> getRuleGroup() {
-    return group;
-  }
+    @Override
+    public Interceptor createInterceptor(int id, PetepHelper helper) {
+        return new TagInterceptor(id, this, helper);
+    }
 }

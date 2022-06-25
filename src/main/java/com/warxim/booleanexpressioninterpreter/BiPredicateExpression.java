@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -19,43 +19,67 @@ package com.warxim.booleanexpressioninterpreter;
 import java.util.function.BiPredicate;
 
 /**
- * BiPredicate expression uses BiPredicate for solve method. Result of BiPredicate is cached until
- * new parameters are provided.
+ * BiPredicate expression uses BiPredicate for solve method.
+ * Result of BiPredicate is cached until new parameters are provided.
+ * @param <T> Type of the first parameter for bipredicate
+ * @param <U> Type of the second parameter for bipredicate
  */
 public class BiPredicateExpression<T, U> implements Expression {
-  private final BiPredicate<T, U> predicate;
+    private final BiPredicate<T, U> predicate;
 
-  private boolean value;
-  private boolean cached;
-  private T firstParameter;
-  private U secondParameter;
+    private boolean value;
+    private boolean cached;
+    private T firstParameter;
+    private U secondParameter;
 
-  public BiPredicateExpression(BiPredicate<T, U> predicate) {
-    this.predicate = predicate;
-    cached = false;
-  }
-
-  public BiPredicateExpression(BiPredicate<T, U> function, T firstParam, U secondParam) {
-    this(function);
-    firstParameter = firstParam;
-    secondParameter = secondParam;
-  }
-
-  public void setParams(T firstParam, U secondParam) {
-    firstParameter = firstParam;
-    secondParameter = secondParam;
-    cached = false;
-  }
-
-  @Override
-  public boolean solve() {
-    if (cached) {
-      return value;
+    /**
+     * BiPredicate expression
+     * <p>
+     *     Parameters are null and can be changed using {@link BiPredicateExpression#setParams}
+     * </p>
+     * @param predicate BiPredicate for evaluating the expression
+     */
+    public BiPredicateExpression(BiPredicate<T, U> predicate) {
+        this.predicate = predicate;
+        cached = false;
     }
 
-    cached = true;
-    value = predicate.test(firstParameter, secondParameter);
+    /**
+     * BiPredicate expression
+     * @param predicate BiPredicate for evaluating the expression
+     * @param firstParam first parameter for the evaluation of bipredicate
+     * @param secondParam second parameter for the evaluation of bipredicate
+     */
+    public BiPredicateExpression(BiPredicate<T, U> predicate, T firstParam, U secondParam) {
+        this(predicate);
+        firstParameter = firstParam;
+        secondParameter = secondParam;
+    }
 
-    return value;
-  }
+    /**
+     * Sets new parameters for bipredicate evaluation.
+     * @param firstParam first parameter for the evaluation of bipredicate
+     * @param secondParam second parameter for the evaluation of bipredicate
+     */
+    public void setParams(T firstParam, U secondParam) {
+        firstParameter = firstParam;
+        secondParameter = secondParam;
+        cached = false;
+    }
+
+
+    /**
+     * Evaluates the bipredicate using persisted parameters and caches the result.
+     */
+    @Override
+    public boolean solve() {
+        if (cached) {
+            return value;
+        }
+
+        cached = true;
+        value = predicate.test(firstParameter, secondParameter);
+
+        return value;
+    }
 }

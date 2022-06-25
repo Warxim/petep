@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,22 +16,38 @@
  */
 package com.warxim.petep.extension.internal.http.proxy;
 
-import java.net.Socket;
+import com.warxim.petep.core.pdu.PDU;
+import com.warxim.petep.extension.internal.http.pdu.HttpPdu;
+import com.warxim.petep.extension.internal.http.pdu.WebSocketPdu;
 import com.warxim.petep.extension.internal.tcp.TcpConfig;
 import com.warxim.petep.extension.internal.tcp.proxy.base.TcpConnection;
 import com.warxim.petep.extension.internal.tcp.proxy.base.TcpProxy;
 import com.warxim.petep.helper.PetepHelper;
 import com.warxim.petep.proxy.module.ProxyModule;
 
-/** HTTP Proxy. */
-public final class HttpProxy extends TcpProxy {
-  /** Http proxy constructor. */
-  public HttpProxy(ProxyModule module, PetepHelper helper, TcpConfig config) {
-    super(module, helper, config);
-  }
+import java.net.Socket;
 
-  @Override
-  protected TcpConnection createConnection(Socket socket) {
-    return new HttpConnection(connectionManager.nextId(), this, socket);
-  }
+/**
+ * HTTP Proxy supporting simple HTTP and WebSocket PDUs.
+ */
+public final class HttpProxy extends TcpProxy {
+    /**
+     * Constructs HTTP proxy
+     * @param module Parent module of the worker
+     * @param helper Helper for accessing running instance of PETEP core
+     * @param config TCP configuration
+     */
+    public HttpProxy(ProxyModule module, PetepHelper helper, TcpConfig config) {
+        super(module, helper, config);
+    }
+
+    @Override
+    protected TcpConnection createConnection(Socket socket) {
+        return new HttpConnection(connectionManager.nextCode(), this, socket);
+    }
+
+    @Override
+    public boolean supports(PDU pdu) {
+        return pdu instanceof HttpPdu || pdu instanceof WebSocketPdu;
+    }
 }

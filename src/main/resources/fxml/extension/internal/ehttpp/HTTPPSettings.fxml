@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="265.0" prefWidth="402.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="10.0" layoutY="65.0" styleClass="input-label" text="IP address:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="65.0" />
+      <TextField fx:id="serverIp" layoutX="75.0" layoutY="60.0" prefHeight="26.0" prefWidth="300.0" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="60.0" />
+      <Label layoutX="10.0" layoutY="37.0" styleClass="h3" text="Internal HTTP server" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="37.0" />
+      <Label layoutX="13.0" layoutY="6.0" styleClass="h2" text="HTTP Proxy" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <Label layoutX="10.0" layoutY="103.0" styleClass="input-label" text="Port:" AnchorPane.topAnchor="95.0" />
+      <TextField fx:id="serverPort" layoutX="75.0" layoutY="98.0" prefHeight="26.0" prefWidth="300.0" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="90.0" />
+      <Label layoutX="10.0" layoutY="155.0" styleClass="input-label" text="IP address:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="155.0" />
+      <TextField fx:id="proxyIp" layoutX="75.0" layoutY="150.0" prefHeight="26.0" prefWidth="300.0" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="150.0" />
+      <Label layoutX="10.0" layoutY="127.0" styleClass="h3" text="HTTP proxy" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="125.0" />
+      <Label layoutX="10.0" layoutY="185.0" styleClass="input-label" text="Port:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="185.0" />
+      <TextField fx:id="proxyPort" layoutX="75.0" layoutY="180.0" prefHeight="26.0" prefWidth="300.0" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="180.0" />
+      <Button layoutX="323.0" layoutY="213.0" mnemonicParsing="false" onAction="#onSaveButtonClick" prefHeight="24.0" prefWidth="55.0" text="Save" AnchorPane.leftAnchor="320.0" AnchorPane.topAnchor="210.0" />
+   </children>
+</AnchorPane>

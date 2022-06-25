@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -19,65 +19,74 @@ package com.warxim.petep.bootstrap;
 import com.warxim.petep.common.ContextType;
 import com.warxim.petep.exception.CommandLineArgumentsException;
 
-/** Command line arguments. */
+/**
+ * Command line arguments representing startup arguments of PETEP.
+ */
 public final class CommandLineArguments {
-  private final String[] arguments;
-  private final String projectPath;
-  private ContextType contextType;
-  private boolean fromWizard;
+    public static final String HELP = "petep project_dir [--nogui]";
+    private final String[] arguments;
+    private final String projectPath;
+    private final ContextType contextType;
+    private final boolean fromWizard;
 
-  public static final String HELP = "petep project_dir [--nogui]";
+    /**
+     * Command line arguments constructor
+     * @param arguments CMD arguments from main method
+     * @throws CommandLineArgumentsException If the arguments are not valid
+     */
+    public CommandLineArguments(String[] arguments) throws CommandLineArgumentsException {
+        if (arguments.length < 1) {
+            throw new CommandLineArgumentsException("Not enough parameters!");
+        }
 
-  /**
-   * Command line arguments constructor
-   *
-   * @param arguments CMD arguments from main method
-   */
-  public CommandLineArguments(String[] arguments) throws CommandLineArgumentsException {
-    if (arguments.length < 1) {
-      throw new CommandLineArgumentsException("Not enough parameters!");
+        this.arguments = arguments;
+
+        // Use the first argument as project path.
+        projectPath = arguments[0];
+
+        // Detect context type and whether the application starts from wizard.
+        var detectedContextType = ContextType.GUI;
+        var detectedFromWizard = false;
+
+        for (var i = 1; i < arguments.length; ++i) {
+            String argument = arguments[i].toLowerCase();
+
+            if ("--nogui".equals(argument)) {
+                detectedContextType = ContextType.COMMAND_LINE;
+            } else if ("--from-wizard".equals(argument)) {
+                detectedFromWizard = true;
+            }
+        }
+
+        this.contextType = detectedContextType;
+        this.fromWizard = detectedFromWizard;
     }
 
-    this.arguments = arguments;
-
-    // Use the first argument as project path.
-    projectPath = arguments[0];
-
-    // Detect context type and whether the application starts from wizard.
-    contextType = ContextType.GUI;
-    fromWizard = false;
-
-    for (int i = 1; i < arguments.length; ++i) {
-      String argument = arguments[i].toLowerCase();
-
-      if ("--nogui".equals(argument)) {
-        contextType = ContextType.COMMAND_LINE;
-      } else if ("--from-wizard".equals(argument)) {
-        fromWizard = true;
-      }
+    /**
+     * @return context type of PETEP (GUI / COMMAND_LINE).
+     */
+    public ContextType getContextType() {
+        return contextType;
     }
-  }
 
-  /** Returns context type of PETEP (GUI / COMMAND_LINE). */
-  public ContextType getContextType() {
-    return contextType;
-  }
+    /**
+     * @return all original command line arguments
+     */
+    public String[] getArguments() {
+        return arguments;
+    }
 
-  /** Returns command line arguments. */
-  public String[] getArguments() {
-    return arguments;
-  }
+    /**
+     * @return project path
+     */
+    public String getProjectPath() {
+        return projectPath;
+    }
 
-  /** Returns project path. */
-  public String getProjectPath() {
-    return projectPath;
-  }
-
-  /**
-   * Returns true if project is started from wizard. (JavaFX application cannot be created multiple
-   * times.)
-   */
-  public boolean isFromWizard() {
-    return fromWizard;
-  }
+    /**
+     * @return {@code true} if project is started from wizard.
+     */
+    public boolean isFromWizard() {
+        return fromWizard;
+    }
 }

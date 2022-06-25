@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,26 +16,45 @@
  */
 package com.warxim.petep.proxy.worker;
 
-/** Proxy executor executes proxy workers. */
+/**
+ * Proxy executor executes proxy workers.
+ */
 public final class ProxyExecutor {
-  private final ProxyManager manager;
+    /**
+     * Manager that manages all active proxies
+     */
+    private final ProxyManager manager;
 
-  public ProxyExecutor(ProxyManager manager) {
-    this.manager = manager;
-  }
+    /**
+     * Constructs proxy executor.
+     * @param manager Proxy manager that handles all active proxies
+     */
+    public ProxyExecutor(ProxyManager manager) {
+        this.manager = manager;
+    }
 
-  /** Runs prepare method in all proxy workers. */
-  public boolean prepare() {
-    return manager.getList().parallelStream().allMatch(Proxy::prepare);
-  }
+    /**
+     * Runs prepare method in all proxy workers.
+     * @return  {@code true} if all proxies have been successfully prepared;<br>
+     *          {@code false} if at least one of proxies has failed preparation (this will abort start of PETEP core)
+     */
+    public boolean prepare() {
+        return manager.getList().parallelStream().allMatch(Proxy::prepare);
+    }
 
-  /** Runs start method in all proxy workers. */
-  public boolean start() {
-    return manager.getList().parallelStream().allMatch(Proxy::start);
-  }
+    /**
+     * Runs start method in all proxy workers.
+     * @return  {@code true} if all proxies have been successfully started;<br>
+     *          {@code false} if at least one of proxies has failed to start (this will abort start of PETEP core)
+     */
+    public boolean start() {
+        return manager.getList().parallelStream().allMatch(Proxy::start);
+    }
 
-  /** Runs stop method in all proxy workers. */
-  public void stop() {
-    manager.getList().parallelStream().forEach(Proxy::stop);
-  }
+    /**
+     * Runs stop method in all proxy workers.
+     */
+    public void stop() {
+        manager.getList().parallelStream().forEach(Proxy::stop);
+    }
 }

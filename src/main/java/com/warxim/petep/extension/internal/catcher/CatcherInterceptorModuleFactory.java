@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -20,29 +20,34 @@ import com.warxim.petep.extension.Extension;
 import com.warxim.petep.interceptor.factory.InterceptorModuleFactory;
 import com.warxim.petep.interceptor.module.InterceptorModule;
 
-/** Catcher interceptor module factory. */
+/**
+ * Catcher interceptor module factory.
+ */
 public final class CatcherInterceptorModuleFactory extends InterceptorModuleFactory {
-  /** Catcher interceptor module factory constructor. */
-  public CatcherInterceptorModuleFactory(Extension extension) {
-    super(extension);
-  }
+    /**
+     * Catcher interceptor module factory constructor.
+     * @param extension Extension that owns this factory
+     */
+    public CatcherInterceptorModuleFactory(Extension extension) {
+        super(extension);
+    }
 
-  @Override
-  public String getName() {
-    return "Catcher";
-  }
+    @Override
+    public String getName() {
+        return "Catcher";
+    }
 
-  @Override
-  public String getCode() {
-    return "catcher";
-  }
+    @Override
+    public String getCode() {
+        return "catcher";
+    }
 
-  @Override
-  public InterceptorModule createModule(
-      String code,
-      String name,
-      String description,
-      boolean enabled) {
-    return new CatcherInterceptorModule(this, code, name, description, enabled);
-  }
+    @Override
+    public InterceptorModule createModule(
+            String code,
+            String name,
+            String description,
+            boolean enabled) {
+        return new CatcherInterceptorModule(this, code, name, description, enabled);
+    }
 }

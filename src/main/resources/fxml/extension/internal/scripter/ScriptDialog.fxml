@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="307.0" prefWidth="518.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+     <Label layoutX="10.0" layoutY="177.0" prefHeight="16.0" prefWidth="77.0" styleClass="input-label" text="Type:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="176.0" />
+       <Label layoutX="10.0" layoutY="9.0" prefHeight="16.0" prefWidth="77.0" styleClass="input-label" text="Name:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="15.0" />
+      <TextField fx:id="nameInput" layoutX="87.0" layoutY="2.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <Label layoutX="10.0" layoutY="35.0" prefHeight="16.0" prefWidth="77.0" styleClass="input-label" text="Description:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="45.0" />
+      <TextArea fx:id="descriptionInput" layoutX="94.0" layoutY="30.0" prefHeight="70.0" prefWidth="423.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="40.0" />
+      <Label layoutX="10.0" layoutY="148.0" prefHeight="16.0" prefWidth="77.0" styleClass="input-label" text="Language:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="146.0" />
+      <TextField fx:id="languageInput" layoutX="85.0" layoutY="142.0" prefHeight="26.0" prefWidth="400.0" text="js" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="141.0" />
+      <Label layoutX="10.0" layoutY="113.0" prefHeight="16.0" prefWidth="77.0" styleClass="input-label" text="Enabled:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="116.0" />
+      <CheckBox fx:id="enabledInput" layoutX="83.0" layoutY="116.0" mnemonicParsing="false" AnchorPane.leftAnchor="85.0" AnchorPane.topAnchor="116.0" />
+      <ComboBox fx:id="typeInput" layoutX="85.0" layoutY="172.0" onAction="#onTypeChange" prefHeight="25.0" prefWidth="423.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="172.0" />
+      <AnchorPane fx:id="stringScriptPane" layoutX="1.0" layoutY="197.0" prefHeight="200.0" prefWidth="200.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="202.0">
+         <children>
+            <Label prefHeight="16.0" prefWidth="77.0" styleClass="input-label" text="Script:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="4.0" />
+            <TextArea fx:id="scriptInput" layoutX="75.0" layoutY="-23.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="fileScriptPane" layoutX="11.0" layoutY="207.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="202.0">
+         <children>
+            <Label prefHeight="16.0" prefWidth="77.0" styleClass="input-label" text="Script:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="4.0" />
+            <TextField fx:id="pathInput" layoutX="87.0" layoutY="2.0" prefHeight="25.0" prefWidth="399.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="0.0" />
+            <Button layoutX="466.0" layoutY="5.0" mnemonicParsing="false" onAction="#onFileOpenButtonClick" prefWidth="25.0" prefHeight="26.0" text="..." AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
+         </children>
+      </AnchorPane>
+     </children>
+</AnchorPane>

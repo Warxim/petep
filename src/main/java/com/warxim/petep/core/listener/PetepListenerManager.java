@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,53 +16,45 @@
  */
 package com.warxim.petep.core.listener;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.warxim.petep.helper.PetepHelper;
 
-/** Listener manager that allows modules to register their own listener. */
-public final class PetepListenerManager implements PetepListener {
-  private final List<PetepListener> listeners;
+/**
+ * Listener manager that allows modules to register their own listener.
+ * <p>
+ *     Calls listeners in parallel.
+ * </p>
+ * <p>
+ *     Based on {@link ListenerManager}
+ * </p>
+ */
+public final class PetepListenerManager extends ListenerManager<PetepListener> implements PetepListener {
+    @Override
+    public void beforeCorePrepare(PetepHelper helper) {
+        parallelCall(listener -> listener.beforeCorePrepare(helper));
+    }
 
-  public PetepListenerManager() {
-    listeners = new ArrayList<>();
-  }
+    @Override
+    public void afterCorePrepare(PetepHelper helper) {
+        parallelCall(listener -> listener.afterCorePrepare(helper));
+    }
 
-  public void registerListener(PetepListener listener) {
-    listeners.add(listener);
-  }
+    @Override
+    public void beforeCoreStart(PetepHelper helper) {
+        parallelCall(listener -> listener.beforeCoreStart(helper));
+    }
 
-  public void unregisterListener(PetepListener listener) {
-    listeners.remove(listener);
-  }
+    @Override
+    public void afterCoreStart(PetepHelper helper) {
+        parallelCall(listener -> listener.afterCoreStart(helper));
+    }
 
-  @Override
-  public void beforePrepare(PetepHelper helper) {
-    listeners.parallelStream().forEach(listener -> listener.beforePrepare(helper));
-  }
+    @Override
+    public void beforeCoreStop(PetepHelper helper) {
+        parallelCall(listener -> listener.beforeCoreStop(helper));
+    }
 
-  @Override
-  public void afterPrepare(PetepHelper helper) {
-    listeners.parallelStream().forEach(listener -> listener.afterPrepare(helper));
-  }
-
-  @Override
-  public void beforeStart(PetepHelper helper) {
-    listeners.parallelStream().forEach(listener -> listener.beforeStart(helper));
-  }
-
-  @Override
-  public void afterStart(PetepHelper helper) {
-    listeners.parallelStream().forEach(listener -> listener.afterStart(helper));
-  }
-
-  @Override
-  public void beforeStop(PetepHelper helper) {
-    listeners.parallelStream().forEach(listener -> listener.beforeStop(helper));
-  }
-
-  @Override
-  public void afterStop(PetepHelper helper) {
-    listeners.parallelStream().forEach(listener -> listener.afterStop(helper));
-  }
+    @Override
+    public void afterCoreStop(PetepHelper helper) {
+        parallelCall(listener -> listener.afterCoreStop(helper));
+    }
 }

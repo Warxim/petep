@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -21,61 +21,104 @@ import com.warxim.petep.gui.controller.settings.SettingsController;
 import com.warxim.petep.gui.guide.GuideManager;
 import javafx.scene.image.Image;
 
-/** Singleton for GUI assets. */
+/**
+ * Singleton for GUI assets.
+ */
 public final class GuiBundle {
-  private static GuiBundle instance = null;
+    /**
+     * Internal instance reference
+     */
+    private static volatile GuiBundle instance;
 
-  // Assets.
-  private final Image petepIcon = new Image(getClass().getResourceAsStream("/img/Logo.png"));
+    /**
+     * PETEP logo icon
+     */
+    private final Image petepIcon;
 
-  // GUI components.
-  private ApplicationController applicationController;
-  private SettingsController settingsController;
+    /**
+     * Manager for handling registration of guides
+     */
+    private final GuideManager guideManager;
 
-  // Guide manager.
-  private final GuideManager guideManager;
+    /**
+     * Controller of main application window
+     */
 
-  /** GUI Bundle constructor (hidden). */
-  private GuiBundle() {
-    guideManager = new GuideManager();
-  }
+    private ApplicationController applicationController;
+    /**
+     * Controller of settings tab
+     */
+    private SettingsController settingsController;
 
-  /** Returns GuiBundle instance. */
-  public static GuiBundle getInstance() {
-    if (instance == null) {
-      instance = new GuiBundle();
+    /**
+     * GUI Bundle constructor (hidden).
+     */
+    private GuiBundle() {
+        guideManager = new GuideManager();
+        petepIcon = new Image(getClass().getResourceAsStream("/img/Logo.png"));
     }
 
-    return instance;
-  }
+    /**
+     * Gets instance of GUI bundle.
+     * @return GUI bundle instance
+     */
+    public static GuiBundle getInstance() {
+        if (instance == null) {
+            synchronized(GuiBundle.class) {
+                if (instance == null) {
+                    instance = new GuiBundle();
+                }
+            }
+        }
 
-  /*
-   * GETTERS
-   */
-  public Image getPetepIcon() {
-    return petepIcon;
-  }
+        return instance;
+    }
 
-  public ApplicationController getApplicationController() {
-    return applicationController;
-  }
+    /**
+     * Obtains PETEP icon.
+     * @return JavaFX image with PETEP icon
+     */
+    public Image getPetepIcon() {
+        return petepIcon;
+    }
 
-  public SettingsController getSettingsController() {
-    return settingsController;
-  }
+    /**
+     * Obtains application controller, which handles main application window UI
+     * @return Application controller
+     */
+    public ApplicationController getApplicationController() {
+        return applicationController;
+    }
 
-  public GuideManager getGuideManager() {
-    return guideManager;
-  }
+    /**
+     * Sets application controller, which handles main application window UI
+     * @param controller Application controller
+     */
+    public void setApplicationController(ApplicationController controller) {
+        applicationController = controller;
+    }
 
-  /*
-   * SETTERS
-   */
-  public void setApplicationController(ApplicationController controller) {
-    applicationController = controller;
-  }
+    /**
+     * Obtains settings controller, which handles settings tab UI
+     * @return Settings controller
+     */
+    public SettingsController getSettingsController() {
+        return settingsController;
+    }
 
-  public void setSettingsController(SettingsController controller) {
-    settingsController = controller;
-  }
+    /**
+     * Sets settings controller, which handles settings tab UI
+     * @param controller Settings controller
+     */
+    public void setSettingsController(SettingsController controller) {
+        settingsController = controller;
+    }
+
+    /**
+     * Obtains Guide manager, which is used for registering and obtaining guides of various extensions.
+     * @return Guide manager
+     */
+    public GuideManager getGuideManager() {
+        return guideManager;
+    }
 }

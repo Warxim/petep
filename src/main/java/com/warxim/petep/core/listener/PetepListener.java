@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -20,31 +20,56 @@ import com.warxim.petep.extension.PetepAPI;
 import com.warxim.petep.helper.PetepHelper;
 
 /**
- * PETEP listener interface. Allows extensions to listen for PETEP events and also allows them to
- * obtain PetepHelper.
- *
+ * PETEP listener interface. Allows extensions to listen for PETEP events and also allows them to obtain PetepHelper.
  * <p>
- * <b>ATTENTION</b>: Extensions should remove PetepHelper from their memory after PETEP stops, so
- * that GC can collect resources. (This, of course, applies to all other resources that are
- * connected to PETEP instance.)
+ *    <b>Warning #1</b>: Extensions should remove PetepHelper from their memory after PETEP stops, so that GC can collect resources.
+ *    (This, of course, applies to all other resources that are connected to PETEP instance.)
+ * </p>
+ * <p>
+ *    <b>Warning #2</b>: Listeners are called in parallel, so be careful when accessing the same data in two listeners.
+ * </p>
  */
 @PetepAPI
 public interface PetepListener {
-  /** Event before prepare step is processed. */
-  default void beforePrepare(PetepHelper helper) {}
+    /**
+     * Event before prepare step is processed.
+     * @param helper PETEP helper for currently running core
+     */
+    default void beforeCorePrepare(PetepHelper helper) {
+    }
 
-  /** Event after prepare step is processed. */
-  default void afterPrepare(PetepHelper helper) {}
+    /**
+     * Event after prepare step is processed.
+     * @param helper PETEP helper for currently running core
+     */
+    default void afterCorePrepare(PetepHelper helper) {
+    }
 
-  /** Event before start step is processed. */
-  default void beforeStart(PetepHelper helper) {}
+    /**
+     * Event before start step is processed.
+     * @param helper PETEP helper for currently running core
+     */
+    default void beforeCoreStart(PetepHelper helper) {
+    }
 
-  /** Event after start step is processed. */
-  default void afterStart(PetepHelper helper) {}
+    /**
+     * Event after start step is processed.
+     * @param helper PETEP helper for currently running core
+     */
+    default void afterCoreStart(PetepHelper helper) {
+    }
 
-  /** Event before stop step is processed. */
-  default void beforeStop(PetepHelper helper) {}
+    /**
+     * Event before stop step is processed.
+     * @param helper PETEP helper for currently running core
+     */
+    default void beforeCoreStop(PetepHelper helper) {
+    }
 
-  /** Event after stop step is processed. */
-  default void afterStop(PetepHelper helper) {}
+    /**
+     * Event after stop step is processed.
+     * @param helper PETEP helper for currently running core
+     */
+    default void afterCoreStop(PetepHelper helper) {
+    }
 }

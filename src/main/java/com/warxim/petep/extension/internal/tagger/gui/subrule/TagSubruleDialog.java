@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,13 +16,11 @@
  */
 package com.warxim.petep.extension.internal.tagger.gui.subrule;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubrule;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleData;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleFactory;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleFactoryManager;
+import com.warxim.petep.gui.common.DisplayFunctionStringConverter;
 import com.warxim.petep.gui.component.ConfigPane;
 import com.warxim.petep.gui.dialog.Dialogs;
 import com.warxim.petep.gui.dialog.SimpleInputDialog;
@@ -31,104 +29,109 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
-import javafx.util.StringConverter;
 
-/** Tag subrule dialog. */
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Tag subrule dialog.
+ */
 public abstract class TagSubruleDialog extends SimpleInputDialog<TagSubrule> {
-  @FXML
-  protected ComboBox<TagSubruleFactory> factoryInput;
+    @FXML
+    protected ComboBox<TagSubruleFactory> factoryInput;
 
-  @FXML
-  protected AnchorPane factoryPane;
+    @FXML
+    protected AnchorPane factoryPane;
 
-  /** Tag subrule dialog constructor. */
-  public TagSubruleDialog(String title, String okText, TagSubruleFactoryManager factoryManager)
-      throws IOException {
-    super("/fxml/extension/internal/tagger/TagSubruleDialog.fxml", title, okText);
+    /**
+     * Constructs tag subrule dialog.
+     * @param title Title of the dialog
+     * @param okText Text of the OK button
+     * @param factoryManager Manager of tag subrule factories
+     * @throws IOException If the dialog template could not be loaded
+     */
+    protected TagSubruleDialog(String title, String okText, TagSubruleFactoryManager factoryManager) throws IOException {
+        super("/fxml/extension/internal/tagger/TagSubruleDialog.fxml", title, okText);
 
-    // Show factory name as factory input text.
-    factoryInput.setConverter(new StringConverter<TagSubruleFactory>() {
-      @Override
-      public String toString(TagSubruleFactory factory) {
+        // Show factory name as factory input text.
+        factoryInput.setConverter(new DisplayFunctionStringConverter<>(TagSubruleFactory::getName));
+
+        // Show factories sorted by name
+        var sortedFactories = new ArrayList<>(factoryManager.getFactories());
+        sortedFactories.sort((a, b) -> a.getName().compareToIgnoreCase(b.getName()));
+        factoryInput.setItems(FXCollections.observableArrayList(sortedFactories));
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    protected final boolean isValid() {
+        // Validate factory
+        var factory = factoryInput.getSelectionModel().getSelectedItem();
         if (factory == null) {
-          return "";
+            Dialogs.createErrorDialog("Factory required", "You have to select factory.");
+            return false;
         }
-        return factory.getName();
-      }
 
-      @Override
-      public TagSubruleFactory fromString(String str) {
+        // Validate configuration pane
+        return factoryPane.getChildren().isEmpty()
+                || ((ConfigPane<TagSubruleData>) factoryPane.getChildren().get(0)).isValid();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    protected final TagSubrule obtainResult() {
+        var factory = factoryInput.getSelectionModel().getSelectedItem();
+
+        if (factoryPane.getChildren().isEmpty()) {
+            return factory.createSubrule(null);
+        } else {
+            var configPane = (ConfigPane<TagSubruleData>) factoryPane.getChildren().get(0);
+            return factory.createSubrule(configPane.getConfig());
+        }
+    }
+
+    /**
+     * Sets config pane to factory pane.
+     */
+    protected final void setFactoryPane(ConfigPane<TagSubruleData> pane) {
+        if (pane == null) {
+            // Clear factory pane if config pane does not exist.
+            factoryPane.getChildren().clear();
+            return;
+        }
+
+        AnchorPane.setLeftAnchor(pane, 0D);
+        AnchorPane.setRightAnchor(pane, 0D);
+
+        // Add config pane to factory pane.
+        factoryPane.getChildren().setAll(pane);
+    }
+
+    /**
+     * Creates config pane for selected factory.
+     */
+    protected final ConfigPane<TagSubruleData> createFactoryPane() {
+        var factory = factoryInput.getSelectionModel().getSelectedItem();
+        if (factory == null) {
+            return null;
+        }
+
+        try {
+            return factory.createConfigPane().orElse(null);
+        } catch (IOException e) {
+            Logger.getGlobal().log(Level.SEVERE, "Could not load factory config pane.", e);
+        }
+
         return null;
-      }
-    });
-
-    factoryInput.setItems(FXCollections.observableArrayList(factoryManager.getFactories()));
-  }
-
-  protected final void setFactoryPane(ConfigPane<TagSubruleData> pane) {
-    if (pane == null) {
-      // Clear factory pane if config pane does not exist.
-      factoryPane.getChildren().clear();
-      return;
     }
 
-    AnchorPane.setLeftAnchor(pane, 0D);
-    AnchorPane.setRightAnchor(pane, 0D);
-
-    // Add config pane to factory pane.
-    factoryPane.getChildren().setAll(pane);
-  }
-
-  protected final ConfigPane<TagSubruleData> createFactoryPane() {
-    TagSubruleFactory factory = factoryInput.getSelectionModel().getSelectedItem();
-
-    if (factory == null) {
-      return null;
+    /**
+     * Handles factory change by loading new factory pane.
+     */
+    @FXML
+    private void onFactoryChange(ActionEvent event) {
+        setFactoryPane(createFactoryPane());
     }
-
-    try {
-      return factory.createConfigPane();
-    } catch (IOException e) {
-      Logger.getGlobal().log(Level.SEVERE, "Could not load factory config pane.", e);
-    }
-
-    return null;
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  protected final boolean isValid() {
-    // Validate factory
-    TagSubruleFactory factory = factoryInput.getSelectionModel().getSelectedItem();
-    if (factory == null) {
-      Dialogs.createErrorDialog("Factory required", "You have to select factory.");
-      return false;
-    }
-
-    // Validate configuration pane
-    if (!factoryPane.getChildren().isEmpty()
-        && !((ConfigPane<TagSubruleData>) factoryPane.getChildren().get(0)).isValid()) {
-      return false;
-    }
-
-    return true;
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  protected final TagSubrule obtainResult() {
-    TagSubruleFactory factory = factoryInput.getSelectionModel().getSelectedItem();
-
-    if (factoryPane.getChildren().isEmpty()) {
-      return factory.createSubrule(null);
-    } else {
-      return factory.createSubrule(
-          ((ConfigPane<TagSubruleData>) factoryPane.getChildren().get(0)).getConfig());
-    }
-  }
-
-  @FXML
-  private final void onFactoryChange(ActionEvent event) {
-    setFactoryPane(createFactoryPane());
-  }
 }

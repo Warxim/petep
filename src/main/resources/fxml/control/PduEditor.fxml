@@ -4,13 +4,8 @@
 
 <?import com.warxim.petep.gui.control.BytesEditor?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
 <fx:root prefHeight="478.0" prefWidth="549.0" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
@@ -51,7 +46,6 @@
       <Label layoutX="10.0" layoutY="129.0" styleClass="input-label" text="Target interceptor:" AnchorPane.leftAnchor="10.0" />
       <ComboBox fx:id="interceptorInput" layoutX="120.0" layoutY="124.0" prefHeight="26.0" prefWidth="460.0" AnchorPane.leftAnchor="120.0" AnchorPane.rightAnchor="10.0" />
       <Label layoutX="10.0" layoutY="14.0" styleClass="h3" text="PDU Flow" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-      <CheckBox fx:id="flowInput" layoutX="84.0" layoutY="14.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="133.0" text="Editable (advanced)" AnchorPane.topAnchor="10.0" />
       <Label layoutX="10.0" layoutY="162.0" styleClass="h3" text="PDU Data" />
    </children>
 </fx:root>

@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,20 +16,12 @@
  */
 package com.warxim.petep.gui.controller.settings;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import com.warxim.petep.Bundle;
 import com.warxim.petep.core.PetepState;
 import com.warxim.petep.core.listener.PetepListener;
 import com.warxim.petep.gui.GuiBundle;
+import com.warxim.petep.gui.common.GuiConstant;
 import com.warxim.petep.helper.PetepHelper;
-import com.warxim.petep.interceptor.factory.InterceptorModuleFactory;
-import com.warxim.petep.interceptor.module.InterceptorModule;
-import com.warxim.petep.proxy.factory.ProxyModuleFactory;
-import com.warxim.petep.proxy.module.ProxyModule;
 import com.warxim.petep.util.GuiUtils;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -41,129 +33,167 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 
-/** Settings controller. */
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Settings controller.
+ */
 public final class SettingsController implements Initializable, PetepListener {
-  @FXML
-  private TabPane tabs;
-  @FXML
-  private Label statusLabel;
-  @FXML
-  private Button startStopButton;
+    @FXML
+    private TabPane tabs;
+    @FXML
+    private Label statusLabel;
+    @FXML
+    private Button startStopButton;
 
-  @Override
-  public void initialize(URL location, ResourceBundle resources) {
-    // Register settings controller to GUI bundle.
-    GuiBundle.getInstance().setSettingsController(this);
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // Register settings controller to GUI bundle.
+        GuiBundle.getInstance().setSettingsController(this);
 
-    // Load proxy settings tab.
-    loadProxySettings();
-    loadInterceptorC2SSettings();
-    loadInterceptorS2CSettings();
+        // Load proxy settings tab.
+        loadProxySettings();
+        loadInterceptorC2SSettings();
+        loadInterceptorS2CSettings();
 
-    // Register PETEP listener.
-    Bundle.getInstance().getPetepListenerManager().registerListener(this);
-  }
-
-  /** Registers new tab to settings tab. */
-  public void registerTab(String title, Node node) {
-    GuiUtils.addTabToTabPane(tabs, title, node);
-  }
-
-  /** Unregisters tab from settings tab. */
-  public void unregisterTab(Node node) {
-    GuiUtils.removeTabFromTabPane(tabs, node);
-  }
-
-  private void loadProxySettings() {
-    try {
-      FXMLLoader fxmlLoader =
-          new FXMLLoader(getClass().getResource("/fxml/tab/settings/ModuleSettings.fxml"));
-
-      fxmlLoader.setController(new ModuleSettingsController<ProxyModule, ProxyModuleFactory>(
-          "Proxies", Bundle.getInstance().getProxyModuleFactoryManager(),
-          Bundle.getInstance().getProxyModuleContainer()));
-
-      registerTab("Proxies", fxmlLoader.load());
-    } catch (IOException e) {
-      Logger.getGlobal().log(Level.SEVERE, "Could not add proxies tab", e);
+        // Register PETEP listener.
+        Bundle.getInstance().getPetepListenerManager().registerListener(this);
     }
-  }
 
-  private void loadInterceptorC2SSettings() {
-    try {
-      FXMLLoader fxmlLoader =
-          new FXMLLoader(getClass().getResource("/fxml/tab/settings/ModuleSettings.fxml"));
-
-      fxmlLoader
-          .setController(new ModuleSettingsController<InterceptorModule, InterceptorModuleFactory>(
-              "Interceptors C2S (client → server)",
-              Bundle.getInstance().getInterceptorModuleFactoryManager(),
-              Bundle.getInstance().getInterceptorModuleContainerC2S()));
-
-      registerTab("Interceptors C2S", fxmlLoader.load());
-    } catch (IOException e) {
-      Logger.getGlobal().log(Level.SEVERE, "Could not add interceptors C2S tab", e);
+    /**
+     * Registers new tab to settings tab.
+     * @param title Title of the tab
+     * @param node Node to be added as a child into the tab
+     */
+    public void registerTab(String title, Node node) {
+        GuiUtils.addTabToTabPane(tabs, title, node);
     }
-  }
 
-  private void loadInterceptorS2CSettings() {
-    try {
-      FXMLLoader fxmlLoader =
-          new FXMLLoader(getClass().getResource("/fxml/tab/settings/ModuleSettings.fxml"));
-
-      fxmlLoader
-          .setController(new ModuleSettingsController<InterceptorModule, InterceptorModuleFactory>(
-              "Interceptors S2C (server → client)",
-              Bundle.getInstance().getInterceptorModuleFactoryManager(),
-              Bundle.getInstance().getInterceptorModuleContainerS2C()));
-
-      registerTab("Interceptors S2C", fxmlLoader.load());
-    } catch (IOException e) {
-      Logger.getGlobal().log(Level.SEVERE, "Could not add interceptors S2C tab", e);
+    /**
+     * Registers new tab to settings tab.
+     * @param title Title of the tab
+     * @param node Node to be added as a child into the tab
+     * @param order Order of the tab (where should the tab be placed)
+     */
+    public void registerTab(String title, Node node, Integer order) {
+        GuiUtils.addTabToTabPane(tabs, title, node, order);
     }
-  }
 
-  @FXML
-  private void onStartStopButtonClick(ActionEvent e) {
-    if (Bundle.getInstance().getPetepManager().getState() == PetepState.STOPPED) {
-      // Lock GUI
-      lock();
-      Platform.runLater(() -> statusLabel.setText("STARTING..."));
-      startStopButton.setText("STOP");
-
-      Bundle.getInstance().getPetepManager().start();
-    } else {
-      Bundle.getInstance().getPetepManager().stop();
+    /**
+     * Unregisters tab from settings tab.
+     * @param node Child node of the tab that should be removed
+     */
+    public void unregisterTab(Node node) {
+        GuiUtils.removeTabFromTabPane(tabs, node);
     }
-  }
 
-  /** Locks settings. */
-  private void lock() {
-    this.tabs.setDisable(true);
-  }
+    @Override
+    public void afterCoreStart(PetepHelper helper) {
+        Platform.runLater(() -> statusLabel.setText("STARTED"));
+    }
 
-  /** Unlocks settings. */
-  private void unlock() {
-    this.tabs.setDisable(false);
-  }
+    @Override
+    public void afterCoreStop(PetepHelper helper) {
+        // Unlock GUI
+        Platform.runLater(() -> {
+            unlock();
+            statusLabel.setText("STOPPED");
+            startStopButton.setText("START");
+        });
+    }
 
-  @Override
-  public void afterStart(PetepHelper helper) {
-    Platform.runLater(() -> statusLabel.setText("STARTED"));
-  }
+    @Override
+    public void afterCorePrepare(PetepHelper helper) {
+        Platform.runLater(() -> statusLabel.setText("PREPARED"));
+    }
 
-  @Override
-  public void afterStop(PetepHelper helper) {
-    // Unlock GUI
-    Platform.runLater(() -> {
-      unlock();
-      statusLabel.setText("STOPPED");
-      startStopButton.setText("START");
-    });
-  }
+    /**
+     * Starts or stops PETEP core.
+     */
+    @FXML
+    private void onStartStopButtonClick(ActionEvent e) {
+        if (Bundle.getInstance().getPetepManager().getState() == PetepState.STOPPED) {
+            // Lock GUI
+            lock();
+            Platform.runLater(() -> statusLabel.setText("STARTING..."));
+            startStopButton.setText("STOP");
 
-  @Override
-  public void afterPrepare(PetepHelper helper) {
-    Platform.runLater(() -> statusLabel.setText("PREPARED"));
-  }
+            Bundle.getInstance().getPetepManager().start();
+        } else {
+            Bundle.getInstance().getPetepManager().stop();
+        }
+    }
+
+    /**
+     * Loads proxy settings tab.
+     */
+    private void loadProxySettings() {
+        try {
+            var fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/tab/settings/ModuleSettings.fxml"));
+
+            fxmlLoader.setController(new ModuleSettingsController<>(
+                    "Proxies", Bundle.getInstance().getProxyModuleFactoryManager(),
+                    Bundle.getInstance().getProxyModuleContainer()));
+
+            registerTab("Proxies", fxmlLoader.load(), GuiConstant.SETTINGS_PROXIES_TAB_ORDER);
+        } catch (IOException e) {
+            Logger.getGlobal().log(Level.SEVERE, "Could not add proxies tab", e);
+        }
+    }
+
+    /**
+     * Loads interceptor C2S settings tab.
+     */
+    private void loadInterceptorC2SSettings() {
+        try {
+            var fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/tab/settings/ModuleSettings.fxml"));
+
+            fxmlLoader
+                    .setController(new ModuleSettingsController<>(
+                            "Interceptors C2S (client → server)",
+                            Bundle.getInstance().getInterceptorModuleFactoryManager(),
+                            Bundle.getInstance().getInterceptorModuleContainerC2S()));
+
+            registerTab("Interceptors C2S", fxmlLoader.load(), GuiConstant.SETTINGS_INTERCEPTORS_C2S_TAB_ORDER);
+        } catch (IOException e) {
+            Logger.getGlobal().log(Level.SEVERE, "Could not add interceptors C2S tab", e);
+        }
+    }
+
+    /**
+     * Loads interceptor S2C settings tab.
+     */
+    private void loadInterceptorS2CSettings() {
+        try {
+            var fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/tab/settings/ModuleSettings.fxml"));
+
+            fxmlLoader
+                    .setController(new ModuleSettingsController<>(
+                            "Interceptors S2C (server → client)",
+                            Bundle.getInstance().getInterceptorModuleFactoryManager(),
+                            Bundle.getInstance().getInterceptorModuleContainerS2C()));
+
+            registerTab("Interceptors S2C", fxmlLoader.load(), GuiConstant.SETTINGS_INTERCEPTORS_S2C_TAB_ORDER);
+        } catch (IOException e) {
+            Logger.getGlobal().log(Level.SEVERE, "Could not add interceptors S2C tab", e);
+        }
+    }
+
+    /**
+     * Locks settings.
+     */
+    private void lock() {
+        this.tabs.setDisable(true);
+    }
+
+    /**
+     * Unlocks settings.
+     */
+    private void unlock() {
+        this.tabs.setDisable(false);
+    }
 }

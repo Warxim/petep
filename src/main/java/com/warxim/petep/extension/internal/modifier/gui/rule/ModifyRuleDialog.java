@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,16 +16,15 @@
  */
 package com.warxim.petep.extension.internal.modifier.gui.rule;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import com.warxim.petep.extension.internal.modifier.factory.ModifierData;
 import com.warxim.petep.extension.internal.modifier.factory.ModifierFactory;
 import com.warxim.petep.extension.internal.modifier.factory.ModifierFactoryManager;
 import com.warxim.petep.extension.internal.modifier.rule.ModifyRule;
+import com.warxim.petep.gui.common.DisplayFunctionStringConverter;
 import com.warxim.petep.gui.component.ConfigPane;
 import com.warxim.petep.gui.dialog.Dialogs;
 import com.warxim.petep.gui.dialog.SimpleInputDialog;
+import com.warxim.petep.util.GuiUtils;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -34,127 +33,133 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.util.StringConverter;
 
-/** Modify rule dialog. */
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Modify rule dialog.
+ */
 public abstract class ModifyRuleDialog extends SimpleInputDialog<ModifyRule> {
-  @FXML
-  protected ComboBox<ModifierFactory> factoryInput;
+    @FXML
+    protected ComboBox<ModifierFactory> factoryInput;
+    @FXML
+    protected AnchorPane factoryPane;
+    @FXML
+    protected TextField nameInput;
+    @FXML
+    protected TextArea descriptionInput;
+    @FXML
+    protected TextField tagInput;
+    @FXML
+    protected CheckBox enabledInput;
 
-  @FXML
-  protected AnchorPane factoryPane;
+    /**
+     * Constructs modify rule.
+     * @param title Title of the dialog
+     * @param okText Text of the OK button
+     * @param factoryManager Manager of modifier factories for obtaining factories
+     * @throws IOException If the dialog template could not be loaded
+     */
+    protected ModifyRuleDialog(String title, String okText, ModifierFactoryManager factoryManager)
+            throws IOException {
+        super("/fxml/extension/internal/modifier/ModifyRuleDialog.fxml", title, okText);
 
-  @FXML
-  protected TextField nameInput;
+        enabledInput.setSelected(true);
 
-  @FXML
-  protected TextArea descriptionInput;
+        // Show factory name as factory input text.
+        factoryInput.setConverter(new DisplayFunctionStringConverter<>(ModifierFactory::getName));
 
-  @FXML
-  protected TextField tagInput;
+        // Show factories sorted by name
+        var sortedFactories = new ArrayList<>(factoryManager.getFactories());
+        sortedFactories.sort((a, b) -> a.getName().compareToIgnoreCase(b.getName()));
+        factoryInput.setItems(FXCollections.observableArrayList(sortedFactories));
 
-  @FXML
-  protected CheckBox enabledInput;
+        tagInput.setTooltip(GuiUtils.createTooltip(
+                "Use empty string to use this modifier to all PDUs or specific tag to use this modifier only in tagged PDUs."
+        ));
+    }
 
-  /** Modify rule dialog constructor. */
-  public ModifyRuleDialog(String title, String okText, ModifierFactoryManager factoryManager)
-      throws IOException {
-    super("/fxml/extension/internal/modifier/ModifyRuleDialog.fxml", title, okText);
+    /**
+     * On factory change, reset factory pane so that there are adequate fields.
+     */
+    @FXML
+    protected void onFactoryChange(ActionEvent event) {
+        setFactoryPane(createFactoryPane());
+    }
 
-    enabledInput.setSelected(true);
-
-    // Show factory name as factory input text.
-    factoryInput.setConverter(new StringConverter<ModifierFactory>() {
-      @Override
-      public String toString(ModifierFactory factory) {
-        if (factory == null) {
-          return "";
+    /**
+     * Sets config pane into factory pane and anchors it.
+     */
+    protected final void setFactoryPane(ConfigPane<ModifierData> pane) {
+        if (pane == null) {
+            // Clear factory pane if config pane does not exist.
+            factoryPane.getChildren().clear();
+            return;
         }
-        return factory.getName();
-      }
 
-      @Override
-      public ModifierFactory fromString(String str) {
+        AnchorPane.setLeftAnchor(pane, 0D);
+        AnchorPane.setRightAnchor(pane, 0D);
+
+        // Add config pane to factory pane.
+        factoryPane.getChildren().setAll(pane);
+    }
+
+    /**
+     * Creates factory pane for selected modifier factory.
+     */
+    protected final ConfigPane<ModifierData> createFactoryPane() {
+        var factory = factoryInput.getSelectionModel().getSelectedItem();
+
+        if (factory == null) {
+            return null;
+        }
+
+        try {
+            return factory.createConfigPane().orElse(null);
+        } catch (IOException e) {
+            Logger.getGlobal().log(Level.SEVERE, "Could not load factory config pane.", e);
+        }
+
         return null;
-      }
-    });
-
-    factoryInput.setItems(FXCollections.observableArrayList(factoryManager.getFactories()));
-  }
-
-  protected final void setFactoryPane(ConfigPane<ModifierData> pane) {
-    if (pane == null) {
-      // Clear factory pane if config pane does not exist.
-      factoryPane.getChildren().clear();
-      return;
     }
 
-    AnchorPane.setLeftAnchor(pane, 0D);
-    AnchorPane.setRightAnchor(pane, 0D);
+    @SuppressWarnings("unchecked")
+    @Override
+    protected final boolean isValid() {
+        if (nameInput.getText().isEmpty()) {
+            Dialogs.createErrorDialog("Name required", "You have to enter name.");
+            return false;
+        }
 
-    // Add config pane to factory pane.
-    factoryPane.getChildren().setAll(pane);
-  }
+        // Validate tag.
+        if (!tagInput.getText().isEmpty() && !tagInput.getText().matches("^[a-zA-Z0-9-_.]+$")) {
+            Dialogs.createErrorDialog("Tag invalid",
+                    "You have entered invalid tag (allowed characters are A-Za-z0-9-_.).");
+            return false;
+        }
 
-  protected final ConfigPane<ModifierData> createFactoryPane() {
-    ModifierFactory factory = factoryInput.getSelectionModel().getSelectedItem();
+        // Validate factory
+        var factory = factoryInput.getSelectionModel().getSelectedItem();
+        if (factory == null) {
+            Dialogs.createErrorDialog("Factory required", "You have to select factory.");
+            return false;
+        }
 
-    if (factory == null) {
-      return null;
+        // Validate configuration pane
+        return factoryPane.getChildren().isEmpty()
+                || ((ConfigPane<ModifierData>) factoryPane.getChildren().get(0)).isValid();
     }
 
-    try {
-      return factory.createConfigPane();
-    } catch (IOException e) {
-      Logger.getGlobal().log(Level.SEVERE, "Could not load factory config pane.", e);
+    @SuppressWarnings("unchecked")
+    @Override
+    protected final ModifyRule obtainResult() {
+        ModifierFactory factory = factoryInput.getSelectionModel().getSelectedItem();
+
+        return new ModifyRule(nameInput.getText(), descriptionInput.getText(),
+                enabledInput.isSelected(), tagInput.getText(), factory.createModifier(
+                ((ConfigPane<ModifierData>) factoryPane.getChildren().get(0)).getConfig()));
     }
-
-    return null;
-  }
-
-  @FXML
-  private final void onFactoryChange(ActionEvent event) {
-    setFactoryPane(createFactoryPane());
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  protected final boolean isValid() {
-    if (nameInput.getText().isEmpty()) {
-      Dialogs.createErrorDialog("Name required", "You have to enter name.");
-      return false;
-    }
-
-    // Validate tag.
-    if (!tagInput.getText().isEmpty() && !tagInput.getText().matches("^[a-zA-Z0-9-_.]+$")) {
-      Dialogs.createErrorDialog("Tag invalid",
-          "You have entered invalid tag (allowed characters are A-Za-z0-9-_.).");
-      return false;
-    }
-
-    // Validate factory
-    ModifierFactory factory = factoryInput.getSelectionModel().getSelectedItem();
-    if (factory == null) {
-      Dialogs.createErrorDialog("Factory required", "You have to select factory.");
-      return false;
-    }
-
-    // Validate configuration pane
-    if (!factoryPane.getChildren().isEmpty()
-        && !((ConfigPane<ModifierData>) factoryPane.getChildren().get(0)).isValid()) {
-      return false;
-    }
-
-    return true;
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  protected final ModifyRule obtainResult() {
-    ModifierFactory factory = factoryInput.getSelectionModel().getSelectedItem();
-
-    return new ModifyRule(nameInput.getText(), descriptionInput.getText(),
-        enabledInput.isSelected(), tagInput.getText(), factory.createModifier(
-            ((ConfigPane<ModifierData>) factoryPane.getChildren().get(0)).getConfig()));
-  }
 }

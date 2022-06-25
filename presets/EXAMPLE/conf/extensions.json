@@ -1,0 +1,206 @@
+[
+  {
+    "path": "logger"
+  },
+  {
+    "path": "udp"
+  },
+  {
+    "path": "tcp"
+  },
+  {
+    "path": "http"
+  },
+  {
+    "path": "external_http_proxy",
+    "store": {
+      "serverIp": "127.0.0.1",
+      "serverPort": 8181,
+      "proxyIp": "127.0.0.1",
+      "proxyPort": 8080
+    }
+  },
+  {
+    "path": "connection_view"
+  },
+  {
+    "path": "tagger",
+    "store": {
+      "groups": [
+        {
+          "code": "default",
+          "name": "Default",
+          "rules": [
+            {
+              "name": "PETEP",
+              "description": "",
+              "enabled": true,
+              "tag": "petep",
+              "subrules": [
+                {
+                  "factoryCode": "proxy",
+                  "data": {
+                    "proxyCode": "petep"
+                  }
+                }
+              ],
+              "expressionString": "0"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "path": "catcher"
+  },
+  {
+    "path": "modifier",
+    "store": {
+      "groups": [
+        {
+          "code": "default",
+          "name": "Default",
+          "rules": [
+            {
+              "name": "Fix PETEP Host header",
+              "description": "Change Host header from 127.0.0.1:8888 to petep.warxim.com",
+              "enabled": true,
+              "tag": "petep",
+              "factoryCode": "replace",
+              "data": {
+                "occurrence": 0,
+                "what": [
+                  49,
+                  50,
+                  55,
+                  46,
+                  48,
+                  46,
+                  48,
+                  46,
+                  49,
+                  58,
+                  56,
+                  56,
+                  56,
+                  56
+                ],
+                "whatCharset": "ISO-8859-1",
+                "with": [
+                  112,
+                  101,
+                  116,
+                  101,
+                  112,
+                  46,
+                  119,
+                  97,
+                  114,
+                  120,
+                  105,
+                  109,
+                  46,
+                  99,
+                  111,
+                  109
+                ],
+                "withCharset": "ISO-8859-1"
+              }
+            },
+            {
+              "name": "Invalidate Accept-Encoding header",
+              "description": "",
+              "enabled": true,
+              "tag": "petep",
+              "factoryCode": "replace",
+              "data": {
+                "occurrence": 0,
+                "what": [
+                  65,
+                  99,
+                  99,
+                  101,
+                  112,
+                  116,
+                  45,
+                  69,
+                  110,
+                  99,
+                  111,
+                  100,
+                  105,
+                  110,
+                  103
+                ],
+                "whatCharset": "ISO-8859-1",
+                "with": [
+                  67,
+                  45,
+                  65,
+                  99,
+                  99,
+                  101,
+                  112,
+                  116,
+                  45,
+                  69,
+                  110,
+                  99,
+                  111,
+                  100,
+                  105,
+                  110,
+                  103
+                ],
+                "withCharset": "ISO-8859-1"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "path": "history"
+  },
+  {
+    "path": "scripter",
+    "store": {
+      "groups": [
+        {
+          "code": "default",
+          "name": "Default",
+          "rules": [
+            {
+              "name": "Log PDU size",
+              "description": "",
+              "language": "js",
+              "enabled": true,
+              "type": "STRING",
+              "data": {
+                "string": "const log \u003d scripter.getLogger();\n\nscripter.registerInterceptor({\n    intercept: function(pdu, helper) {\n        log.info(\u0027PDU size: \u0027 + pdu.getSize());\n        return true;\n    }\n});"
+              }
+            },
+            {
+              "name": "File script",
+              "description": "",
+              "language": "js",
+              "enabled": true,
+              "type": "FILE",
+              "data": {
+                "path": "scripts/main.js"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "path": "repeater",
+    "store": {
+      "tabs": []
+    }
+  }
+]

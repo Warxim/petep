@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -20,35 +20,42 @@ import com.warxim.petep.core.pdu.PDU;
 import com.warxim.petep.helper.PetepHelper;
 import com.warxim.petep.interceptor.worker.Interceptor;
 
-/** Logger interceptor. */
+/**
+ * Logger interceptor.
+ */
 public final class LoggerInterceptor extends Interceptor {
-  private LoggerWorker worker;
+    private LoggerWorker worker;
 
-  /** Logger interceptor constructor. */
-  public LoggerInterceptor(int id, LoggerInterceptorModule module, PetepHelper helper) {
-    super(id, module, helper);
-  }
-
-  @Override
-  public boolean intercept(PDU pdu) {
-    if (!pdu.hasTag("no_log") || pdu.hasTag("log")) {
-      worker.log(pdu.copy());
+    /**
+     * Logger interceptor constructor.
+     * @param id Identifier of interceptor (index of the interceptor)
+     * @param module Parent module of the interceptor
+     * @param helper Helper for accessing running instance of PETEP core
+     */
+    public LoggerInterceptor(int id, LoggerInterceptorModule module, PetepHelper helper) {
+        super(id, module, helper);
     }
 
-    return true;
-  }
+    @Override
+    public boolean intercept(PDU pdu) {
+        if (!pdu.hasTag("no_log") || pdu.hasTag("log")) {
+            worker.log(pdu.copy());
+        }
 
-  @Override
-  public boolean prepare() {
-    return true;
-  }
+        return true;
+    }
 
-  @Override
-  public void stop() {
-    // No action needed.
-  }
+    @Override
+    public boolean prepare() {
+        return true;
+    }
 
-  public void setWorker(LoggerWorker worker) {
-    this.worker = worker;
-  }
+    @Override
+    public void stop() {
+        // No action needed.
+    }
+
+    public void setWorker(LoggerWorker worker) {
+        this.worker = worker;
+    }
 }

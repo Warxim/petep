@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -17,15 +17,17 @@
 package com.warxim.petep.extension.internal.tagger.factory.internal.starts_with;
 
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleData;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
-public final class StartsWithData extends TagSubruleData {
-  private final byte[] data;
+import java.nio.charset.Charset;
 
-  public StartsWithData(byte[] data) {
-    this.data = data;
-  }
-
-  public byte[] getData() {
-    return data;
-  }
+/**
+ * Tag subrule data for "startsWith" subrule.
+ */
+@Value
+@EqualsAndHashCode(callSuper=true)
+public class StartsWithData extends TagSubruleData {
+    byte[] data;
+    Charset charset;
 }

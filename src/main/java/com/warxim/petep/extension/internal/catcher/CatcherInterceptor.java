@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -21,63 +21,73 @@ import com.warxim.petep.helper.PetepHelper;
 import com.warxim.petep.interceptor.module.InterceptorModule;
 import com.warxim.petep.interceptor.worker.Interceptor;
 
-/** Catcher interceptor. */
+/**
+ * Catcher interceptor.
+ */
 public final class CatcherInterceptor extends Interceptor {
-  private static final int RECHECK_STATE_PERIOD_MS = 25;
-  private CatcherController controller;
+    /**
+     * After how many milliseconds to recheck state of Catcher when transitioning between states.
+     */
+    private static final int RECHECK_STATE_PERIOD_MS = 25;
+    private CatcherController controller;
 
-  /** Catcher interceptor constructor. */
-  public CatcherInterceptor(int id, InterceptorModule module, PetepHelper helper) {
-    super(id, module, helper);
-  }
-
-  @Override
-  public boolean prepare() {
-    // Get controller.
-    controller = ((CatcherExtension) module.getFactory().getExtension()).getController();
-    return true;
-  }
-
-  @Override
-  public boolean intercept(PDU pdu) {
-    if (controller == null) {
-      // Controller does not exist, let PDU go through.
-      return true;
-    } else {
-      // PDU has no_catch_skip tag and does not have catch tag. (Let it go through the interceptor.)
-      if (pdu.hasTag("no_catch_skip") && !pdu.hasTag("catch")) {
-        return true;
-      }
-
-      // If controller is in transition, wait, so we do not mix PDU order.
-      while (controller.getState() == CatcherState.TRANSITION) {
-        try {
-          Thread.sleep(RECHECK_STATE_PERIOD_MS);
-        } catch (InterruptedException e) {
-          // Interrupted
-          Thread.currentThread().interrupt();
-          return false;
-        }
-      }
-
-      // If catcher is disabled, let PDU go through.
-      if (controller.getState() == CatcherState.OFF) {
-        return true;
-      }
-
-      // Set this interceptor as last PDU interceptor.
-      pdu.setLastInterceptor(this);
-
-      // Intercept PDU in GUI.
-      controller.catchPdu(pdu);
-
-      // Do not let PDU go to the next interceptor.
-      return false;
+    /**
+     * Constructs catcher interceptor
+     * @param id Identifier of interceptor (index of the interceptor)
+     * @param module Parent module of the interceptor
+     * @param helper Helper for accessing running instance of PETEP core
+     */
+    public CatcherInterceptor(int id, InterceptorModule module, PetepHelper helper) {
+        super(id, module, helper);
     }
-  }
 
-  @Override
-  public void stop() {
-    // No action needed.
-  }
+    @Override
+    public boolean prepare() {
+        // Get controller.
+        controller = ((CatcherExtension) module.getFactory().getExtension()).getController();
+        return true;
+    }
+
+    @Override
+    public boolean intercept(PDU pdu) {
+        if (controller == null) {
+            // Controller does not exist, let PDU go through.
+            return true;
+        } else {
+            // PDU has no_catch_skip tag and does not have catch tag. (Let it go through the interceptor.)
+            if (pdu.hasTag("no_catch_skip") && !pdu.hasTag("catch")) {
+                return true;
+            }
+
+            // If controller is in transition, wait, so we do not mix PDU order.
+            while (controller.getState() == CatcherState.TRANSITION) {
+                try {
+                    Thread.sleep(RECHECK_STATE_PERIOD_MS);
+                } catch (InterruptedException e) {
+                    // Interrupted
+                    Thread.currentThread().interrupt();
+                    return false;
+                }
+            }
+
+            // If catcher is disabled, let PDU go through.
+            if (controller.getState() == CatcherState.OFF) {
+                return true;
+            }
+
+            // Set this interceptor as last PDU interceptor.
+            pdu.setLastInterceptor(this);
+
+            // Intercept PDU in GUI.
+            controller.catchPdu(pdu);
+
+            // Do not let PDU go to the next interceptor.
+            return false;
+        }
+    }
+
+    @Override
+    public void stop() {
+        // No action needed.
+    }
 }

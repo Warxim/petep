@@ -1,0 +1,63 @@
+[
+  {
+    "code": "logger",
+    "name": "Logger",
+    "description": "",
+    "factory": "logger",
+    "enabled": true,
+    "config": {
+      "path": "log/s2c.log"
+    }
+  },
+  {
+    "code": "tagger",
+    "name": "Tagger",
+    "description": "",
+    "factory": "tagger",
+    "enabled": true,
+    "config": {
+      "ruleGroupCode": "default"
+    }
+  },
+  {
+    "code": "modifier",
+    "name": "Modifier",
+    "description": "",
+    "factory": "modifier",
+    "enabled": true,
+    "config": {
+      "ruleGroupCode": "default"
+    }
+  },
+  {
+    "code": "scripter",
+    "name": "Scripter",
+    "description": "",
+    "factory": "scripter",
+    "enabled": true,
+    "config": {
+      "ruleGroupCode": "default"
+    }
+  },
+  {
+    "code": "history",
+    "name": "History",
+    "description": "",
+    "factory": "history",
+    "enabled": true
+  },
+  {
+    "code": "catcher",
+    "name": "Catcher",
+    "description": "",
+    "factory": "catcher",
+    "enabled": true
+  },
+  {
+    "code": "ehttpp",
+    "name": "External HTTP Proxy",
+    "description": "",
+    "factory": "external_http_proxy",
+    "enabled": false
+  }
+]

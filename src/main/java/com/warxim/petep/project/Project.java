@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,21 +16,19 @@
  */
 package com.warxim.petep.project;
 
-/** PETEP project. */
-public final class Project {
-  private final String name;
-  private final String description;
+import lombok.Value;
 
-  public Project(String name, String description) {
-    this.name = name;
-    this.description = description;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String getDescription() {
-    return description;
-  }
+/**
+ * PETEP project.
+ */
+@Value
+public class Project {
+    /**
+     * Project name
+     */
+    String name;
+    /**
+     * Project description
+     */
+    String description;
 }

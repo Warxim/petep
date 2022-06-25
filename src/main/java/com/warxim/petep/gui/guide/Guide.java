@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,34 +16,49 @@
  */
 package com.warxim.petep.gui.guide;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import com.warxim.petep.extension.PetepAPI;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
 /**
- * Guide base class. (Guides are HTML pages that contain various tutorials, tips and tricks for
- * extension modules and also PETEP core.)
+ * Guide base class.
+ * (Guides are HTML pages that contain various tutorials, tips and tricks for extension modules and also PETEP core.)
  */
 @PetepAPI
 public abstract class Guide {
-  public Guide() {}
-
-  public abstract String getTitle();
-
-  public abstract String getHtml();
-
-  /** Returns content of HTML file from resource path. */
-  protected String loadHtmlResource(String path) {
-    try (InputStream in = getClass().getResourceAsStream(path)) {
-      return new String(in.readAllBytes(), StandardCharsets.UTF_8);
-    } catch (IOException e) {
-      return "<p><b>Could not load " + getTitle() + " Guide:</b></p><p>" + e.getMessage() + "</p>";
+    protected Guide() {
     }
-  }
 
-  /** Returns text displayed in list view in guide dialog. */
-  public String toString() {
-    return getTitle();
-  }
+    /**
+     * Gets title of the guide
+     * @return Guide title
+     */
+    public abstract String getTitle();
+
+    /**
+     * Gets HTML of the guide
+     * @return Guide content HTML
+     */
+    public abstract String getHtml();
+
+    /**
+     * Returns content of HTML file from resource path.
+     * <p>If the resource does not exist, result will contain error message.</p>
+     * @param path Path of HTML resource file to load into string
+     */
+    protected String loadHtmlResource(String path) {
+        try (var in = getClass().getResourceAsStream(path)) {
+            return new String(in.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            return "<p><b>Could not load " + getTitle() + " Guide:</b></p><p>" + e.getMessage() + "</p>";
+        }
+    }
+
+    /**
+     * Returns text displayed in list view in guide dialog.
+     */
+    public String toString() {
+        return getTitle();
+    }
 }

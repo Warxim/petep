@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,150 +16,187 @@
  */
 package com.warxim.petep.extension.internal.tcp.proxy.base;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import com.warxim.petep.core.connection.ConnectionManager;
 import com.warxim.petep.extension.internal.tcp.TcpConfig;
 import com.warxim.petep.helper.PetepHelper;
 import com.warxim.petep.proxy.module.ProxyModule;
 import com.warxim.petep.proxy.worker.Proxy;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Base TCP proxy class for accepting TCP connections.
+ */
 public abstract class TcpProxy extends Proxy {
-  /** TCP connection manager. */
-  protected final TcpConnectionManager connectionManager;
+    /**
+     * TCP connection manager.
+     */
+    protected final TcpConnectionManager connectionManager;
 
-  /** TCP configuration. */
-  protected final TcpConfig config;
+    /**
+     * TCP configuration.
+     */
+    protected final TcpConfig config;
 
-  /** Socket factory for SSL/noSSL sockets. */
-  protected TcpSocketFactory socketFactory;
+    /**
+     * Socket factory for SSL/noSSL sockets.
+     */
+    protected TcpSocketFactory socketFactory;
 
-  /** Server socket (between client and proxy). */
-  protected ServerSocket socket = null;
+    /**
+     * Server socket (between client and proxy).
+     */
+    protected ServerSocket socket;
 
-  /** TCP proxy thread. */
-  protected Thread thread;
+    /**
+     * TCP proxy thread.
+     */
+    protected Thread thread;
 
-  /** Is TCP proxy running? */
-  protected boolean running;
+    /**
+     * Is TCP proxy running?
+     */
+    protected boolean running;
 
-  /** TCP proxy constructor. */
-  public TcpProxy(ProxyModule module, PetepHelper helper, TcpConfig config) {
-    super(module, helper);
-    this.config = config;
-    connectionManager = createConnectionManager();
-  }
-
-  /** Creates connection manager. */
-  protected TcpConnectionManager createConnectionManager() {
-    return new TcpConnectionManager();
-  }
-
-  /** Creates connection. */
-  protected abstract TcpConnection createConnection(Socket socket);
-
-  /** Prepares TCP socket factory using SSL configuration. */
-  @Override
-  public boolean prepare() {
-    try {
-      socketFactory =
-          new TcpSocketFactory(config.getServerSslConfig(), config.getClientSslConfig());
-    } catch (KeyManagementException | NoSuchAlgorithmException | UnrecoverableKeyException
-        | KeyStoreException | CertificateException | IOException e) {
-      Logger.getGlobal().log(Level.SEVERE, "SSL exception.", e);
-      return false;
+    /**
+     * Constructs TCP proxy
+     * @param module Parent module of the worker
+     * @param helper Helper for accessing running instance of PETEP core
+     * @param config TCP configuration
+     */
+    protected TcpProxy(ProxyModule module, PetepHelper helper, TcpConfig config) {
+        super(module, helper);
+        this.config = config;
+        connectionManager = createConnectionManager();
     }
 
-    return true;
-  }
+    /**
+     * Creates TCP connection.
+     * @param socket Socket of the connection
+     * @return TCP connection
+     */
+    protected abstract TcpConnection createConnection(Socket socket);
 
-  /** Starts TCP proxy. */
-  @Override
-  public boolean start() {
-    try {
-      socket = socketFactory.createServerSocket(config.getProxyIP(), config.getProxyPort());
-
-      thread = new Thread(this::accept);
-
-      running = true;
-
-      thread.start();
-
-      return true;
-    } catch (UnknownHostException e) {
-      Logger.getGlobal().log(Level.SEVERE, "TCP unknown host exception thrown.", e);
-    } catch (IOException e) {
-      Logger.getGlobal().log(Level.SEVERE, "TCP IO exception thrown.", e);
+    /**
+     * Creates connection manager.
+     * @return TCP connection manager
+     */
+    protected TcpConnectionManager createConnectionManager() {
+        return new TcpConnectionManager(helper);
     }
 
-    return false;
-  }
-
-  /** Accepts incoming connections. */
-  protected void accept() {
-    try {
-      while (running) {
-        // Accept connection.
-        TcpConnection connection = createConnection(socket.accept());
-
-        // Start connection and add it to connection manager.
-        if (connection.start()) {
-          connectionManager.add(connection);
+    /**
+     * Prepares TCP socket factory using SSL configuration.
+     */
+    @Override
+    public boolean prepare() {
+        try {
+            socketFactory = new TcpSocketFactory(config.getServerSslConfig(), config.getClientSslConfig());
+        } catch (TcpProxyException e) {
+            Logger.getGlobal().log(Level.SEVERE, "SSL exception.", e);
+            return false;
         }
-      }
-    } catch (SocketException e) {
-      // Socket closed
-    } catch (IOException e) {
-      Logger.getGlobal().log(Level.SEVERE, "TCP Proxy accept exception.", e);
-    }
-  }
 
-  /** Stops TCP proxy. */
-  @Override
-  public void stop() {
-    running = false;
-
-    // Interrupt accepting thread.
-    if (thread != null) {
-      thread.interrupt();
+        return true;
     }
 
-    // Close server socket.
-    if (socket != null) {
-      try {
-        socket.close();
-      } catch (IOException e) {
-        Logger.getGlobal().log(Level.SEVERE, "TCP proxy exception - IO exception!", e);
-      }
+    /**
+     * Starts TCP proxy.
+     * <p>Runs accept loop for accepting new connections, adding them to connection manager and starting them.</p>
+     */
+    @Override
+    public boolean start() {
+        try {
+            socket = socketFactory.createServerSocket(config.getProxyIP(), config.getProxyPort());
+
+            thread = new Thread(this::accept);
+
+            running = true;
+
+            thread.start();
+
+            return true;
+        } catch (UnknownHostException e) {
+            Logger.getGlobal().log(Level.SEVERE, "TCP unknown host exception thrown.", e);
+        } catch (IOException e) {
+            Logger.getGlobal().log(Level.SEVERE, "TCP IO exception thrown.", e);
+        }
+
+        return false;
     }
 
-    // Stop connections.
-    connectionManager.stop();
-  }
+    /**
+     * Accepts incoming connections.
+     * <p>Adds accepted connections to connection manager.</p>
+     */
+    protected void accept() {
+        try {
+            while (running) {
+                // Accept connection.
+                var connection = createConnection(socket.accept());
 
-  /** Returns connection manager. */
-  @Override
-  public ConnectionManager getConnectionManager() {
-    return connectionManager;
-  }
+                // Start connection and add it to connection manager.
+                if (connection.start()) {
+                    connectionManager.add(connection);
+                }
+            }
+        } catch (SocketException e) {
+            // Socket closed
+        } catch (IOException e) {
+            Logger.getGlobal().log(Level.SEVERE, "TCP Proxy accept exception.", e);
+        }
+    }
 
-  /** Returns TCP config. */
-  public TcpConfig getConfig() {
-    return config;
-  }
+    /**
+     * Stops TCP proxy.
+     */
+    @Override
+    public void stop() {
+        running = false;
 
-  /** Returns TCP socket factory. */
-  public TcpSocketFactory getSocketFactory() {
-    return socketFactory;
-  }
+        // Interrupt accepting thread.
+        if (thread != null) {
+            thread.interrupt();
+        }
+
+        // Close server socket.
+        if (socket != null) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                Logger.getGlobal().log(Level.SEVERE, "TCP proxy exception - IO exception!", e);
+            }
+        }
+
+        // Stop connections.
+        connectionManager.stop();
+    }
+
+    @Override
+    public ConnectionManager getConnectionManager() {
+        return connectionManager;
+    }
+
+    /**
+     * Gets TCP config.
+     * @return TCP config of this proxy
+     */
+    public TcpConfig getConfig() {
+        return config;
+    }
+
+    /**
+     * Gets TCP socket factory.
+     * @return TCP socket factory for this proxy (created according to the config)
+     */
+    public TcpSocketFactory getSocketFactory() {
+        return socketFactory;
+    }
+
 }

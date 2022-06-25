@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,93 +16,124 @@
  */
 package com.warxim.petep.gui.guide.internal;
 
+import com.warxim.petep.Bundle;
+import com.warxim.petep.gui.guide.Guide;
+import com.warxim.petep.interceptor.module.InterceptorModule;
+import com.warxim.petep.module.Module;
+import com.warxim.petep.proxy.module.ProxyModule;
+import com.warxim.petep.util.WebUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringJoiner;
-import com.warxim.petep.Bundle;
-import com.warxim.petep.gui.guide.Guide;
-import com.warxim.petep.interceptor.module.InterceptorModule;
-import com.warxim.petep.proxy.module.ProxyModule;
-import com.warxim.petep.util.WebUtils;
 
-/** Diagram guide renders diagram of PETEP. */
+/**
+ * Diagram guide renders diagram of PETEP.
+ */
 public final class DiagramGuide extends Guide {
-  @Override
-  public String getTitle() {
-    return "Diagram";
-  }
-
-  @Override
-  public String getHtml() {
-    // Load templates.
-    String page = loadHtmlResource("/html/guide/internal/diagram/Diagram.html");
-    String interceptorTemplate =
-        loadHtmlResource("/html/guide/internal/diagram/DiagramInterceptor.html");
-
-    // Generate interceptors.
-    page = page.replace("{{interceptorsC2S}}", generateInterceptors(
-        Bundle.getInstance().getInterceptorModuleContainerC2S().getList(), interceptorTemplate,
-        loadHtmlResource("/html/guide/internal/diagram/DiagramInterceptorSeparatorRight.html")));
-
-    page = page.replace("{{interceptorsS2C}}",
-        generateInterceptors(
-            reverseList(Bundle.getInstance().getInterceptorModuleContainerS2C().getList()),
-            interceptorTemplate,
-            loadHtmlResource("/html/guide/internal/diagram/DiagramInterceptorSeparatorLeft.html")));
-
-    // Generate proxies.
-    page = page.replace("{{proxies}}",
-        generateProxies(Bundle.getInstance().getProxyModuleContainer().getList(),
-            loadHtmlResource("/html/guide/internal/diagram/DiagramProxy.html")));
-
-    return page;
-  }
-
-  /** Generates interceptors HTML using specified template separated by specified separator. */
-  private static String generateInterceptors(
-      List<InterceptorModule> modules,
-      String template,
-      String separator) {
-    StringJoiner joiner = new StringJoiner(separator);
-
-    for (InterceptorModule module : modules) {
-      if (!module.isEnabled()) {
-        continue;
-      }
-
-      joiner.add(template.replace("{{name}}", WebUtils.escapeHtml(module.getName()))
-          .replace("{{code}}", WebUtils.escapeHtml(module.getCode()))
-          .replace("{{description}}", WebUtils.escapeHtml(module.getDescription())));
+    @Override
+    public String getTitle() {
+        return "Diagram";
     }
 
-    return joiner.toString();
-  }
+    @Override
+    public String getHtml() {
+        // Load templates.
+        var page = loadHtmlResource("/html/guide/internal/diagram/Diagram.html");
+        var interceptorTemplate = loadHtmlResource("/html/guide/internal/diagram/DiagramInterceptor.html");
 
-  /** Generates proxies HTML using specified template. */
-  private static String generateProxies(List<ProxyModule> modules, String template) {
-    StringBuilder builder = new StringBuilder();
+        // Generate interceptors.
+        page = page.replace(
+                "{{interceptorsC2S}}",
+                generateInterceptors(
+                        Bundle.getInstance().getInterceptorModuleContainerC2S().getList(),
+                        interceptorTemplate,
+                        loadHtmlResource("/html/guide/internal/diagram/DiagramInterceptorSeparatorRight.html")
+                )
+        );
 
-    for (ProxyModule module : modules) {
-      if (!module.isEnabled()) {
-        continue;
-      }
+        page = page.replace(
+                "{{interceptorsS2C}}",
+                generateInterceptors(
+                        reverseList(Bundle.getInstance().getInterceptorModuleContainerS2C().getList()),
+                        interceptorTemplate,
+                        loadHtmlResource("/html/guide/internal/diagram/DiagramInterceptorSeparatorLeft.html")
+                )
+        );
 
-      builder.append(template.replace("{{name}}", WebUtils.escapeHtml(module.getName()))
-          .replace("{{code}}", WebUtils.escapeHtml(module.getCode()))
-          .replace("{{description}}",
-              WebUtils.escapeHtml(module.getDescription()).replace("\n", "<br>")));
+        // Generate proxies.
+        page = page.replace(
+                "{{proxies}}",
+                generateProxies(
+                        Bundle.getInstance().getProxyModuleContainer().getList(),
+                        loadHtmlResource("/html/guide/internal/diagram/DiagramProxy.html")
+                )
+        );
+
+        return page;
     }
 
-    return builder.toString();
-  }
+    /**
+     * Generates interceptors HTML using specified template separated by specified separator.
+     */
+    private static String generateInterceptors(
+            List<InterceptorModule> modules,
+            String template,
+            String separator) {
+        var joiner = new StringJoiner(separator);
 
-  /** Returns reversed list. */
-  private static <E> List<E> reverseList(List<E> alist) {
-    ArrayList<E> rlist = new ArrayList<>(alist);
+        for (var module : modules) {
+            if (!module.isEnabled()) {
+                continue;
+            }
 
-    Collections.reverse(rlist);
+            var filledTemplate = preprocessTemplate(template, module);
+            joiner.add(filledTemplate);
+        }
 
-    return rlist;
-  }
+        return joiner.toString();
+    }
+
+    /**
+     * Generates proxies HTML using specified template.
+     */
+    private static String generateProxies(List<ProxyModule> modules, String template) {
+        var builder = new StringBuilder();
+
+        for (var module : modules) {
+            if (!module.isEnabled()) {
+                continue;
+            }
+
+            var filledTemplate = preprocessTemplate(template, module);
+            builder.append(filledTemplate);
+        }
+
+        return builder.toString();
+    }
+
+    /**
+     * Preprocesses template using given module (replaces code, name, description placeholders).
+     */
+    private static String preprocessTemplate(String template, Module<?> module) {
+        var name = WebUtils.escapeHtml(module.getName());
+        var code = WebUtils.escapeHtml(module.getCode());
+        var description = WebUtils.escapeHtml(module.getDescription()).replace("\n", "<br>");
+        return template
+                .replace("{{name}}", name)
+                .replace("{{code}}", code)
+                .replace("{{description}}", description);
+    }
+
+    /**
+     * Returns reversed list.
+     */
+    private static <E> List<E> reverseList(List<E> alist) {
+        var reversedList = new ArrayList<E>(alist);
+
+        Collections.reverse(reversedList);
+
+        return reversedList;
+    }
 }

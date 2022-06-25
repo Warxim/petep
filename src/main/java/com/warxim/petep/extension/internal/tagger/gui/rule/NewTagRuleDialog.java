@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,13 +16,20 @@
  */
 package com.warxim.petep.extension.internal.tagger.gui.rule;
 
-import java.io.IOException;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleFactoryManager;
 
-/** New tag rule dialog. */
+import java.io.IOException;
+
+/**
+ * New tag rule dialog.
+ */
 public final class NewTagRuleDialog extends TagRuleDialog {
-  /** New tag rule dialog constructor. */
-  public NewTagRuleDialog(TagSubruleFactoryManager moduleManager) throws IOException {
-    super("New tag rule", "Create", moduleManager);
-  }
+    /**
+     * Constructs tag rule dialog for creation.
+     * @param factoryManager Manager of tag subrule factories
+     * @throws IOException If the dialog template could not be loaded
+     */
+    public NewTagRuleDialog(TagSubruleFactoryManager factoryManager) throws IOException {
+        super("New tag rule", "Create", factoryManager);
+    }
 }

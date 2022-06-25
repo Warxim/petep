@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -22,22 +22,30 @@ import com.warxim.petep.extension.internal.modifier.factory.ModifierData;
 import com.warxim.petep.extension.internal.modifier.factory.ModifierFactory;
 import com.warxim.petep.util.PduUtils;
 
+/**
+ * Replacer modifier rule for replacing bytes in PDUs.
+ */
 public final class Replacer extends Modifier {
-  public Replacer(ModifierFactory factory, ModifierData data) {
-    super(factory, data);
-  }
-
-  @Override
-  public boolean process(PDU pdu) {
-    ReplacerData rule = (ReplacerData) data;
-
-    // run replace
-    if (rule.getOccurrence() == -1) {
-      PduUtils.replace(pdu, rule.getWhat(), rule.getWith());
-    } else {
-      PduUtils.replace(pdu, rule.getWhat(), rule.getWith(), rule.getOccurrence());
+    /**
+     * Constructs replacer modifier
+     * @param factory Factory that created this modifier
+     * @param data Data configuration for this modifier
+     */
+    public Replacer(ModifierFactory factory, ModifierData data) {
+        super(factory, data);
     }
 
-    return true;
-  }
+    @Override
+    public boolean process(PDU pdu) {
+        var rule = (ReplacerData) data;
+
+        // Run replace
+        if (rule.getOccurrence() == -1) {
+            PduUtils.replace(pdu, rule.getWhat(), rule.getWith());
+        } else {
+            PduUtils.replace(pdu, rule.getWhat(), rule.getWith(), rule.getOccurrence());
+        }
+
+        return true;
+    }
 }

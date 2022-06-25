@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -18,7 +18,12 @@ package com.warxim.petep.interceptor.factory;
 
 import com.warxim.petep.module.ModuleFactoryManager;
 
-/** Interceptor module factory manager. */
-public class InterceptorModuleFactoryManager
-    extends ModuleFactoryManager<InterceptorModuleFactory> {
+/**
+ * Interceptor module factory manager.
+ * <p>
+ *     Takes care of all interceptor module factories in PETEP.
+ *     These factories are registered by extensions.
+ * </p>
+ */
+public class InterceptorModuleFactoryManager extends ModuleFactoryManager<InterceptorModuleFactory> {
 }

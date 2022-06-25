@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,179 +16,194 @@
  */
 package com.warxim.petep.configuration;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+import com.warxim.petep.common.Constant;
+import com.warxim.petep.exception.ConfigurationException;
+import com.warxim.petep.extension.Extension;
+import com.warxim.petep.extension.internal.catcher.CatcherExtension;
+import com.warxim.petep.extension.internal.connectionview.ConnectionViewExtension;
+import com.warxim.petep.extension.internal.externalhttpproxy.EHTTPPExtension;
+import com.warxim.petep.extension.internal.history.HistoryExtension;
+import com.warxim.petep.extension.internal.http.HttpExtension;
+import com.warxim.petep.extension.internal.logger.LoggerExtension;
+import com.warxim.petep.extension.internal.modifier.ModifierExtension;
+import com.warxim.petep.extension.internal.repeater.RepeaterExtension;
+import com.warxim.petep.extension.internal.scripter.ScripterExtension;
+import com.warxim.petep.extension.internal.tagger.TaggerExtension;
+import com.warxim.petep.extension.internal.tcp.TcpExtension;
+import com.warxim.petep.extension.internal.udp.UdpExtension;
+import com.warxim.petep.persistence.Configurable;
+import com.warxim.petep.persistence.Storable;
+import com.warxim.petep.util.ExtensionUtils;
+import com.warxim.petep.util.FileUtils;
+import com.warxim.petep.util.GsonUtils;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.List;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
-import com.warxim.petep.common.Constant;
-import com.warxim.petep.exception.ConfigurationException;
-import com.warxim.petep.exception.ExtensionLoadException;
-import com.warxim.petep.extension.Extension;
-import com.warxim.petep.extension.internal.catcher.CatcherExtension;
-import com.warxim.petep.extension.internal.connection_view.ConnectionViewExtension;
-import com.warxim.petep.extension.internal.external_http_proxy.EHTTPPExtension;
-import com.warxim.petep.extension.internal.http.HttpExtension;
-import com.warxim.petep.extension.internal.logger.LoggerExtension;
-import com.warxim.petep.extension.internal.modifier.ModifierExtension;
-import com.warxim.petep.extension.internal.tagger.TaggerExtension;
-import com.warxim.petep.extension.internal.tcp.TcpExtension;
-import com.warxim.petep.extension.internal.test.TestExtension;
-import com.warxim.petep.persistence.Configurable;
-import com.warxim.petep.persistence.Storable;
-import com.warxim.petep.util.ExtensionUtils;
-import com.warxim.petep.util.FileUtils;
 
-/** Static class for loading extensions. */
+/**
+ * Static class for loading extensions.
+ */
 public final class ExtensionsLoader {
-  private ExtensionsLoader() {}
+    private ExtensionsLoader() {
+    }
 
-  /** Loads extensions from specified path. */
-  public static List<Extension> load(String path) throws ConfigurationException {
-    // Read configuration from specified path.
-    try (JsonReader reader = new JsonReader(new FileReader(path))) {
-      JsonArray list = JsonParser.parseReader(reader).getAsJsonArray();
-      ArrayList<Extension> extensions = new ArrayList<>(list.size());
+    /**
+     * Loads extensions from specified path.
+     * @param path Path to extensions.json configuration file
+     * @return List of loaded extensions
+     * @throws ConfigurationException If the extensions could not be loaded
+     */
+    public static List<Extension> load(String path) throws ConfigurationException {
+        // Read configuration from specified path.
+        try (var reader = new JsonReader(new FileReader(path, Constant.FILE_CHARSET))) {
+            var list = JsonParser.parseReader(reader).getAsJsonArray();
+            var extensions = new ArrayList<Extension>(list.size());
 
-      for (int i = 0; i < list.size(); ++i) {
-        try {
-          JsonObject extension = list.get(i).getAsJsonObject();
+            for (var i = 0; i < list.size(); ++i) {
+                var extension = list.get(i).getAsJsonObject();
 
-          // Load extension and add it to list.
-          extensions.add(loadExtension(extension.get(Constant.CONFIG_ITEM_PATH).getAsString(),
-              extension.get(Constant.CONFIG_ITEM_STORE),
-              extension.get(Constant.CONFIG_ITEM_CONFIG)));
-        } catch (ExtensionLoadException e) {
-          throw new ConfigurationException("Could not load extension!", e);
+                // Load extension and add it to list.
+                extensions.add(loadExtension(extension.get(Constant.CONFIG_ITEM_PATH).getAsString(),
+                        extension.get(Constant.CONFIG_ITEM_STORE),
+                        extension.get(Constant.CONFIG_ITEM_CONFIG)));
+            }
+
+            return extensions;
+        } catch (JsonParseException e) {
+            throw new ConfigurationException("Could not parse project configuration!", e);
+        } catch (NoSuchFileException e) {
+            throw new ConfigurationException("Could not found project configuration!", e);
+        } catch (IOException e) {
+            throw new ConfigurationException("Could not load project configuration!", e);
         }
-      }
-
-      return extensions;
-    } catch (JsonParseException e) {
-      throw new ConfigurationException("Could not parse project configuration!", e);
-    } catch (NoSuchFileException e) {
-      throw new ConfigurationException("Could not found project configuration!", e);
-    } catch (IOException e) {
-      throw new ConfigurationException("Could not load project configuration!", e);
-    }
-  }
-
-  /**
-   * Loads specified extension by given name (internal or external) and hands over the
-   * configuration.
-   */
-  private static Extension loadExtension(String path, JsonElement store, JsonElement config)
-      throws ExtensionLoadException {
-    Extension extension;
-
-    switch (path) {
-      case "logger":
-        extension = new LoggerExtension("logger");
-        break;
-      case "test":
-        extension = new TestExtension("test");
-        break;
-      case "external_http_proxy":
-        extension = new EHTTPPExtension("external_http_proxy");
-        break;
-      case "tcp":
-        extension = new TcpExtension("tcp");
-        break;
-      case "tagger":
-        extension = new TaggerExtension("tagger");
-        break;
-      case "catcher":
-        extension = new CatcherExtension("catcher");
-        break;
-      case "connection_view":
-        extension = new ConnectionViewExtension("connection_view");
-        break;
-      case "http":
-        extension = new HttpExtension("http");
-        break;
-      case "modifier":
-        extension = new ModifierExtension("modifier");
-        break;
-      default:
-        extension = loadExternalExtension(path);
     }
 
-    loadExtensionConfig(extension, config);
-    loadExtensionStore(extension, store);
+    /**
+     * Loads specified extension by given name (internal or external) and hands over the configuration.
+     */
+    private static Extension loadExtension(String path, JsonElement store, JsonElement config)
+            throws ConfigurationException {
+        Extension extension;
 
-    return extension;
-  }
+        switch (path) {
+            case "logger":
+                extension = new LoggerExtension("logger");
+                break;
+            case "external_http_proxy":
+                extension = new EHTTPPExtension("external_http_proxy");
+                break;
+            case "tcp":
+                extension = new TcpExtension("tcp");
+                break;
+            case "udp":
+                extension = new UdpExtension("udp");
+                break;
+            case "tagger":
+                extension = new TaggerExtension("tagger");
+                break;
+            case "catcher":
+                extension = new CatcherExtension("catcher");
+                break;
+            case "connection_view":
+                extension = new ConnectionViewExtension("connection_view");
+                break;
+            case "http":
+                extension = new HttpExtension("http");
+                break;
+            case "modifier":
+                extension = new ModifierExtension("modifier");
+                break;
+            case "history":
+                extension = new HistoryExtension("history");
+                break;
+            case "scripter":
+                extension = new ScripterExtension("scripter");
+                break;
+            case "repeater":
+                extension = new RepeaterExtension("repeater");
+                break;
+            default:
+                extension = loadExternalExtension(path);
+        }
 
-  /**
-   * Decides if extension expects store and hands it over.
-   *
-   * @throws ExtensionLoadException
-   */
-  private static void loadExtensionStore(Extension extension, JsonElement store) {
-    // No store in json.
-    if (store == null) {
-      return;
+        try {
+            loadExtensionConfig(extension, config);
+            loadExtensionStore(extension, store);
+        } catch (RuntimeException e) {
+            throw new ConfigurationException("Extension '" + path + "' could not be loaded!", e);
+        }
+
+        return extension;
     }
 
-    // Get store type using reflections.
-    Type storeType = ExtensionUtils.getStoreType(extension);
-    if (storeType == null) {
-      return;
+    /**
+     * Decides if extension expects store and hands it over.
+     */
+    private static void loadExtensionStore(Extension extension, JsonElement store) {
+        // No store in json.
+        if (store == null) {
+            return;
+        }
+
+        // Get store type using reflections.
+        var maybeStoreType = ExtensionUtils.getStoreType(extension);
+        if (maybeStoreType.isEmpty()) {
+            return;
+        }
+
+        // Deserialize store to expected type and give the to the extension.
+        ((Storable<?>) extension).loadStore(GsonUtils.getGson().fromJson(store, maybeStoreType.get()));
     }
 
-    // Deserialize store to expected type and give the to the extension.
-    ((Storable<?>) extension).loadStore(new GsonBuilder().create().fromJson(store, storeType));
-  }
+    /**
+     * Decides if extension expects config and hands it over.
+     */
+    private static void loadExtensionConfig(Extension extension, JsonElement config) {
+        // No config in json.
+        if (config == null) {
+            return;
+        }
 
-  /**
-   * Decides if extension expects config and hands it over.
-   *
-   * @throws ExtensionLoadException
-   */
-  private static void loadExtensionConfig(Extension extension, JsonElement config) {
-    // No config in json.
-    if (config == null) {
-      return;
+        // Get config type using reflections.
+        var maybeConfigType = ExtensionUtils.getConfigType(extension);
+        if (maybeConfigType.isEmpty()) {
+            return;
+        }
+
+        // Deserialize config to expected type and give the config to the extension.
+        ((Configurable<?>) extension).loadConfig(GsonUtils.getGson().fromJson(config, maybeConfigType.get()));
     }
 
-    // Get config type using reflections.
-    Type configType = ExtensionUtils.getConfigType(extension);
-    if (configType == null) {
-      return;
+    /**
+     * Loads specified .jar file extension.
+     * @throws ConfigurationException if the extension could not be loaded
+     */
+    private static Extension loadExternalExtension(String path) throws ConfigurationException {
+        try {
+            var classLoader = new URLClassLoader(new URL[]{FileUtils.getApplicationFile(path).toURI().toURL()});
+
+            // Create instance of extension class.
+            return (Extension) Class.forName("petep.PetepExtension", true, classLoader)
+                    .getConstructor(String.class)
+                    .newInstance(path);
+        } catch (NoSuchMethodException
+                | IllegalAccessException
+                | InstantiationException
+                | InvocationTargetException
+                | ClassNotFoundException
+                | MalformedURLException e) {
+            throw new ConfigurationException("Extension '" + path + "' could not be loaded!", e);
+        }
     }
-
-    // Deserialize config to expected type and give the config to the extension.
-    ((Configurable<?>) extension)
-        .loadConfig(new GsonBuilder().create().fromJson(config, configType));
-  }
-
-  /** Loads specified .jar file extension. */
-  private static Extension loadExternalExtension(String path) throws ExtensionLoadException {
-    try {
-      URLClassLoader classLoader =
-          new URLClassLoader(new URL[] {FileUtils.getApplicationFile(path).toURI().toURL()});
-
-      // Create instance of extension class.
-      return (Extension) Class.forName("petep.PetepExtension", true, classLoader)
-          .getConstructor(String.class)
-          .newInstance(path);
-    } catch (MalformedURLException | InstantiationException | IllegalAccessException
-        | ClassNotFoundException | IllegalArgumentException | InvocationTargetException
-        | NoSuchMethodException | SecurityException e) {
-      throw new ExtensionLoadException(
-          "Extension '" + path + "' could not be loaded -> " + e.toString(), e);
-    }
-  }
 }

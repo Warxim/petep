@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -18,64 +18,107 @@ package com.warxim.petep.module;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-/** Module container base class. */
+/**
+ * Module container base class.
+ * @param <M> Type of modules
+ */
 public abstract class ModuleContainer<M extends Module<?>> {
-  /** List of modules. */
-  protected List<M> modules;
+    /**
+     * List of modules.
+     */
+    protected List<M> modules;
 
-  /** Creates module container using specified module list. */
-  public ModuleContainer(List<M> modules) {
-    this.modules = modules;
-  }
-
-  /** Adds module to manager. */
-  public void add(M module) {
-    modules.add(module);
-  }
-
-  /** Returns module by code. */
-  public M get(String code) {
-    for (M module : modules) {
-      if (module.getCode().equals(code)) {
-        return module;
-      }
+    /**
+     * Creates module container using specified module list.
+     * @param modules List of modules to set into the container
+     */
+    protected ModuleContainer(List<M> modules) {
+        this.modules = modules;
     }
-    return null;
-  }
 
-  /** Returns true if manager contains module with specified code. */
-  public boolean contains(String code) {
-    for (M module : modules) {
-      if (module.getCode().equals(code)) {
+    /**
+     * Adds module to container.
+     * @param module Module to be added
+     * @return  {@code true} if the module was added;<br>
+     *          {@code false} if the module code is already registered
+     */
+    public boolean add(M module) {
+        if (contains(module.getCode())) {
+            return false;
+        }
+        modules.add(module);
         return true;
-      }
     }
-    return false;
-  }
 
-  /** Replaces module with a new one. */
-  public void replace(M oldModule, M newModule) {
-    modules.set(modules.indexOf(oldModule), newModule);
-  }
+    /**
+     * Obtains module by code.
+     * @param code Module code to find
+     * @return Module if it exists or empty optional
+     */
+    public Optional<M> get(String code) {
+        for (var module : modules) {
+            if (module.getCode().equals(code)) {
+                return Optional.of(module);
+            }
+        }
+        return Optional.empty();
+    }
 
-  /** Removes module with given code. */
-  public void remove(M module) {
-    modules.remove(module);
-  }
+    /**
+     * Checks whether the container contains module with specified code.
+     * @param code Module code to find
+     * @return {@code true} if the container contains module with given code
+     */
+    public boolean contains(String code) {
+        for (var module : modules) {
+            if (module.getCode().equals(code)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-  /** Swaps modules. */
-  public void swap(int what, int with) {
-    Collections.swap(modules, what, with);
-  }
+    /**
+     * Replaces old module with a new one.
+     * @param oldModule Module to be replaced
+     * @param newModule Module to use as replacement
+     */
+    public void replace(M oldModule, M newModule) {
+        modules.set(modules.indexOf(oldModule), newModule);
+    }
 
-  /** Returns number of modules. */
-  public int size() {
-    return modules.size();
-  }
+    /**
+     * Removes module.
+     * @param module Module to be removed
+     */
+    public void remove(M module) {
+        modules.remove(module);
+    }
 
-  /** Returns list of modules. */
-  public List<M> getList() {
-    return modules;
-  }
+    /**
+     * Swaps modules.
+     * @param what Index of module to be swapped
+     * @param with Index of module to be swapped
+     */
+    public void swap(int what, int with) {
+        Collections.swap(modules, what, with);
+    }
+
+    /**
+     * Obtains number of modules.
+     * @return Size of module list
+     */
+    public int size() {
+        return modules.size();
+    }
+
+    /**
+     * Obtains list of modules.
+     * @return Unmodifiable list of modules
+     */
+    public List<M> getList() {
+        return Collections.unmodifiableList(modules);
+    }
 }

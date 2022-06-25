@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -18,8 +18,17 @@ package com.warxim.petep.core.pdu;
 
 import com.warxim.petep.extension.PetepAPI;
 
-/** Destination of PDU. */
+/**
+ * Destination of PDU.
+ */
 @PetepAPI
 public enum PduDestination {
-  CLIENT, SERVER
+    /**
+     * Direction server -&gt; client (S2C)
+     */
+    CLIENT,
+    /**
+     * Direction client -&gt; server (C2S)
+     */
+    SERVER
 }

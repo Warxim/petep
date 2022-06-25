@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,11 +16,17 @@
  */
 package com.warxim.petep.exception;
 
-/** Command line arguments exception for invalid arguments. */
+/**
+ * Command line arguments exception for invalid arguments.
+ */
 public final class CommandLineArgumentsException extends Exception {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  public CommandLineArgumentsException(String message) {
-    super(message);
-  }
+    /**
+     * Constructs exception for command line arguments error.
+     * @param message Message describing the problem
+     */
+    public CommandLineArgumentsException(String message) {
+        super(message);
+    }
 }

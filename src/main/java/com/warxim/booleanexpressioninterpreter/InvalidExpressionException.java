@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,11 +16,17 @@
  */
 package com.warxim.booleanexpressioninterpreter;
 
-/** Invalid expression exception. */
+/**
+ * Invalid expression exception.
+ */
 public final class InvalidExpressionException extends Exception {
-  private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-  public InvalidExpressionException(String message) {
-    super(message);
-  }
+    /**
+     * Constructs exception signalizing that the expression is invalid.
+     * @param message Additional information about the invalidity
+     */
+    public InvalidExpressionException(String message) {
+        super(message);
+    }
 }

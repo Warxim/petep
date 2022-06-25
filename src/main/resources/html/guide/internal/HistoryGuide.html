@@ -1,0 +1,25 @@
+<p>
+	History is an extension that persists all intercepted PDUs to database. You can easily look at all persisted PDUs or send them to other extension using right click.
+</p>
+<p>
+	History can be used in extensions, so you will see the history view in extensions like Repeater.
+</p>
+
+
+<h2>Filtering history</h2>
+<p>
+	You can filter displayed PDUs using the filter button on top of History tab:
+</p>
+<p>
+	<strong>Note: </strong>History extension uses SQLite as a storage. The database file (history.db) is stored in project directory.
+</p>
+
+
+<h2>Special tags</h2>
+<p>
+	In order to specify, which PDUs should be persisted, you can tag them using the following tags (all PDUs are persisted by default):
+</p>
+<ul>
+	<li><strong>no_history</strong> - tagged PDU won't be persisted</li>
+	<li><strong>history</strong> - tagged PDU will be persisted even if it already has no_history tag.</li>
+</ul>

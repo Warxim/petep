@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,9 +16,14 @@
  */
 package com.warxim.booleanexpressioninterpreter;
 
-/** Expression interface. */
+/**
+ * Expression interface for logical expression interpreting
+ */
 @FunctionalInterface
 public interface Expression {
-  /** Method returning result of expression. */
-  boolean solve();
+    /**
+     * Solves the expression
+     * @return result of the expression
+     */
+    boolean solve();
 }

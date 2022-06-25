@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,26 +16,32 @@
  */
 package com.warxim.petep.extension.internal.tagger.config;
 
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleData;
+import com.warxim.petep.util.GsonUtils;
+import lombok.Getter;
 
-/** Configuration of tag subrules. */
+/**
+ * Configuration of tag subrules.
+ */
+@Getter
 public final class TagSubruleConfig {
-  private final String factoryCode;
-  private final JsonElement data;
+    /**
+     * Code of factory that generated this subrule
+     */
+    private final String factoryCode;
+    /**
+     * Serialized data of tag subrule
+     */
+    private final JsonElement data;
 
-  /** Tag subrule config constructor. */
-  public TagSubruleConfig(String factoryCode, TagSubruleData data) {
-    this.factoryCode = factoryCode;
-    this.data = new GsonBuilder().setPrettyPrinting().create().toJsonTree(data);
-  }
-
-  public String getFactoryCode() {
-    return factoryCode;
-  }
-
-  public JsonElement getData() {
-    return data;
-  }
+    /**
+     * Constructs tag subrule config.
+     * @param factoryCode Code of factory that created this subrule
+     * @param data Data for the subrule
+     */
+    public TagSubruleConfig(String factoryCode, TagSubruleData data) {
+        this.factoryCode = factoryCode;
+        this.data = GsonUtils.getGson().toJsonTree(data);
+    }
 }

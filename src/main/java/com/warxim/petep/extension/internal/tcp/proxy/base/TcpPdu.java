@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,29 +16,55 @@
  */
 package com.warxim.petep.extension.internal.tcp.proxy.base;
 
-import java.util.Set;
 import com.warxim.petep.core.connection.Connection;
 import com.warxim.petep.core.pdu.DefaultPdu;
 import com.warxim.petep.core.pdu.PduDestination;
 import com.warxim.petep.proxy.worker.Proxy;
 
-public class TcpPdu extends DefaultPdu {
-  public TcpPdu(
-      Proxy proxy,
-      Connection connection,
-      PduDestination destination,
-      byte[] buffer,
-      int size) {
-    super(proxy, connection, destination, buffer, size);
-  }
+import java.nio.charset.Charset;
+import java.util.Set;
 
-  public TcpPdu(
-      Proxy proxy,
-      Connection connection,
-      PduDestination destination,
-      byte[] buffer,
-      int size,
-      Set<String> tags) {
-    super(proxy, connection, destination, buffer, size, tags);
-  }
+/**
+ * Simple TCP PDU based on DefaultPdu.
+ */
+public class TcpPdu extends DefaultPdu {
+    /**
+     * Constructs TCP PDU with empty tag set.
+     * @param proxy Proxy
+     * @param connection Connection
+     * @param destination Destination of the PDU
+     * @param buffer Data buffer
+     * @param size Size of the data in the buffer
+     * @param charset Charset of the data in the buffer
+     */
+    public TcpPdu(
+            Proxy proxy,
+            Connection connection,
+            PduDestination destination,
+            byte[] buffer,
+            int size,
+            Charset charset) {
+        super(proxy, connection, destination, buffer, size, charset);
+    }
+
+    /**
+     * Constructs TCP PDU.
+     * @param proxy Proxy
+     * @param connection Connection
+     * @param destination Destination of the PDU
+     * @param buffer Data buffer
+     * @param size Size of the data in the buffer
+     * @param charset Charset of the data in the buffer
+     * @param tags Set of tags
+     */
+    public TcpPdu(
+            Proxy proxy,
+            Connection connection,
+            PduDestination destination,
+            byte[] buffer,
+            int size,
+            Charset charset,
+            Set<String> tags) {
+        super(proxy, connection, destination, buffer, size, charset, tags);
+    }
 }

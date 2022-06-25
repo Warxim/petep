@@ -1,0 +1,18 @@
+[
+  {
+    "code": "petep",
+    "name": "PETEP website",
+    "description": "",
+    "factory": "tcp",
+    "enabled": true,
+    "config": {
+      "proxyIP": "127.0.0.1",
+      "targetIP": "petep.warxim.com",
+      "proxyPort": 8888,
+      "targetPort": 80,
+      "bufferSize": 32768,
+      "charset": "ISO-8859-1",
+      "connectionCloseDelay": 5000
+    }
+  }
+]

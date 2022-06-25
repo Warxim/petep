@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,42 +16,46 @@
  */
 package com.warxim.petep.extension.internal.modifier.gui.rule;
 
-import java.io.IOException;
-import com.warxim.petep.extension.internal.modifier.factory.Modifier;
-import com.warxim.petep.extension.internal.modifier.factory.ModifierData;
 import com.warxim.petep.extension.internal.modifier.factory.ModifierFactoryManager;
 import com.warxim.petep.extension.internal.modifier.rule.ModifyRule;
-import com.warxim.petep.gui.component.ConfigPane;
 
-/** Edit modify rule dialog. */
+import java.io.IOException;
+
+/**
+ * Edit modify rule dialog.
+ */
 public final class EditModifyRuleDialog extends ModifyRuleDialog {
-  /** Edit modify rule dialog constructor. */
-  public EditModifyRuleDialog(ModifierFactoryManager factoryManager, ModifyRule rule)
-      throws IOException {
-    super("Edit modify rule", "Save", factoryManager);
+    /**
+     * Constructs modify rule dialog for editing.
+     * @param factoryManager Manager of modifier factories for obtaining factories
+     * @param rule Rule to edit
+     * @throws IOException If the dialog template could not be loaded
+     */
+    public EditModifyRuleDialog(ModifierFactoryManager factoryManager, ModifyRule rule) throws IOException {
+        super("Edit modify rule", "Save", factoryManager);
 
-    nameInput.setText(rule.getName());
-    descriptionInput.setText(rule.getDescription());
-    tagInput.setText(rule.getTag());
-    enabledInput.setSelected(rule.isEnabled());
+        nameInput.setText(rule.getName());
+        descriptionInput.setText(rule.getDescription());
+        tagInput.setText(rule.getTag());
+        enabledInput.setSelected(rule.isEnabled());
 
-    Modifier processor = rule.getModifier();
-    factoryInput.getSelectionModel().select(processor.getFactory());
+        var processor = rule.getModifier();
+        factoryInput.getSelectionModel().select(processor.getFactory());
 
-    // Load config pane.
-    ConfigPane<ModifierData> pane = createFactoryPane();
-    if (pane == null) {
-      return;
+        // Load config pane.
+        var pane = createFactoryPane();
+        if (pane == null) {
+            return;
+        }
+        setFactoryPane(pane);
+
+        // Get configuration from instance.
+        var data = processor.getData();
+        if (data == null) {
+            return;
+        }
+
+        // Set config to pane.
+        pane.setConfig(data);
     }
-    setFactoryPane(pane);
-
-    // Get configuration from instance.
-    ModifierData data = processor.getData();
-    if (data == null) {
-      return;
-    }
-
-    // Set config to pane.
-    pane.setConfig(data);
-  }
 }

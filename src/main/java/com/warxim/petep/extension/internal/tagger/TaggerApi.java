@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -19,9 +19,15 @@ package com.warxim.petep.extension.internal.tagger;
 import com.warxim.petep.extension.PetepAPI;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleFactory;
 
+/**
+ * Interface for registration of tag subrule factories.
+ */
 @PetepAPI
-/** Interface for registration of tag subrule factories. */
 public interface TaggerApi {
-  /** Registers tag subrule factory. */
-  boolean registerSubruleFactory(TagSubruleFactory factory);
+    /**
+     * Registers tag subrule factory.
+     * @param factory Factory to be registered
+     * @return {@code true} if the registration was successfull ({@code false} if the factory code is already registered}
+     */
+    boolean registerSubruleFactory(TagSubruleFactory factory);
 }

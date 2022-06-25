@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,14 +16,21 @@
  */
 package com.warxim.petep.extension.internal.tagger.rule;
 
-import java.util.function.Predicate;
 import com.warxim.booleanexpressioninterpreter.PredicateExpression;
 import com.warxim.petep.core.pdu.PDU;
 
-/** PDU predicate expression. */
+import java.util.function.Predicate;
+
+/**
+ * PDU predicate expression.
+ * <p>"Compiled" expression for evaluating tag rules using multiple subrules.</p>
+ */
 public final class PduPredicateExpression extends PredicateExpression<PDU> {
-  /** PDU predicate expression constructor. */
-  public PduPredicateExpression(Predicate<PDU> predicate) {
-    super(predicate);
-  }
+    /**
+     * Constructs PDU predicate expression.
+     * @param predicate PDU predicate
+     */
+    public PduPredicateExpression(Predicate<PDU> predicate) {
+        super(predicate);
+    }
 }

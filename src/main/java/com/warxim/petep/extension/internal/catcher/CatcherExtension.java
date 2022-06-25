@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,97 +16,80 @@
  */
 package com.warxim.petep.extension.internal.catcher;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import com.warxim.petep.common.ContextType;
-import com.warxim.petep.core.listener.PetepListener;
 import com.warxim.petep.extension.Extension;
+import com.warxim.petep.gui.common.GuiConstant;
 import com.warxim.petep.helper.ExtensionHelper;
 import com.warxim.petep.helper.GuiHelper;
-import com.warxim.petep.helper.PetepHelper;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 
-/** Catcher extension. */
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Catcher extension.
+ */
 public final class CatcherExtension extends Extension {
-  private GuiHelper guiHelper;
-  private Node node;
-  private CatcherController controller;
+    private CatcherController controller;
+    private ExtensionHelper extensionHelper;
 
-  /** Catcher extension constructor. */
-  public CatcherExtension(String path) {
-    super(path);
-  }
+    /**
+     * Catcher extension constructor.
+     * @param path Path to the extension
+     */
+    public CatcherExtension(String path) {
+        super(path);
+    }
 
-  @Override
-  public void init(ExtensionHelper helper) {
-    // Register PETEP listener if GUI is enabled.
-    if (helper.getContextType() == ContextType.GUI) {
-      helper.registerPetepListener(new PetepListener() {
-        @Override
-        public void beforePrepare(PetepHelper helper) {
-          // Load catcher tab.
-          try {
-            FXMLLoader fxmlLoader = new FXMLLoader(
-                getClass().getResource("/fxml/extension/internal/catcher/Catcher.fxml"));
+    @Override
+    public void init(ExtensionHelper helper) {
+        // Register PETEP listener if GUI is enabled.
+        helper.registerInterceptorModuleFactory(new CatcherInterceptorModuleFactory(this));
+        this.extensionHelper = helper;
+    }
 
-            controller = new CatcherController(helper);
+    @Override
+    public void initGui(GuiHelper helper) {
+        helper.registerGuide(new CatcherGuide());
+
+        // Load catcher tab.
+        try {
+            var fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/extension/internal/catcher/Catcher.fxml"));
+
+            controller = new CatcherController(extensionHelper);
 
             fxmlLoader.setController(controller);
 
-            node = fxmlLoader.load();
+            var node = (Node) fxmlLoader.load();
 
-            guiHelper.registerTab("Catcher", node);
-          } catch (IOException e) {
+            helper.registerTab("Catcher", node, GuiConstant.CATCHER_TAB_ORDER);
+        } catch (IOException e) {
             Logger.getGlobal().log(Level.SEVERE, "Could not load catcher GUI!", e);
-          }
         }
-
-        @Override
-        public void beforeStop(PetepHelper helper) {
-          // Unload catcher tab.
-          guiHelper.unregisterTab(node);
-
-          // Clear memory.
-          node = null;
-          controller.stop();
-          controller = null;
-        }
-      });
     }
 
-    helper.registerInterceptorModuleFactory(new CatcherInterceptorModuleFactory(this));
-  }
+    @Override
+    public String getCode() {
+        return "catcher";
+    }
 
-  @Override
-  public void initGui(GuiHelper helper) {
-    guiHelper = helper;
+    @Override
+    public String getName() {
+        return "Catcher";
+    }
 
-    helper.registerGuide(new CatcherGuide());
-  }
+    @Override
+    public String getDescription() {
+        return "Catches PDUs and allows user to edit them before relasing (manual intercepting).";
+    }
 
-  @Override
-  public String getCode() {
-    return "catcher";
-  }
+    @Override
+    public String getVersion() {
+        return "1.2";
+    }
 
-  @Override
-  public String getName() {
-    return "Catcher";
-  }
-
-  @Override
-  public String getDescription() {
-    return "Catches PDUs and allows user to edit them before relasing (manual intercepting).";
-  }
-
-  @Override
-  public String getVersion() {
-    return "1.0";
-  }
-
-  public CatcherController getController() {
-    return controller;
-  }
+    public CatcherController getController() {
+        return controller;
+    }
 }

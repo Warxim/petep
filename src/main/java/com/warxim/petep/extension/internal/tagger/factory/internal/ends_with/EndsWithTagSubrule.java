@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -22,13 +22,21 @@ import com.warxim.petep.extension.internal.tagger.factory.TagSubruleData;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleFactory;
 import com.warxim.petep.util.PduUtils;
 
+/**
+ * Tag subrule for checking whether the PDU ends with specified data.
+ */
 public final class EndsWithTagSubrule extends TagSubrule {
-  public EndsWithTagSubrule(TagSubruleFactory factory, TagSubruleData data) {
-    super(factory, data);
-  }
+    /**
+     * Constructs tag subrule for EndsWith subrule.
+     * @param factory Factory that created this subrule
+     * @param data Data for the subrule
+     */
+    public EndsWithTagSubrule(TagSubruleFactory factory, TagSubruleData data) {
+        super(factory, data);
+    }
 
-  @Override
-  public boolean test(PDU pdu) {
-    return PduUtils.endsWith(pdu, ((EndsWithData) data).getData());
-  }
+    @Override
+    public boolean test(PDU pdu) {
+        return PduUtils.endsWith(pdu, ((EndsWithData) data).getData());
+    }
 }

@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,43 +16,52 @@
  */
 package com.warxim.petep.extension.internal.tagger.factory.internal.proxy;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubrule;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleConfigurator;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleData;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleFactory;
 import com.warxim.petep.helper.ExtensionHelper;
 
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.Optional;
+
+/**
+ * Tag subrule factory for creating "proxy" subrules.
+ */
 public final class ProxySubruleFactory extends TagSubruleFactory {
-  private ExtensionHelper helper;
+    private ExtensionHelper helper;
 
-  public ProxySubruleFactory(ExtensionHelper helper) {
-    this.helper = helper;
-  }
+    /**
+     * Constructs proxy subrule factory.
+     * @param helper Extension helper for obtaining configured proxy modules
+     */
+    public ProxySubruleFactory(ExtensionHelper helper) {
+        this.helper = helper;
+    }
 
-  @Override
-  public String getCode() {
-    return "proxy";
-  }
+    @Override
+    public String getCode() {
+        return "proxy";
+    }
 
-  @Override
-  public String getName() {
-    return "Proxy ...";
-  }
+    @Override
+    public String getName() {
+        return "Proxy ...";
+    }
 
-  @Override
-  public TagSubrule createSubrule(TagSubruleData data) {
-    return new ProxyTagSubrule(this, data);
-  }
+    @Override
+    public TagSubrule createSubrule(TagSubruleData data) {
+        return new ProxyTagSubrule(this, data);
+    }
 
-  @Override
-  public TagSubruleConfigurator createConfigPane() throws IOException {
-    return new ProxySubruleConfigurator(helper);
-  }
+    @Override
+    public Optional<TagSubruleConfigurator> createConfigPane() throws IOException {
+        return Optional.of(new ProxySubruleConfigurator(helper));
+    }
 
-  @Override
-  public Type getConfigType() {
-    return ProxyData.class;
-  }
+    @Override
+    public Optional<Type> getConfigType() {
+        return Optional.of(ProxyData.class);
+    }
 }

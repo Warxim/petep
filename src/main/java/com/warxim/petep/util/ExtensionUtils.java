@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,79 +16,78 @@
  */
 package com.warxim.petep.util;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import com.warxim.petep.persistence.Configurable;
 import com.warxim.petep.persistence.Configurator;
 import com.warxim.petep.persistence.Storable;
 
-/** Extension utils. */
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Optional;
+
+/**
+ * Extension utils.
+ */
 public final class ExtensionUtils {
-  private ExtensionUtils() {}
-
-  /**
-   * Determines store type using reflections.
-   *
-   * @returns Type or null if extension does not contain store.
-   */
-  public static Type getStoreType(Object object) {
-    if (!(object instanceof Storable)) {
-      return null;
+    private ExtensionUtils() {
     }
 
-    Type[] genericInterfaces = object.getClass().getGenericInterfaces();
+    /**
+     * Determines store type using reflections from object that implements {@link Storable} interface.
+     * @param object Object in which to find type of storable data
+     * @return Type or empty optional if extension does not contain store.
+     */
+    public static Optional<Type> getStoreType(Object object) {
+        if (!(object instanceof Storable)) {
+            return Optional.empty();
+        }
 
-    for (Type genericInterface : genericInterfaces) {
-      if (genericInterface instanceof ParameterizedType
-          && ((ParameterizedType) genericInterface).getRawType() == Storable.class) {
-        return ((ParameterizedType) genericInterface).getActualTypeArguments()[0];
-      }
+        return getGenericTypeArgument(object.getClass(), Storable.class);
     }
 
-    return null;
-  }
+    /**
+     * Determines configuration type using reflections from object that implements {@link Configurable} interface.
+     * @param object Object in which to find type of config data
+     * @return Type or empty optional if extension does not contain configuration.
+     */
+    public static Optional<Type> getConfigType(Object object) {
+        if (!(object instanceof Configurable)) {
+            return Optional.empty();
+        }
 
-  /**
-   * Determines configuration type using reflections.
-   *
-   * @returns Type or null if extension does not contain configuration.
-   */
-  public static Type getConfigType(Object object) {
-    if (!(object instanceof Configurable)) {
-      return null;
+        return getGenericTypeArgument(object.getClass(), Configurable.class);
     }
 
-    Type[] genericInterfaces = object.getClass().getGenericInterfaces();
+    /**
+     * Determines configuration type using reflections from object that implements {@link Configurator} interface.
+     * @param object Object in which to find type of config data
+     * @return Type or empty optional if extension does not contain configuration.
+     */
+    public static Optional<Type> getConfiguratorType(Object object) {
+        if (!(object instanceof Configurator)) {
+            return Optional.empty();
+        }
 
-    for (Type genericInterface : genericInterfaces) {
-      if (genericInterface instanceof ParameterizedType
-          && ((ParameterizedType) genericInterface).getRawType() == Configurable.class) {
-        return ((ParameterizedType) genericInterface).getActualTypeArguments()[0];
-      }
+        return getGenericTypeArgument(object.getClass(), Configurator.class);
     }
 
-    return null;
-  }
+    /**
+     * Finds type of generic argument in interface (type).
+     */
+    private static Optional<Type> getGenericTypeArgument(Class<?> clazz, Type type) {
+        var genericInterfaces = clazz.getGenericInterfaces();
 
-  /**
-   * Determines configuration type using reflections.
-   *
-   * @returns Type or null if extension does not contain configuration.
-   */
-  public static Type getConfiguratorType(Object object) {
-    if (!(object instanceof Configurator)) {
-      return null;
+        for (var genericInterface : genericInterfaces) {
+            if (genericInterface instanceof ParameterizedType
+                    && ((ParameterizedType) genericInterface).getRawType() == type) {
+                return Optional.of(((ParameterizedType) genericInterface).getActualTypeArguments()[0]);
+            }
+        }
+
+        var superClass = clazz.getSuperclass();
+        if (superClass != null) {
+            return getGenericTypeArgument(superClass, type);
+        }
+
+        return Optional.empty();
     }
-
-    Type[] genericInterfaces = object.getClass().getGenericInterfaces();
-
-    for (Type genericInterface : genericInterfaces) {
-      if (genericInterface instanceof ParameterizedType
-          && ((ParameterizedType) genericInterface).getRawType() == Configurator.class) {
-        return ((ParameterizedType) genericInterface).getActualTypeArguments()[0];
-      }
-    }
-
-    return null;
-  }
 }

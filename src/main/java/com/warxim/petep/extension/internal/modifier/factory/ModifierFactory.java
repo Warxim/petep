@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,30 +16,51 @@
  */
 package com.warxim.petep.extension.internal.modifier.factory;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
 import com.warxim.petep.extension.PetepAPI;
 
-/** Modifier factory. */
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.Optional;
+
+/**
+ * Modifier factory for generating modifier rules.
+ */
 @PetepAPI
 public abstract class ModifierFactory {
-  /** Returns factory code (for configuration purposes). */
-  public abstract String getCode();
+    /**
+     * Gets factory code
+     * @return Factory code (for configuration purposes)
+     */
+    public abstract String getCode();
 
-  /** Returns factory name (visible for user). */
-  public abstract String getName();
+    /**
+     * Gets factory name
+     * @return Factory name (visible for user)
+     */
+    public abstract String getName();
 
-  /** Creates modifier using given data. */
-  public abstract Modifier createModifier(ModifierData data);
+    /**
+     * Creates modifier using given data.
+     * @param data Data for the modifier
+     * @return New modifier instance
+     */
+    public abstract Modifier createModifier(ModifierData data);
 
-  /** Creates config pane for modifier data. */
-  public abstract ModifierConfigurator createConfigPane() throws IOException;
+    /**
+     * Get type of modifier configuration
+     * @return Type of configuration for deserialization from JSON or empty optional if no configuration is needed
+     */
+    public abstract Optional<Type> getConfigType();
 
-  /** Returns type of configuration, so it can be deserialized from JSON configuration. */
-  public abstract Type getConfigType();
+    /**
+     * Creates config pane for modifier data.
+     * @throws IOException If there has been problem with loading FXML template
+     * @return Modifier configurator for configuring modifier data or empty optional if no configurator is needed
+     */
+    public abstract Optional<ModifierConfigurator> createConfigPane() throws IOException;
 
-  @Override
-  public String toString() {
-    return getName();
-  }
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

@@ -1,0 +1,219 @@
+<p>
+	Scripter is an extension that introduces scripting support to PETEP.
+</p>
+<p>
+	Scripting is based on GraalVM Polyglot, which support JavaScript language out-of-the-box.
+	One of the greatest advantages is that you can use Java libraries in the code, so you can also use PETEP utils etc.
+</p>
+<p>
+	<strong>Note:</strong> All scripts are persisted in Groups. You have to define these groups and bind them with specific Scripter interceptors to make them work.
+</p>
+
+
+<h2>Scripter interfaces</h2>
+<p>
+	Scripter currently has the following interface accessible through "scripter" variable:
+</p>
+<dl>
+	<dt>void registerInterceptor(ScriptInterceptor interceptor)</dt>
+	<dd>Registers interceptor that allows you to work with PDUs.</dd>
+
+	<dt>void require(String path)</dt>
+	<dd>Loads script from specified path.</dd>
+
+	<dt>ScriptLogger getLogger()</dt>
+	<dd>Returns simplified logger.</dd>
+
+	<dt>ExtensionHelper getExtensionHelper()</dt>
+	<dd>Returns extension helper (see DEV guide).</dd>
+</dl>
+<h3>Script interceptor</h3>
+<dl>
+	<dt>boolean intercept(PDU pdu, PetepHelper helper)</dt>
+	<dd>This method is called automatically for each PDU that goes through the interceptor.</dd>
+</dl>
+<h3>Script logger</h3>
+<dl>
+	<dt>void info(String message)</dt>
+	<dd>Extension should be initalized inside this method - registration of modules etc.</dd>
+
+	<dt>void warning(String message)</dt>
+	<dd>Extension GUI should be initialized inside this method - creation of tabs etc.</dd>
+
+	<dt>void error(String message)</dt>
+	<dd>Extension GUI should be initialized inside this method - creation of tabs etc.</dd>
+</dl>
+
+<h2>Pro Tip</h2>
+<p>
+	Use PETEP's Java utils to work with the PDUs. This can be achieved using the Java.type function:
+</p>
+<pre class="code">
+const PduUtils = Java.type('com.warxim.petep.util.PduUtils');
+const BytesUtils = Java.type('com.warxim.petep.util.BytesUtils');
+</pre>
+
+<p>
+	Take full advantage of Java interoperability, see
+	<a href="https://www.graalvm.org/reference-manual/js/JavaInteroperability/"
+	   onclick="petep.openLink('https://www.graalvm.org/reference-manual/js/JavaInteroperability/');return false;">
+		GraalVM Java Interoperability
+	</a>
+</p>
+
+<h2>Special tags</h2>
+<p>
+	In order to specify, which PDUs should be processed using scripts, you can tag them using the following tags (all PDUs are processed by default):
+</p>
+<ul>
+	<li><strong>no_scripter</strong> - tagged PDU won't be processed</li>
+	<li><strong>scripter</strong> - tagged PDU will be processed even if it already has no_scripter tag.</li>
+</ul>
+
+
+<h2>Example scripts</h2>
+<p>
+	The following examples are part of Example preset. There are two scripts - logging interceptor and colorizing interceptor.
+</p>
+
+<h3>Simple console logger</h3>
+<p>
+	This simple script uses logger and PduUtils to print information about PDUs to console.
+</p>
+<h4>log-config.js</h4>
+<pre class="code">
+var config = {};
+
+config.messages = {
+	init: 'Script initialized!'
+};
+
+config.log = {
+	type: true,
+	size: true,
+	proxy: true,
+	connection: true,
+	interceptor: false,
+	destination: true,
+	tags: true,
+	buffer: false
+};
+</pre>
+<h4>logger.js</h4>
+<pre class="code">
+// Import config script
+scripter.require('log-config.js');
+
+// Load PETEP utils
+const PduUtils = Java.type('com.warxim.petep.util.PduUtils');
+
+// Load Java utils
+const StringJoiner = Java.type('java.util.StringJoiner');
+const ArrayList = Java.type('java.util.ArrayList');
+
+// Obtain logger
+const log = scripter.getLogger();
+log.info(config.messages.init);
+
+// Register info interceptor
+scripter.registerInterceptor({
+    intercept: function(pdu, helper) {
+		var information = '';
+
+		if (config.log.type) {
+			information += '\n- type: ' + pdu.getClass().getSimpleName();
+		}
+
+		if (config.log.destination) {
+			information += '\n- destination: ' + pdu.getDestination();
+		}
+
+		if (config.log.proxy) {
+			let proxy = pdu.getProxy();
+			information += '\n- proxy: ' + proxy.getName() + ' (' + proxy.getCode() + ')';
+		}
+
+		if (config.log.connection) {
+			let connection = pdu.getConnection();
+			information += '\n- connection: ' + connection.getCode();
+		}
+
+		if (config.log.interceptor) {
+			let interceptor = pdu.getLastInterceptor();
+			information += '\n- last interceptor: ' + interceptor.getName() + ' (' + interceptor.getCode() + ')';
+		}
+
+		if (config.log.size) {
+			information += '\n- size: ' + pdu.getSize();
+		}
+
+		if (config.log.tags) {
+			let tagJoiner = new StringJoiner(', ');
+			pdu.getTags().forEach(tagJoiner.add);
+			information += '\n- tags: ' + tagJoiner.toString();
+		}
+
+		if (config.log.buffer) {
+			information += '\n- buffer: ' + PduUtils.bufferToHexString(pdu);
+		}
+
+		if (information.length > 0) {
+			log.info('PDU information: ' + information);
+		}
+
+		return true;
+	}
+});
+</pre>
+
+
+<h3>Simple console logger</h3>
+<p>
+	This simple script uses PduUtils and BytesUtils to replace colors in the PDU data.
+</p>
+<h4>color-config.js</h4>
+<pre class="code">
+var config = {};
+
+config.colors = {
+	'#383b53': '#533838',
+	'#b4b9e6': '#e6b4b4',
+	'#8e96d9': '#d98e8e',
+	'#33364b': '#4b3333',
+	'#1f2639': '#391f1f',
+	'#403e66': '#663e3e',
+	'#daddf3': '#f3dada',
+	'#edeff9': '#f9eded',
+	'#f9f9fd': '#fdf9f9',
+	'#f7f8fc': '#fcf7f7',
+	'rgba(142,150,217,0.25)': 'rgba(217,142,142,0.25)'
+}
+</pre>
+<h4>colorizer.js</h4>
+<pre class="code">
+// Import config script
+scripter.require('color-config.js');
+
+// Load PETEP utils
+const PduUtils = Java.type('com.warxim.petep.util.PduUtils');
+const BytesUtils = Java.type('com.warxim.petep.util.BytesUtils');
+
+// Register colorize interceptor
+scripter.registerInterceptor({
+    intercept: function(pdu, helper) {
+		if (pdu.getProxy().getCode() !== 'petep') {
+			return;
+		}
+
+		for (let currentColor in config.colors) {
+			let newColor = config.colors[currentColor];
+			PduUtils.replace(
+				pdu,
+				BytesUtils.getBytes(currentColor),
+				BytesUtils.getBytes(newColor)
+			);
+		}
+		return true;
+    }
+});
+</pre>

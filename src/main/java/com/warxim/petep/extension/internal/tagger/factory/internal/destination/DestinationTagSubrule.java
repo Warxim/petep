@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -22,19 +22,28 @@ import com.warxim.petep.extension.internal.tagger.factory.TagSubrule;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleData;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleFactory;
 
+/**
+ * Tag subrule for checking whether the PDU goes in specified direction (to specified destination).
+ */
 public final class DestinationTagSubrule extends TagSubrule {
-  public DestinationTagSubrule(TagSubruleFactory factory, TagSubruleData data) {
-    super(factory, data);
-  }
+    /**
+     * Constructs tag subrule for Destination subrule.
+     * @param factory Factory that created this subrule
+     * @param data Data for the subrule
+     */
+    public DestinationTagSubrule(TagSubruleFactory factory, TagSubruleData data) {
+        super(factory, data);
+    }
 
-  @Override
-  public boolean test(PDU pdu) {
-    return pdu.getDestination() == ((DestinationData) data).getDestination();
-  }
+    @Override
+    public boolean test(PDU pdu) {
+        return pdu.getDestination() == ((DestinationData) data).getDestination();
+    }
 
-  @Override
-  public String toString() {
-    return "To " + (((DestinationData) data).getDestination() == PduDestination.CLIENT ? "client"
-        : "server");
-  }
+    @Override
+    public String toString() {
+        return ((DestinationData) data).getDestination() == PduDestination.CLIENT
+                ? "To client"
+                : "To server";
+    }
 }

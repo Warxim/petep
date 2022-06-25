@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,12 +16,22 @@
  */
 package com.warxim.petep.proxy.module;
 
-import java.util.List;
 import com.warxim.petep.module.ModuleContainer;
 
-/** Proxy module container. */
+import java.util.List;
+
+/**
+ * Proxy module container.
+ * <p>
+ *     Proxy modules are registered by the user in application settings.
+ * </p>
+ */
 public final class ProxyModuleContainer extends ModuleContainer<ProxyModule> {
-  public ProxyModuleContainer(List<ProxyModule> modules) {
-    super(modules);
-  }
+    /**
+     * Creates proxy module container using specified module list.
+     * @param modules List of modules to set into the container
+     */
+    public ProxyModuleContainer(List<ProxyModule> modules) {
+        super(modules);
+    }
 }

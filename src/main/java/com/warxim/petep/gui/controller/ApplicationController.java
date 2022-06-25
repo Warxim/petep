@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,14 +16,10 @@
  */
 package com.warxim.petep.gui.controller;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import com.warxim.petep.Bundle;
 import com.warxim.petep.exception.ConfigurationException;
 import com.warxim.petep.gui.GuiBundle;
+import com.warxim.petep.gui.common.GuiConstant;
 import com.warxim.petep.gui.controller.log.LogController;
 import com.warxim.petep.gui.controller.settings.SettingsController;
 import com.warxim.petep.gui.dialog.AboutDialog;
@@ -40,107 +36,152 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
 
-/** Application controller. */
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * Application controller.
+ */
 public final class ApplicationController implements Initializable {
-  /** Main application tabs. */
-  @FXML
-  private TabPane tabs;
+    /**
+     * Main application tabs.
+     */
+    @FXML
+    private TabPane tabs;
 
-  @Override
-  public void initialize(URL location, ResourceBundle resources) {
-    // Initialize tabs.
-    initTabs();
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // Initialize tabs.
+        initTabs();
 
-    // Setup GUI bundle.
-    GuiBundle.getInstance().setApplicationController(this);
+        // Setup GUI bundle.
+        GuiBundle.getInstance().setApplicationController(this);
 
-    // Initialize extensions GUI.
-    Bundle.getInstance()
-        .getExtensionManager()
-        .initGui(new DefaultGuiHelper(GuiBundle.getInstance()));
-  }
-
-  /** Initializes main tabs. */
-  private void initTabs() {
-    registerLogTab();
-    registerSettingsTab();
-  }
-
-  /** Loads and registers settings tab. */
-  private void registerSettingsTab() {
-    try {
-      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/tab/Settings.fxml"));
-      fxmlLoader.setController(new SettingsController());
-      registerTab("Settings", fxmlLoader.load());
-    } catch (IOException e) {
-      Logger.getGlobal().log(Level.SEVERE, "Could not add settings tab", e);
+        // Initialize extensions GUI.
+        Bundle.getInstance()
+                .getExtensionManager()
+                .initGui(new DefaultGuiHelper(GuiBundle.getInstance()));
     }
-  }
 
-  /** Loads and registers log tab. */
-  private void registerLogTab() {
-    try {
-      FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/tab/Log.fxml"));
-      fxmlLoader.setController(new LogController());
-      registerTab("Log", fxmlLoader.load());
-    } catch (IOException e) {
-      Logger.getGlobal().log(Level.SEVERE, "Could not add log tab", e);
+    /**
+     * Registers new tab to main tabs.
+     * @param title Title of the tab
+     * @param node Node to be added as a child into the tab
+     */
+    public void registerTab(String title, Node node) {
+        GuiUtils.addTabToTabPane(tabs, title, node);
     }
-  }
 
-  /** Shows application about dialog. */
-  @FXML
-  private void showAbout(ActionEvent e) {
-    AboutDialog.show();
-  }
-
-  /** Shows application guide dialog. */
-  @FXML
-  private void showGuide(ActionEvent event) {
-    try {
-      new GuideDialog().show();
-    } catch (IOException e) {
-      Logger.getGlobal().log(Level.SEVERE, "Could not open guide dialog", e);
+    /**
+     * Registers new tab to main tabs.
+     * @param title Title of the tab
+     * @param node Node to be added as a child into the tab
+     * @param order Order of the tab (where should the tab be placed)
+     */
+    public void registerTab(String title, Node node, int order) {
+        GuiUtils.addTabToTabPane(tabs, title, node, order);
     }
-  }
 
-  /** Shows project info dialog. */
-  @FXML
-  private void onProjectInfoMenuClick(ActionEvent event) {
-    try {
-      new ProjectInfoDialog(Bundle.getInstance().getProject(),
-          Bundle.getInstance().getExtensionManager().getList()).show();
-    } catch (IOException e) {
-      Logger.getGlobal().log(Level.SEVERE, "Could not open project info dialog", e);
+    /**
+     * Registers new tab to main tabs.
+     * @param node Child node of the tab that should be removed
+     */
+    public void unregisterTab(Node node) {
+        GuiUtils.removeTabFromTabPane(tabs, node);
     }
-  }
 
-  /** Exits application dialog. */
-  @FXML
-  private void onExitMenuClick(ActionEvent event) {
-    Platform.exit();
-  }
-
-  /** Saves project dialog. */
-  @FXML
-  private void onSaveMenuClick(ActionEvent event) {
-    try {
-      Bundle.getInstance().save();
-
-      Dialogs.createInfoDialog("Project saved", "Project has been saved!");
-    } catch (ConfigurationException e) {
-      Dialogs.createExceptionDialog("Save fault", "Project could not be saved!", e);
-      Logger.getGlobal().log(Level.SEVERE, "Exception during save", e);
+    /**
+     * Shows application about dialog.
+     */
+    @FXML
+    private void showAbout(ActionEvent e) {
+        AboutDialog.show();
     }
-  }
 
-  /** Registers new tab to main tabs. */
-  public void registerTab(String title, Node node) {
-    GuiUtils.addTabToTabPane(tabs, title, node);
-  }
+    /**
+     * Shows application guide dialog.
+     */
+    @FXML
+    private void showGuide(ActionEvent event) {
+        try {
+            new GuideDialog().show();
+        } catch (IOException e) {
+            Logger.getGlobal().log(Level.SEVERE, "Could not open guide dialog", e);
+        }
+    }
 
-  /** Registers new tab to main tabs. */
-  public void unregisterTab(Node node) {
-    GuiUtils.removeTabFromTabPane(tabs, node);
-  }
+    /**
+     * Shows project info dialog.
+     */
+    @FXML
+    private void onProjectInfoMenuClick(ActionEvent event) {
+        try {
+            new ProjectInfoDialog(
+                    Bundle.getInstance().getProject(),
+                    Bundle.getInstance().getExtensionManager().getList()
+            ).show();
+        } catch (IOException e) {
+            Logger.getGlobal().log(Level.SEVERE, "Could not open project info dialog", e);
+        }
+    }
+
+    /**
+     * Exits application dialog.
+     */
+    @FXML
+    private void onExitMenuClick(ActionEvent event) {
+        Platform.exit();
+    }
+
+    /**
+     * Saves project dialog.
+     */
+    @FXML
+    private void onSaveMenuClick(ActionEvent event) {
+        try {
+            Bundle.getInstance().save();
+
+            Dialogs.createInfoDialog("Project saved", "Project has been saved!");
+        } catch (ConfigurationException e) {
+            Dialogs.createExceptionDialog("Save fault", "Project could not be saved!", e);
+            Logger.getGlobal().log(Level.SEVERE, "Exception during save", e);
+        }
+    }
+
+    /**
+     * Initializes main tabs.
+     */
+    private void initTabs() {
+        registerLogTab();
+        registerSettingsTab();
+    }
+
+    /**
+     * Loads and registers settings tab.
+     */
+    private void registerSettingsTab() {
+        try {
+            var fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/tab/Settings.fxml"));
+            fxmlLoader.setController(new SettingsController());
+            registerTab("Settings", fxmlLoader.load(), GuiConstant.SETTINGS_TAB_ORDER);
+        } catch (IOException e) {
+            Logger.getGlobal().log(Level.SEVERE, "Could not add settings tab", e);
+        }
+    }
+
+    /**
+     * Loads and registers log tab.
+     */
+    private void registerLogTab() {
+        try {
+            var fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/tab/Log.fxml"));
+            fxmlLoader.setController(new LogController());
+            registerTab("Log", fxmlLoader.load(), GuiConstant.LOG_TAB_ORDER);
+        } catch (IOException e) {
+            Logger.getGlobal().log(Level.SEVERE, "Could not add log tab", e);
+        }
+    }
 }

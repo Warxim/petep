@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,17 +16,15 @@
  */
 package com.warxim.petep.extension.internal.modifier.config;
 
+import lombok.Value;
+
 import java.util.List;
 
-public final class ModifierConfig {
-  private final List<ModifyRuleGroupConfig> groups;
-
-  /** Modifier configuration constructor. */
-  public ModifierConfig(List<ModifyRuleGroupConfig> groups) {
-    this.groups = groups;
-  }
-
-  public List<ModifyRuleGroupConfig> getGroups() {
-    return groups;
-  }
+/**
+ * Configuration of modifier.
+ * <p>Contains list of {@link ModifyRuleGroupConfig}.</p>
+ */
+@Value
+public class ModifierConfig {
+    List<ModifyRuleGroupConfig> groups;
 }

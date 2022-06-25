@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -21,12 +21,21 @@ import com.warxim.petep.extension.PetepAPI;
 /**
  * Allows extensions and modules to define their own data stores that are serialized to JSON
  * structure and saved to project files.
+ * <p>Allows extensions/modules to load/save store of any serializable type.</p>
+ * <p>Loading of all stores occurs during start of PETEP.</p>
+ * @param <S> Type of the storable object
  */
 @PetepAPI
 public interface Storable<S> {
-  /** Returns store to be saved. */
-  S saveStore();
+    /**
+     * Obtains store to be saved.
+     * @return Serializable store, which will be stored by PETEP
+     */
+    S saveStore();
 
-  /** Loads store. */
-  void loadStore(S store);
+    /**
+     * Loads store.
+     * @param store Deserialized store
+     */
+    void loadStore(S store);
 }

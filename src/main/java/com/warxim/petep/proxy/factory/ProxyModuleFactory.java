@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,7 +16,6 @@
  */
 package com.warxim.petep.proxy.factory;
 
-import java.io.IOException;
 import com.warxim.petep.extension.Extension;
 import com.warxim.petep.extension.PetepAPI;
 import com.warxim.petep.gui.component.PduMetadataPane;
@@ -25,19 +24,39 @@ import com.warxim.petep.proxy.module.ProxyModule;
 import com.warxim.petep.proxy.serizalization.ProxyDeserializer;
 import com.warxim.petep.proxy.serizalization.ProxySerializer;
 
-/** Proxy module factory. */
+import java.io.IOException;
+import java.util.Optional;
+
+/**
+ * Proxy module factory.
+ * <p>Used as base class for module factories, which produce proxy modules.</p>
+ */
 @PetepAPI
 public abstract class ProxyModuleFactory extends ModuleFactory<ProxyModule> {
-  public ProxyModuleFactory(Extension extension) {
-    super(extension);
-  }
+    /**
+     * Constructs proxy module factory.
+     * @param extension Extension that owns this factory
+     */
+    protected ProxyModuleFactory(Extension extension) {
+        super(extension);
+    }
 
-  /** Creates PDU metadata component for modules of this factory. */
-  public abstract PduMetadataPane createPduMetadataPane() throws IOException;
+    /**
+     * Creates PDU metadata component for modules of this factory.
+     * @return created PDU metadata pane (if it is supported by the module factory)
+     * @throws IOException If the PDU metadata pane could not be created
+     */
+    public abstract Optional<PduMetadataPane> createPduMetadataPane() throws IOException;
 
-  /** Returns proxy serializer. */
-  public abstract ProxySerializer getSerializer();
+    /**
+     * Obtains proxy serializer.
+     * @return Proxy serializer for serializing PDUs
+     */
+    public abstract ProxySerializer getSerializer();
 
-  /** Returns proxy deserializer. */
-  public abstract ProxyDeserializer getDeserializer();
+    /**
+     * Obtains proxy deserializer.
+     * @return Proxy deserializer for deserializing PDUs
+     */
+    public abstract ProxyDeserializer getDeserializer();
 }

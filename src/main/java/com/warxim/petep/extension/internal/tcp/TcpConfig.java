@@ -1,6 +1,6 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
- * 
+ *
  * Copyright (C) 2020 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
@@ -16,77 +16,57 @@
  */
 package com.warxim.petep.extension.internal.tcp;
 
-/** TCP configuration. */
-public final class TcpConfig {
-  private final String proxyIP;
-  private final String targetIP;
+import lombok.Builder;
+import lombok.Value;
 
-  private final int proxyPort;
-  private final int targetPort;
+import java.nio.charset.Charset;
 
-  private final int bufferSize;
-  private final String charset;
+/**
+ * TCP configuration.
+ */
+@Builder
+@Value
+public class TcpConfig {
+    /**
+     * IP address of the PETEP proxy.
+     */
+    String proxyIP;
+    /**
+     * IP address of the target server.
+     */
+    String targetIP;
 
-  private final int connectionCloseDelay;
+    /**
+     * Port of the PETEP proxy.
+     */
+    int proxyPort;
+    /**
+     * Port of the target server.
+     */
+    int targetPort;
 
-  private final SslConfig serverSslConfig;
-  private final SslConfig clientSslConfig;
+    /**
+     * Size of buffer for PDUs in bytes
+     */
+    int bufferSize;
 
-  /** TCP configuration constructor. */
-  public TcpConfig(
-      String proxyIP,
-      String targetIP,
-      int proxyPort,
-      int targetPort,
-      int bufferSize,
-      String charset,
-      int connectionCloseDelay,
-      SslConfig serverSslConfig,
-      SslConfig clientSslConfig) {
-    this.proxyIP = proxyIP;
-    this.targetIP = targetIP;
-    this.proxyPort = proxyPort;
-    this.targetPort = targetPort;
-    this.bufferSize = bufferSize;
-    this.charset = charset;
-    this.connectionCloseDelay = connectionCloseDelay;
-    this.serverSslConfig = serverSslConfig;
-    this.clientSslConfig = clientSslConfig;
-  }
+    /**
+     * Charset of data in PDUs
+     */
+    Charset charset;
 
-  public String getProxyIP() {
-    return proxyIP;
-  }
+    /**
+     * After how many milliseconds to close the connection, when one of connection sockets closes.
+     */
+    int connectionCloseDelay;
 
-  public String getTargetIP() {
-    return targetIP;
-  }
+    /**
+     * Configuration of SSL/TLS for server
+     */
+    SslConfig serverSslConfig;
 
-  public int getProxyPort() {
-    return proxyPort;
-  }
-
-  public int getTargetPort() {
-    return targetPort;
-  }
-
-  public int getBufferSize() {
-    return bufferSize;
-  }
-
-  public String getCharset() {
-    return charset;
-  }
-
-  public int getConnectionCloseDelay() {
-    return connectionCloseDelay;
-  }
-
-  public SslConfig getServerSslConfig() {
-    return serverSslConfig;
-  }
-
-  public SslConfig getClientSslConfig() {
-    return clientSslConfig;
-  }
+    /**
+     * Configuration of SSL/TLS for client
+     */
+    SslConfig clientSslConfig;
 }
