@@ -18,13 +18,10 @@ package com.warxim.petep.gui.dialog;
 
 import com.warxim.petep.common.Constant;
 import com.warxim.petep.extension.PetepAPI;
+import com.warxim.petep.gui.GuiBundle;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
@@ -32,12 +29,8 @@ import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
-import java.awt.*;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -369,8 +362,8 @@ public final class Dialogs {
      */
     private static void onWebClick(ActionEvent event) {
         try {
-            Desktop.getDesktop().browse(new URI(Constant.WEB));
-        } catch (IOException | URISyntaxException e) {
+            GuiBundle.getInstance().getHostServices().showDocument(Constant.WEB);
+        } catch (Exception e) {
             Logger.getGlobal().log(Level.SEVERE, "Could not open PETEP link.");
         }
     }

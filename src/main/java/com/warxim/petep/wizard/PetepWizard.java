@@ -44,6 +44,9 @@ public final class PetepWizard extends PetepApplication {
         StyleManager.getInstance()
                 .addUserAgentStylesheet(getClass().getResource(GuiConstant.MAIN_CSS_PATH).toString());
 
+        // Store host services inside GUI bundle
+        GuiBundle.getInstance().setHostServices(getHostServices());
+
         // Load wizard GUI.
         try {
             var fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/wizard/Wizard.fxml"));

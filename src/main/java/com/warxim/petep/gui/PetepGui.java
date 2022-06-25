@@ -44,6 +44,9 @@ public final class PetepGui extends PetepApplication {
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
         StyleManager.getInstance().addUserAgentStylesheet(getClass().getResource(GuiConstant.MAIN_CSS_PATH).toString());
 
+        // Store host services inside GUI bundle
+        GuiBundle.getInstance().setHostServices(getHostServices());
+
         // Load application GUI.
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/fxml/Application.fxml"));

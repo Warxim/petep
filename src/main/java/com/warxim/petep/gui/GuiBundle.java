@@ -19,6 +19,7 @@ package com.warxim.petep.gui;
 import com.warxim.petep.gui.controller.ApplicationController;
 import com.warxim.petep.gui.controller.settings.SettingsController;
 import com.warxim.petep.gui.guide.GuideManager;
+import javafx.application.HostServices;
 import javafx.scene.image.Image;
 
 /**
@@ -49,6 +50,11 @@ public final class GuiBundle {
      * Controller of settings tab
      */
     private SettingsController settingsController;
+
+    /**
+     * Host services
+     */
+    private HostServices hostServices;
 
     /**
      * GUI Bundle constructor (hidden).
@@ -120,5 +126,21 @@ public final class GuiBundle {
      */
     public GuideManager getGuideManager() {
         return guideManager;
+    }
+
+    /**
+     * Obtains host services
+     * @return Host services
+     */
+    public HostServices getHostServices() {
+        return hostServices;
+    }
+
+    /**
+     * Sets host services
+     * @param hostServices Host services
+     */
+    public void setHostServices(HostServices hostServices) {
+        this.hostServices = hostServices;
     }
 }

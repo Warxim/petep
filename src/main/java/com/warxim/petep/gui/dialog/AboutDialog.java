@@ -27,10 +27,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import java.awt.*;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -74,7 +70,7 @@ public final class AboutDialog {
         link.setOnAction(AboutDialog::onWebClick);
 
         // Copyright
-        var copyrightLabel = new Label("Copyright (C) Michal Válka, 2021, all rights reserved.");
+        var copyrightLabel = new Label("Copyright (C) Michal Válka, 2022, all rights reserved.");
 
         // Grid
         var grid = new GridPane();
@@ -107,8 +103,8 @@ public final class AboutDialog {
      */
     private static void onWebClick(ActionEvent event) {
         try {
-            Desktop.getDesktop().browse(new URI(Constant.WEB));
-        } catch (IOException | URISyntaxException e) {
+            GuiBundle.getInstance().getHostServices().showDocument(Constant.WEB);
+        } catch (Exception e) {
             Logger.getGlobal().log(Level.SEVERE, "Could not open PETEP link.");
         }
     }

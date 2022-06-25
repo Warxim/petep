@@ -16,10 +16,8 @@
  */
 package com.warxim.petep.gui.guide;
 
-import java.awt.*;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import com.warxim.petep.gui.GuiBundle;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -33,8 +31,8 @@ public final class GuideJS {
      */
     public void openLink(String url) {
         try {
-            Desktop.getDesktop().browse(new URI(url));
-        } catch (IOException | URISyntaxException e) {
+            GuiBundle.getInstance().getHostServices().showDocument(url);
+        } catch (Exception e) {
             Logger.getGlobal().log(Level.SEVERE, () -> String.format("Could not open URL '%s'!", url));
         }
     }
