@@ -178,6 +178,10 @@ distributions {
                 into ""
             }
 
+            from("README.md") {
+                into ""
+            }
+
             from(petepLibJar) {
                 into "api"
             }
