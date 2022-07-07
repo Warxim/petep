@@ -2,6 +2,11 @@
 
 All notable changes to this project will are documented in this changelog file.
 
+## [2.0.2] - 2022-01-01
+### Added
+- Bugfix for crashes when version cannot be obtained
+- Links to HTTPS instead of HTTP
+
 ## [2.0.1] - 2022-01-01
 ### Added
 - Added support for URL opening on Linux
