@@ -30,10 +30,10 @@ import java.util.List;
 @PetepAPI
 public final class Constant {
     // PETEP version
-    public static final String VERSION = "2.0.1";
+    public static final String VERSION = "2.0.2";
 
     // PETEP web
-    public static final String WEB = "http://petep.warxim.com/";
+    public static final String WEB = "https://petep.warxim.com/";
 
     // Charset
     public static final Charset DEFAULT_CHARSET = StandardCharsets.ISO_8859_1;
