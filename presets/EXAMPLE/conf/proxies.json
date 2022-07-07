@@ -9,10 +9,13 @@
       "proxyIP": "127.0.0.1",
       "targetIP": "petep.warxim.com",
       "proxyPort": 8888,
-      "targetPort": 80,
+      "targetPort": 443,
       "bufferSize": 32768,
       "charset": "ISO-8859-1",
-      "connectionCloseDelay": 5000
+      "connectionCloseDelay": 5000,
+      "clientSslConfig": {
+        "algorithm": "TLSv1.3"
+      }
     }
   }
 ]

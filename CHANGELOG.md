@@ -2,6 +2,11 @@
 
 All notable changes to this project will are documented in this changelog file.
 
+## [2.0.3] - 2022-01-01
+### Added
+- Improved deserialization of Charset to work with never Java
+- Updated example preset
+
 ## [2.0.2] - 2022-01-01
 ### Added
 - Bugfix for crashes when version cannot be obtained

@@ -30,8 +30,8 @@ public final class GsonUtils {
      * GSON instance for serializing/deserializing in PETEP.
      */
     private static final Gson GSON = new GsonBuilder()
-            .registerTypeAdapter(Charset.class, createCharsetSerializer())
-            .registerTypeAdapter(Charset.class, createCharsetDeserializer())
+            .registerTypeHierarchyAdapter(Charset.class, createCharsetSerializer())
+            .registerTypeHierarchyAdapter(Charset.class, createCharsetDeserializer())
             .setPrettyPrinting()
             .create();
 
