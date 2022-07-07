@@ -59,7 +59,7 @@ public final class WebApiUtils {
             }
 
             return object.get("version").getAsString();
-        } catch (IOException e) {
+        } catch (Exception e) {
             logVersionFetchError();
         }
 
