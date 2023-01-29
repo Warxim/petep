@@ -39,6 +39,8 @@ import java.util.logging.Logger;
 public final class PetepWizard extends PetepApplication {
     @Override
     public void start(Stage stage) {
+        super.start(stage);
+
         // Load stylesheets.
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
         StyleManager.getInstance()
@@ -55,7 +57,6 @@ public final class PetepWizard extends PetepApplication {
 
             var scene = new Scene(root);
             scene.getStylesheets().add(GuiConstant.MAIN_CSS_PATH);
-            stage.getIcons().add(GuiBundle.getInstance().getPetepIcon());
             stage.setTitle("PETEP Project Wizard v" + Constant.VERSION);
             stage.setScene(scene);
             stage.show();

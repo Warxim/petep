@@ -28,6 +28,7 @@ public final class GuiConstant {
      * Path to main CSS file of PETEP application.
      */
     public static final String MAIN_CSS_PATH = "/css/Main.css";
+    public static final String ICON_PATH = "/img/Logo.png";
 
     public static final Integer LOG_TAB_ORDER = -10000;
     public static final Integer SETTINGS_TAB_ORDER = -9000;

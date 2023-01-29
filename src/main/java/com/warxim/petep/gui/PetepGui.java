@@ -40,6 +40,8 @@ import java.util.logging.Logger;
 public final class PetepGui extends PetepApplication {
     @Override
     public void start(Stage stage) {
+        super.start(stage);
+
         // Load stylesheets.
         Application.setUserAgentStylesheet(Application.STYLESHEET_MODENA);
         StyleManager.getInstance().addUserAgentStylesheet(getClass().getResource(GuiConstant.MAIN_CSS_PATH).toString());
@@ -53,7 +55,6 @@ public final class PetepGui extends PetepApplication {
 
             var scene = new Scene(root);
             scene.getStylesheets().add(GuiConstant.MAIN_CSS_PATH);
-            stage.getIcons().add(GuiBundle.getInstance().getPetepIcon());
             stage.setTitle("PETEP v" + Constant.VERSION + " (" + Bundle.getInstance().getProject().getName() + ")");
             stage.setWidth(1200);
             stage.setHeight(900);

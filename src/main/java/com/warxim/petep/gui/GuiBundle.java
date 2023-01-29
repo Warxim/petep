@@ -16,6 +16,7 @@
  */
 package com.warxim.petep.gui;
 
+import com.warxim.petep.gui.common.GuiConstant;
 import com.warxim.petep.gui.controller.ApplicationController;
 import com.warxim.petep.gui.controller.settings.SettingsController;
 import com.warxim.petep.gui.guide.GuideManager;
@@ -61,7 +62,7 @@ public final class GuiBundle {
      */
     private GuiBundle() {
         guideManager = new GuideManager();
-        petepIcon = new Image(getClass().getResourceAsStream("/img/Logo.png"));
+        petepIcon = new Image(getClass().getResourceAsStream(GuiConstant.ICON_PATH));
     }
 
     /**

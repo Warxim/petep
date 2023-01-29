@@ -19,10 +19,16 @@ package com.warxim.petep.gui.common;
 import com.warxim.petep.Bundle;
 import com.warxim.petep.common.Constant;
 import com.warxim.petep.core.PetepState;
+import com.warxim.petep.gui.GuiBundle;
 import com.warxim.petep.gui.dialog.Dialogs;
 import com.warxim.petep.util.WebApiUtils;
 import javafx.application.Application;
 import javafx.stage.Stage;
+
+import javax.imageio.ImageIO;
+import java.awt.Taskbar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Base class for JavaFX application.
@@ -30,7 +36,7 @@ import javafx.stage.Stage;
 public abstract class PetepApplication extends Application {
     @Override
     public void start(Stage stage) {
-        throw new UnsupportedOperationException("Application.start() method is not implemented.");
+        setupIcons(stage);
     }
 
     /**
@@ -61,6 +67,26 @@ public abstract class PetepApplication extends Application {
         var version = WebApiUtils.getLatestVersion();
         if (!version.equals(Constant.VERSION)) {
             Dialogs.createNewVersionDialog(version);
+        }
+    }
+
+    /**
+     * Sets up icons for the application
+     */
+    protected void setupIcons(Stage stage) {
+        // Set stage icons (WIN, LINUX)
+        stage.getIcons().add(GuiBundle.getInstance().getPetepIcon());
+
+        // Little workaround to set icons for macOS taskbar using AWT
+        try {
+            if (!Taskbar.isTaskbarSupported()) {
+                return;
+            }
+            var iconImage = ImageIO.read(getClass().getResourceAsStream(GuiConstant.ICON_PATH));
+            var taskbar = Taskbar.getTaskbar();
+            taskbar.setIconImage(iconImage);
+        } catch (Exception e) {
+            Logger.getGlobal().log(Level.SEVERE, "Could not set taskbar icon!", e);
         }
     }
 }
