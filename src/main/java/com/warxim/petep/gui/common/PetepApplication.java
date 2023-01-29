@@ -82,8 +82,11 @@ public abstract class PetepApplication extends Application {
             if (!Taskbar.isTaskbarSupported()) {
                 return;
             }
-            var iconImage = ImageIO.read(getClass().getResourceAsStream(GuiConstant.ICON_PATH));
             var taskbar = Taskbar.getTaskbar();
+            if (!taskbar.isSupported(Taskbar.Feature.ICON_IMAGE)) {
+                return;
+            }
+            var iconImage = ImageIO.read(getClass().getResourceAsStream(GuiConstant.ICON_PATH));
             taskbar.setIconImage(iconImage);
         } catch (Exception e) {
             Logger.getGlobal().log(Level.SEVERE, "Could not set taskbar icon!", e);
