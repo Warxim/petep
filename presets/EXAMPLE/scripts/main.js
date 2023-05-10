@@ -71,7 +71,7 @@ scripter.registerInterceptor({
 scripter.registerInterceptor({
     intercept: function(pdu, helper) {
 		if (pdu.getProxy().getCode() !== 'petep') {
-			return;
+			return true;
 		}
 		
 		for (let currentColor in config.colors) {
