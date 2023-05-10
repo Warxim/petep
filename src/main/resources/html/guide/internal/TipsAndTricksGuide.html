@@ -13,3 +13,12 @@
 
 <h2>Tip #4 Go through the development guide.</h2>
 <p>Go to the PETEP website and check out the full development guide.</p>
+
+<h2>Tip #4 Go through the methodology.</h2>
+<p>Go to the PETEP website and check out the full methodology.</p>
+
+<h2>Tip #5 Use Java keytool to generate certificate in JKS.</h2>
+<p>In order to use SSL/TLS, generate your own certificate using Java keytool, that is part of the Java binaries:</p>
+<pre class="code">
+keytool -genkey -alias petep -keyalg RSA -validity 3650 -keysize 4096 -keystore C:/server.jks
+</pre>
