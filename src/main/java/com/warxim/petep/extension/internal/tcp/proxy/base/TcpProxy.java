@@ -50,7 +50,7 @@ public abstract class TcpProxy extends Proxy {
     protected TcpSocketFactory socketFactory;
 
     /**
-     * Server socket (between client and proxy).
+     * Socket for accepting connection between Client &lt;-&gt; Proxy
      */
     protected ServerSocket socket;
 
@@ -97,7 +97,7 @@ public abstract class TcpProxy extends Proxy {
     @Override
     public boolean prepare() {
         try {
-            socketFactory = new TcpSocketFactory(config.getServerSslConfig(), config.getClientSslConfig());
+            socketFactory = createTcpSocketFactory();
         } catch (TcpProxyException e) {
             Logger.getGlobal().log(Level.SEVERE, "SSL exception.", e);
             return false;
@@ -113,7 +113,7 @@ public abstract class TcpProxy extends Proxy {
     @Override
     public boolean start() {
         try {
-            socket = socketFactory.createServerSocket(config.getProxyIP(), config.getProxyPort());
+            socket = socketFactory.createC2PSocket(config.getProxyIP(), config.getProxyPort());
 
             thread = new Thread(this::accept);
 
@@ -129,6 +129,13 @@ public abstract class TcpProxy extends Proxy {
         }
 
         return false;
+    }
+
+    /**
+     * Creates TCP socket factory from current TCP config
+     */
+    protected TcpSocketFactory createTcpSocketFactory() throws TcpProxyException {
+        return new TcpSocketFactory(config.getServerSslConfig(), config.getClientSslConfig());
     }
 
     /**

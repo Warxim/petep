@@ -53,7 +53,7 @@ public final class HttpConnection extends TcpConnection {
 
     @Override
     protected void readFromClient() {
-        try (var in = socketClient.getInputStream()) {
+        try (var in = c2pSocket.getInputStream()) {
             PduReader reader = new HttpRequestReader(
                     in,
                     getConfig().getBufferSize(),
@@ -82,7 +82,7 @@ public final class HttpConnection extends TcpConnection {
 
     @Override
     protected void readFromServer() {
-        try (var in = socketServer.getInputStream()) {
+        try (var in = p2sSocket.getInputStream()) {
             PduReader reader = new HttpResponseReader(
                     in,
                     getConfig().getBufferSize(),
@@ -102,7 +102,7 @@ public final class HttpConnection extends TcpConnection {
                 } else {
                     // WebSockets
                     if (((WebSocketPdu) pdu).getOpcode() == Opcode.CLOSE) {
-                        socketServer.close();
+                        p2sSocket.close();
                     }
                 }
 
@@ -117,7 +117,7 @@ public final class HttpConnection extends TcpConnection {
     protected void writeToClient() {
         PDU pdu;
 
-        try (var out = socketClient.getOutputStream()) {
+        try (var out = c2pSocket.getOutputStream()) {
             PduWriter writer = new HttpResponseWriter(out);
 
             // Read bytes to buffer and send it to out stream
@@ -133,7 +133,7 @@ public final class HttpConnection extends TcpConnection {
                 } else {
                     // WebSockets
                     if (((WebSocketPdu) pdu).getOpcode() == Opcode.CLOSE) {
-                        socketClient.close();
+                        c2pSocket.close();
                     }
                 }
             }
@@ -148,7 +148,7 @@ public final class HttpConnection extends TcpConnection {
     protected void writeToServer() {
         PDU pdu;
 
-        try (var out = socketServer.getOutputStream()) {
+        try (var out = p2sSocket.getOutputStream()) {
             PduWriter writer = new HttpRequestWriter(out);
             // Read bytes to buffer and send it to out stream
             while ((pdu = queueC2S.take()) != null) {

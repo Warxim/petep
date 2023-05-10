@@ -202,7 +202,7 @@ const BytesUtils = Java.type('com.warxim.petep.util.BytesUtils');
 scripter.registerInterceptor({
     intercept: function(pdu, helper) {
 		if (pdu.getProxy().getCode() !== 'petep') {
-			return;
+			return true;
 		}
 
 		for (let currentColor in config.colors) {

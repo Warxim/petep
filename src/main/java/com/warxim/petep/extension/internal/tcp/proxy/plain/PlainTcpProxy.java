@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License along with this program. If
  * not, see <https://www.gnu.org/licenses/>.
  */
-package com.warxim.petep.extension.internal.tcp.proxy;
+package com.warxim.petep.extension.internal.tcp.proxy.plain;
 
 import com.warxim.petep.core.pdu.PDU;
 import com.warxim.petep.extension.internal.tcp.TcpConfig;
@@ -29,6 +29,7 @@ import java.net.Socket;
 /**
  * TCP Proxy.
  * <p>Simple implementation for basic TCP support.</p>
+ * <p>Supports plain-text, SSL/TLS, but does not support STARTTLS, for STARTTLS, use {@link com.warxim.petep.extension.internal.tcp.proxy.starttls.StarttlsTcpProxy}.</p>
  */
 public final class PlainTcpProxy extends TcpProxy  {
     /**

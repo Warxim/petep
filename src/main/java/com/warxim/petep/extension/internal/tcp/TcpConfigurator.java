@@ -69,6 +69,8 @@ public final class TcpConfigurator extends ConfigPane<TcpConfig> {
     @FXML
     private RadioButton serverSslRadio;
     @FXML
+    private RadioButton serverStartTlsRadio;
+    @FXML
     private ComboBox<String> serverAlgorithmInput;
     @FXML
     private TextField serverKeyStoreInput;
@@ -89,7 +91,11 @@ public final class TcpConfigurator extends ConfigPane<TcpConfig> {
     @FXML
     private RadioButton clientSslRadio;
     @FXML
+    private RadioButton clientStartTlsRadio;
+    @FXML
     private RadioButton clientSslWithCertificateRadio;
+    @FXML
+    private RadioButton clientStartTlsWithCertificateRadio;
     @FXML
     private ComboBox<String> clientAlgorithmInput;
     @FXML
@@ -116,7 +122,7 @@ public final class TcpConfigurator extends ConfigPane<TcpConfig> {
 
         // SSL
         var algorithms =
-                FXCollections.observableList(Arrays.asList("SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2", "TLSv1.3"));
+                FXCollections.observableList(Arrays.asList("SSL", "SSLv2", "SSLv3", "TLS", "TLSv1", "TLSv1.1", "TLSv1.2", "TLSv1.3"));
         var keyStoreTypes =
                 FXCollections.observableList(Arrays.asList("PKCS12", "PKCS11", "JKS"));
 
@@ -126,7 +132,7 @@ public final class TcpConfigurator extends ConfigPane<TcpConfig> {
         serverNoSslRadio.setSelected(true);
 
         serverAlgorithmInput.setItems(algorithms);
-        serverAlgorithmInput.getSelectionModel().selectLast();
+        serverAlgorithmInput.getSelectionModel().select("TLS");
 
         serverKeyStoreTypeInput.setItems(keyStoreTypes);
         serverKeyStoreTypeInput.getSelectionModel().selectLast();
@@ -139,7 +145,7 @@ public final class TcpConfigurator extends ConfigPane<TcpConfig> {
         clientNoSslRadio.setSelected(true);
 
         clientAlgorithmInput.setItems(FXCollections.observableList(algorithms));
-        clientAlgorithmInput.getSelectionModel().selectLast();
+        clientAlgorithmInput.getSelectionModel().select("TLS");
 
         clientKeyStoreTypeInput.setItems(FXCollections.observableList(keyStoreTypes));
         clientKeyStoreTypeInput.getSelectionModel().selectLast();
@@ -154,28 +160,28 @@ public final class TcpConfigurator extends ConfigPane<TcpConfig> {
     public TcpConfig getConfig() {
         // Server SSL config.
         SslConfig server;
-        if (serverSslRadio.isSelected()) {
+        if (serverSslRadio.isSelected() || serverStartTlsRadio.isSelected()) {
             var certificateConfig = new SslCertificateConfig(
                     serverKeyStoreInput.getText(),
                     serverKeyStoreTypeInput.getValue(),
                     serverKeyStorePasswordInput.getText(),
                     serverKeyPasswordInput.getText());
-            server = new SslConfig(serverAlgorithmInput.getValue(), certificateConfig);
+            server = new SslConfig(serverAlgorithmInput.getValue(), certificateConfig, serverStartTlsRadio.isSelected());
         } else {
             server = null;
         }
 
         // Client SSL config.
         SslConfig client;
-        if (clientSslRadio.isSelected()) {
-            client = new SslConfig(clientAlgorithmInput.getValue(), null);
-        } else if (clientSslWithCertificateRadio.isSelected()) {
+        if (clientSslRadio.isSelected() || clientStartTlsRadio.isSelected()) {
+            client = new SslConfig(clientAlgorithmInput.getValue(), null, clientStartTlsRadio.isSelected());
+        } else if (clientSslWithCertificateRadio.isSelected() || clientStartTlsWithCertificateRadio.isSelected()) {
             var certificateConfig = new SslCertificateConfig(
                     clientKeyStoreInput.getText(),
                     clientKeyStoreTypeInput.getValue(),
                     clientKeyStorePasswordInput.getText(),
                     clientKeyPasswordInput.getText());
-            client = new SslConfig(clientAlgorithmInput.getValue(), certificateConfig);
+            client = new SslConfig(clientAlgorithmInput.getValue(), certificateConfig, clientStartTlsWithCertificateRadio.isSelected());
         } else {
             client = null;
         }
@@ -189,7 +195,8 @@ public final class TcpConfigurator extends ConfigPane<TcpConfig> {
                 Charset.forName(charsetInput.getText()),
                 Integer.parseInt(connectionCloseDelayInput.getText()),
                 server,
-                client);
+                client
+        );
     }
 
     @Override
@@ -205,7 +212,11 @@ public final class TcpConfigurator extends ConfigPane<TcpConfig> {
         // Server SSL config.
         var serverSslConfig = config.getServerSslConfig();
         if (serverSslConfig != null) {
-            serverSslRadio.setSelected(true);
+            if (serverSslConfig.isStartTls()) {
+                serverStartTlsRadio.setSelected(true);
+            } else {
+                serverSslRadio.setSelected(true);
+            }
 
             serverAlgorithmInput.getSelectionModel().select(serverSslConfig.getAlgorithm());
 
@@ -225,13 +236,21 @@ public final class TcpConfigurator extends ConfigPane<TcpConfig> {
             var certificateConfig = clientSslConfig.getCertificateConfig();
 
             if (certificateConfig != null) {
-                clientSslWithCertificateRadio.setSelected(true);
+                if (clientSslConfig.isStartTls()) {
+                    clientStartTlsWithCertificateRadio.setSelected(true);
+                } else {
+                    clientSslWithCertificateRadio.setSelected(true);
+                }
                 clientKeyStoreInput.setText(certificateConfig.getKeyStore());
                 clientKeyStoreTypeInput.setValue(certificateConfig.getKeyStoreType());
                 clientKeyStorePasswordInput.setText(certificateConfig.getKeyStorePassword());
                 clientKeyPasswordInput.setText(certificateConfig.getKeyPassword());
             } else {
-                clientSslRadio.setSelected(true);
+                if (clientSslConfig.isStartTls()) {
+                    clientStartTlsRadio.setSelected(true);
+                } else {
+                    clientSslRadio.setSelected(true);
+                }
             }
         }
     }
@@ -346,7 +365,7 @@ public final class TcpConfigurator extends ConfigPane<TcpConfig> {
             ObservableValue<? extends Toggle> observable,
             Toggle oldValue,
             Toggle newValue) {
-        if (serverSslRadio.isSelected()) {
+        if (serverSslRadio.isSelected() || serverStartTlsRadio.isSelected()) {
             serverAlgorithmInput.setDisable(false);
             serverKeyStoreInput.setDisable(false);
             serverKeyStoreTypeInput.setDisable(false);
@@ -359,6 +378,8 @@ public final class TcpConfigurator extends ConfigPane<TcpConfig> {
             serverKeyStorePasswordInput.setDisable(true);
             serverKeyPasswordInput.setDisable(true);
         }
+
+        onStartTlsChange(serverStartTlsRadio.isSelected());
     }
 
     /**
@@ -368,18 +389,39 @@ public final class TcpConfigurator extends ConfigPane<TcpConfig> {
             ObservableValue<? extends Toggle> observable,
             Toggle oldValue,
             Toggle newValue) {
-        if (clientSslWithCertificateRadio.isSelected()) {
+        if (clientSslWithCertificateRadio.isSelected() || clientStartTlsWithCertificateRadio.isSelected()) {
             clientAlgorithmInput.setDisable(false);
             clientKeyStoreInput.setDisable(false);
             clientKeyStoreTypeInput.setDisable(false);
             clientKeyStorePasswordInput.setDisable(false);
             clientKeyPasswordInput.setDisable(false);
         } else {
-            clientAlgorithmInput.setDisable(!clientSslRadio.isSelected());
+            clientAlgorithmInput.setDisable(!clientSslRadio.isSelected() && !clientStartTlsRadio.isSelected());
             clientKeyStoreInput.setDisable(true);
             clientKeyStoreTypeInput.setDisable(true);
             clientKeyStorePasswordInput.setDisable(true);
             clientKeyPasswordInput.setDisable(true);
+        }
+
+        onStartTlsChange(clientStartTlsWithCertificateRadio.isSelected() || clientStartTlsRadio.isSelected());
+    }
+
+    /**
+     * Ensure that STARTTLS has to be enabled for both client and server
+     */
+    private void onStartTlsChange(boolean startTlsEnabled) {
+        if (startTlsEnabled) {
+            serverStartTlsRadio.setSelected(true);
+            if (!clientStartTlsRadio.isSelected() && !clientStartTlsWithCertificateRadio.isSelected()) {
+                clientStartTlsRadio.setSelected(true);
+            }
+        } else {
+            if (serverStartTlsRadio.isSelected()) {
+                serverNoSslRadio.setSelected(true);
+            }
+            if (clientStartTlsRadio.isSelected() || clientStartTlsWithCertificateRadio.isSelected()) {
+                clientNoSslRadio.setSelected(true);
+            }
         }
     }
 }

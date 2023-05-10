@@ -23,6 +23,18 @@ import lombok.Value;
  */
 @Value
 public class SslConfig {
+    /**
+     * SSL/TLS algorithm to use
+     */
     String algorithm;
+
+    /**
+     * Certificate configuration
+     */
     SslCertificateConfig certificateConfig;
+
+    /**
+     * Should STARTTLS be used?
+     */
+    boolean startTls;
 }

@@ -43,7 +43,7 @@ public abstract class TcpConnection extends Connection {
     /**
      * Socket between client and proxy.
      */
-    protected final Socket socketClient;
+    protected Socket c2pSocket;
 
     /**
      * Writers and readers executor.
@@ -53,7 +53,7 @@ public abstract class TcpConnection extends Connection {
     /**
      * Socket between proxy and server.
      */
-    protected Socket socketServer;
+    protected Socket p2sSocket;
 
     /**
      * Is connection in closing state?
@@ -68,7 +68,7 @@ public abstract class TcpConnection extends Connection {
      */
     protected TcpConnection(String code, Proxy proxy, Socket socket) {
         super(code, proxy);
-        socketClient = socket;
+        c2pSocket = socket;
     }
 
     /**
@@ -103,8 +103,8 @@ public abstract class TcpConnection extends Connection {
         // Open connection with server
         try {
             var tcpProxy = (TcpProxy) proxy;
-            socketServer = tcpProxy.getSocketFactory()
-                    .createSocket(tcpProxy.getConfig().getTargetIP(), tcpProxy.getConfig().getTargetPort());
+            p2sSocket = tcpProxy.getSocketFactory()
+                    .createP2SSocket(tcpProxy.getConfig().getTargetIP(), tcpProxy.getConfig().getTargetPort());
 
             // Write threads
             executor.execute(this::writeToServer);
@@ -148,8 +148,8 @@ public abstract class TcpConnection extends Connection {
 
         // Close socket to client.
         try {
-            if (socketClient != null) {
-                socketClient.close();
+            if (c2pSocket != null) {
+                c2pSocket.close();
             }
         } catch (IOException e) {
             Logger.getGlobal().log(Level.SEVERE, "TCP connection exception - IO exception!", e);
@@ -157,8 +157,8 @@ public abstract class TcpConnection extends Connection {
 
         // Close socket to server.
         try {
-            if (socketServer != null) {
-                socketServer.close();
+            if (p2sSocket != null) {
+                p2sSocket.close();
             }
         } catch (IOException e) {
             Logger.getGlobal().log(Level.SEVERE, "TCP connection exception - IO exception!", e);
@@ -193,9 +193,9 @@ public abstract class TcpConnection extends Connection {
         return "TCP connection "
                 + code
                 + " ("
-                + socketClient.getInetAddress().getHostAddress()
+                + c2pSocket.getInetAddress().getHostAddress()
                 + ":"
-                + socketClient.getPort()
+                + c2pSocket.getPort()
                 + ")";
     }
 

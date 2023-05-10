@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License along with this program. If
  * not, see <https://www.gnu.org/licenses/>.
  */
-package com.warxim.petep.extension.internal.tcp.proxy.base;
+package com.warxim.petep.extension.internal.tcp.proxy.util;
 
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.X509ExtendedTrustManager;

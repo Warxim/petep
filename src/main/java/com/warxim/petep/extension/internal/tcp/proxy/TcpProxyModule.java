@@ -17,6 +17,8 @@
 package com.warxim.petep.extension.internal.tcp.proxy;
 
 import com.warxim.petep.extension.internal.tcp.TcpConfig;
+import com.warxim.petep.extension.internal.tcp.proxy.plain.PlainTcpProxy;
+import com.warxim.petep.extension.internal.tcp.proxy.starttls.StarttlsTcpProxy;
 import com.warxim.petep.helper.PetepHelper;
 import com.warxim.petep.persistence.Configurable;
 import com.warxim.petep.proxy.factory.ProxyModuleFactory;
@@ -48,6 +50,12 @@ public final class TcpProxyModule extends ProxyModule implements Configurable<Tc
 
     @Override
     public Proxy createProxy(PetepHelper helper) {
+        // For STARTTLS use special STARTTLS proxy that starts connections with STARTTLS support
+        if (config.getServerSslConfig() != null && config.getServerSslConfig().isStartTls()) {
+            return new StarttlsTcpProxy(this, helper, config);
+        }
+
+        // For plain-text and other SSL/TLS use plain TCP proxy
         return new PlainTcpProxy(this, helper, config);
     }
 

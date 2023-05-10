@@ -61,12 +61,12 @@ public class TcpConfig {
     int connectionCloseDelay;
 
     /**
-     * Configuration of SSL/TLS for server
+     * Configuration of SSL/TLS for server on the proxy (Client &lt;-&gt; Proxy)
      */
     SslConfig serverSslConfig;
 
     /**
-     * Configuration of SSL/TLS for client
+     * Configuration of SSL/TLS for client of the proxy (Proxy &lt;-&gt; Server)
      */
     SslConfig clientSslConfig;
 }

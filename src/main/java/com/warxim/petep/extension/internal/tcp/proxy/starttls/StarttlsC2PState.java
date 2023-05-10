@@ -1,7 +1,7 @@
 /*
  * PEnetration TEsting Proxy (PETEP)
  *
- * Copyright (C) 2021 Michal Válka
+ * Copyright (C) 2023 Michal Válka
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the
  * GNU General Public License as published by the Free Software Foundation, either version 3 of the
@@ -14,28 +14,18 @@
  * You should have received a copy of the GNU General Public License along with this program. If
  * not, see <https://www.gnu.org/licenses/>.
  */
-package com.warxim.petep.extension.internal.tcp.proxy.base;
+package com.warxim.petep.extension.internal.tcp.proxy.starttls;
 
 /**
- * TCP proxy exception signalizing that something went wrong during proxy startup.
+ * State of communication between the client and the proxy
  */
-public class TcpProxyException extends Exception {
-    private static final long serialVersionUID = 1L;
-
+public enum StarttlsC2PState {
     /**
-     * Constructs TCP proxy exception.
-     * @param message Description of the problem
-     * @param cause Cause of the problem
+     * Plain-text communication is active
      */
-    public TcpProxyException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
+    PLAIN_TEXT_MODE,
     /**
-     * Constructs TCP proxy exception.
-     * @param message Description of the problem
+     * Sockets are using SSL/TLS
      */
-    public TcpProxyException(String message) {
-        super(message);
-    }
+    ENCRYPTION_MODE
 }

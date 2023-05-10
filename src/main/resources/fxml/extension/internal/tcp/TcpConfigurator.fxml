@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<fx:root prefHeight="846.0" prefWidth="313.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="976.0" prefWidth="313.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="11.0" layoutY="58.0" styleClass="input-label" text="Proxy IP:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="58.0" />
       <TextField fx:id="proxyIpInput" layoutX="86.0" layoutY="53.0" prefHeight="26.0" prefWidth="237.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" />
@@ -23,44 +28,49 @@
       <Label layoutX="11.0" layoutY="208.0" styleClass="h3" text="Connection" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="208.0" />
       <Label layoutX="11.0" layoutY="14.0" styleClass="h2" text="TCP" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
       <Label layoutX="10.0" layoutY="347.0" styleClass="h2" text="SSL" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="347.0" />
-      <Label layoutX="10.0" layoutY="481.0" styleClass="input-label" text="Key store type:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="481.0" />
-      <Label layoutX="10.0" layoutY="372.0" styleClass="h3" text="Server" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="372.0" />
-      <Label layoutX="10.0" layoutY="511.0" styleClass="input-label" text="Key store path:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="511.0" />
-      <TextField fx:id="serverKeyStoreInput" layoutX="125.0" layoutY="506.0" prefHeight="26.0" prefWidth="148.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="506.0" />
-      <Label layoutX="10.0" layoutY="541.0" styleClass="input-label" text="Key store password:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="541.0" />
-      <TextField fx:id="serverKeyStorePasswordInput" layoutX="125.0" layoutY="536.0" prefHeight="26.0" prefWidth="190.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="10.0" />
-      <Label layoutX="10.0" layoutY="571.0" styleClass="input-label" text="Key password:" AnchorPane.topAnchor="571.0" />
-      <TextField fx:id="serverKeyPasswordInput" layoutX="125.0" layoutY="566.0" prefHeight="26.0" prefWidth="237.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="566.0" />
-      <ComboBox fx:id="serverKeyStoreTypeInput" layoutX="125.0" layoutY="476.0" prefHeight="26.0" prefWidth="204.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="476.0" />
-      <Label layoutX="10.0" layoutY="450.0" styleClass="input-label" text="Algorithm:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="450.0" />
-      <ComboBox fx:id="serverAlgorithmInput" layoutX="125.0" layoutY="446.0" prefHeight="26.0" prefWidth="178.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="446.0" />
-      <Label layoutX="10.0" layoutY="601.0" styleClass="h3" text="Client" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="601.0" />
-      <RadioButton fx:id="clientNoSslRadio" layoutX="10.0" layoutY="624.0" mnemonicParsing="false" text="No SSL" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="624.0">
+      <Label layoutX="10.0" layoutY="532.0" styleClass="input-label" text="Key store type:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="532.0" />
+      <Label layoutX="10.0" layoutY="372.0" prefHeight="17.0" prefWidth="248.0" styleClass="h3" text="Server (Client &lt;-&gt; Proxy)" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="372.0" />
+      <Label layoutX="10.0" layoutY="562.0" styleClass="input-label" text="Key store path:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="562.0" />
+      <TextField fx:id="serverKeyStoreInput" layoutX="125.0" layoutY="557.0" prefHeight="26.0" prefWidth="148.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="557.0" />
+      <Label layoutX="10.0" layoutY="592.0" styleClass="input-label" text="Key store password:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="592.0" />
+      <TextField fx:id="serverKeyStorePasswordInput" layoutX="125.0" layoutY="587.0" prefHeight="26.0" prefWidth="190.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="10.0" />
+      <Label layoutX="10.0" layoutY="622.0" styleClass="input-label" text="Key password:" AnchorPane.topAnchor="622.0" />
+      <TextField fx:id="serverKeyPasswordInput" layoutX="125.0" layoutY="617.0" prefHeight="26.0" prefWidth="237.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="617.0" />
+      <ComboBox fx:id="serverKeyStoreTypeInput" layoutX="125.0" layoutY="527.0" prefHeight="26.0" prefWidth="204.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="527.0" />
+      <Label layoutX="10.0" layoutY="501.0" styleClass="input-label" text="Algorithm:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="501.0" />
+      <ComboBox fx:id="serverAlgorithmInput" layoutX="125.0" layoutY="497.0" prefHeight="26.0" prefWidth="178.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="497.0" />
+      <Label layoutX="10.0" layoutY="652.0" prefHeight="17.0" prefWidth="284.0" styleClass="h3" text="Client  (Proxy &lt;-&gt; Server)" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="652.0" />
+      <RadioButton fx:id="clientNoSslRadio" layoutX="10.0" layoutY="701.0" mnemonicParsing="false" text="No SSL" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="701.0">
          <toggleGroup>
             <ToggleGroup fx:id="clientSsl" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="clientSslRadio" layoutX="10.0" layoutY="649.0" maxWidth="50.0" minWidth="50.0" mnemonicParsing="false" prefWidth="50.0" text="SSL" toggleGroup="$clientSsl" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="649.0" />
-      <RadioButton fx:id="clientSslWithCertificateRadio" layoutX="10.0" layoutY="674.0" mnemonicParsing="false" text="SSL + certificate" toggleGroup="$clientSsl" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="674.0" />
-      <RadioButton fx:id="serverNoSslRadio" layoutX="10.0" layoutY="397.0" mnemonicParsing="false" text="No SSL" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="397.0">
+      <RadioButton fx:id="clientSslRadio" layoutX="10.0" layoutY="726.0" maxWidth="96.0" minWidth="50.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="96.0" text="SSL/TLS" toggleGroup="$clientSsl" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="726.0" />
+      <RadioButton fx:id="clientSslWithCertificateRadio" layoutX="10.0" layoutY="751.0" mnemonicParsing="false" text="SSL/TLS + client certificate" toggleGroup="$clientSsl" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="751.0" />
+      <RadioButton fx:id="serverNoSslRadio" layoutX="10.0" layoutY="422.0" mnemonicParsing="false" text="No SSL" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="422.0">
          <toggleGroup>
             <ToggleGroup fx:id="serverSsl" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="serverSslRadio" layoutX="10.0" layoutY="422.0" maxWidth="50.0" minWidth="50.0" mnemonicParsing="false" prefWidth="50.0" text="SSL" toggleGroup="$serverSsl" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="422.0" />
-      <Label layoutX="10.0" layoutY="731.0" styleClass="input-label" text="Key store type:" AnchorPane.leftAnchor="10.0" />
-      <Label layoutX="10.0" layoutY="761.0" styleClass="input-label" text="Key store path:" AnchorPane.leftAnchor="10.0" />
-      <TextField fx:id="clientKeyStoreInput" layoutX="125.0" layoutY="756.0" prefHeight="26.0" prefWidth="218.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="40.0" />
-      <Label layoutX="10.0" layoutY="791.0" styleClass="input-label" text="Key store password:" AnchorPane.leftAnchor="10.0" />
-      <TextField fx:id="clientKeyStorePasswordInput" layoutX="125.0" layoutY="786.0" prefHeight="26.0" prefWidth="190.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="10.0" />
-      <Label layoutX="10.0" layoutY="821.0" styleClass="input-label" text="Key password:" AnchorPane.leftAnchor="10.0" />
-      <TextField fx:id="clientKeyPasswordInput" layoutX="125.0" layoutY="816.0" prefHeight="26.0" prefWidth="237.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="10.0" />
-      <ComboBox fx:id="clientKeyStoreTypeInput" layoutX="125.0" layoutY="726.0" prefHeight="26.0" prefWidth="204.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="10.0" />
-      <Label layoutX="10.0" layoutY="700.0" styleClass="input-label" text="Algorithm:" />
-      <ComboBox fx:id="clientAlgorithmInput" layoutX="125.0" layoutY="696.0" prefHeight="26.0" prefWidth="178.0" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="10.0" />
-      <Button layoutX="278.0" layoutY="506.0" mnemonicParsing="false" onAction="#onServerCertificateOpenButtonClick" prefHeight="26.0" prefWidth="25.0" text="..." AnchorPane.rightAnchor="10.0" />
-      <Button layoutX="278.0" layoutY="756.0" mnemonicParsing="false" onAction="#onClientCertificateOpenButtonClick" prefHeight="26.0" prefWidth="25.0" text="..." AnchorPane.rightAnchor="10.0" />
+      <RadioButton fx:id="serverSslRadio" layoutX="10.0" layoutY="447.0" maxWidth="90.0" minWidth="50.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="90.0" text="SSL/TLS" toggleGroup="$serverSsl" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="447.0" />
+      <Label layoutX="9.0" layoutY="859.0" styleClass="input-label" text="Key store type:" AnchorPane.leftAnchor="9.0" />
+      <Label layoutX="9.0" layoutY="889.0" styleClass="input-label" text="Key store path:" AnchorPane.leftAnchor="9.0" />
+      <TextField fx:id="clientKeyStoreInput" layoutX="124.0" layoutY="884.0" prefHeight="26.0" prefWidth="218.0" AnchorPane.leftAnchor="124.0" AnchorPane.rightAnchor="41.0" />
+      <Label layoutX="9.0" layoutY="919.0" styleClass="input-label" text="Key store password:" AnchorPane.leftAnchor="9.0" />
+      <TextField fx:id="clientKeyStorePasswordInput" layoutX="124.0" layoutY="914.0" prefHeight="26.0" prefWidth="190.0" AnchorPane.leftAnchor="124.0" AnchorPane.rightAnchor="11.0" />
+      <Label layoutX="9.0" layoutY="949.0" styleClass="input-label" text="Key password:" AnchorPane.leftAnchor="9.0" />
+      <TextField fx:id="clientKeyPasswordInput" layoutX="124.0" layoutY="944.0" prefHeight="26.0" prefWidth="237.0" AnchorPane.leftAnchor="124.0" AnchorPane.rightAnchor="11.0" />
+      <ComboBox fx:id="clientKeyStoreTypeInput" layoutX="124.0" layoutY="854.0" prefHeight="26.0" prefWidth="204.0" AnchorPane.leftAnchor="124.0" AnchorPane.rightAnchor="11.0" />
+      <Label layoutX="9.0" layoutY="828.0" styleClass="input-label" text="Algorithm:" />
+      <ComboBox fx:id="clientAlgorithmInput" layoutX="124.0" layoutY="824.0" prefHeight="26.0" prefWidth="178.0" AnchorPane.leftAnchor="124.0" AnchorPane.rightAnchor="11.0" />
+      <Button layoutX="278.0" layoutY="557.0" mnemonicParsing="false" onAction="#onServerCertificateOpenButtonClick" prefHeight="26.0" prefWidth="25.0" text="..." AnchorPane.rightAnchor="10.0" />
+      <Button layoutX="277.0" layoutY="884.0" mnemonicParsing="false" onAction="#onClientCertificateOpenButtonClick" prefHeight="26.0" prefWidth="25.0" text="..." AnchorPane.rightAnchor="11.0" />
       <Label layoutX="10.0" layoutY="318.0" styleClass="input-label" text="Charset:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="318.0" />
       <TextField fx:id="charsetInput" layoutX="86.0" layoutY="321.0" prefHeight="26.0" prefWidth="237.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="313.0" />
+      <RadioButton fx:id="serverStartTlsRadio" layoutX="10.0" layoutY="473.0" maxWidth="154.0" minWidth="50.0" mnemonicParsing="false" prefHeight="17.0" prefWidth="154.0" text="STARTTLS" toggleGroup="$serverSsl" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="472.0" />
+      <Label layoutX="11.0" layoutY="396.0" prefHeight="17.0" prefWidth="290.0" text="SSL between client app and PETEP proxy" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="397.0" />
+      <Label layoutX="11.0" layoutY="676.0" prefHeight="17.0" prefWidth="290.0" text="SSL between PETEP proxy and target server" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="677.0" />
+      <RadioButton fx:id="clientStartTlsRadio" layoutX="10.0" layoutY="777.0" mnemonicParsing="false" text="STARTTLS" toggleGroup="$clientSsl" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="776.0" />
+      <RadioButton fx:id="clientStartTlsWithCertificateRadio" layoutX="20.0" layoutY="787.0" mnemonicParsing="false" text="STARTTLS + client certificate" toggleGroup="$clientSsl" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="801.0" />
    </children>
 </fx:root>

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License along with this program. If
  * not, see <https://www.gnu.org/licenses/>.
  */
-package com.warxim.petep.extension.internal.tcp.proxy;
+package com.warxim.petep.extension.internal.tcp.proxy.plain;
 
 import com.warxim.petep.core.pdu.PDU;
 import com.warxim.petep.core.pdu.PduDestination;
@@ -43,22 +43,22 @@ public final class PlainTcpConnection extends TcpConnection {
 
     @Override
     protected void readFromServer() {
-        doRead(PduDestination.CLIENT, socketServer);
+        doRead(PduDestination.CLIENT, p2sSocket);
     }
 
     @Override
     protected void readFromClient() {
-        doRead(PduDestination.SERVER, socketClient);
+        doRead(PduDestination.SERVER, c2pSocket);
     }
 
     @Override
     protected void writeToServer() {
-        doWrite(queueC2S, socketServer);
+        doWrite(queueC2S, p2sSocket);
     }
 
     @Override
     protected void writeToClient() {
-        doWrite(queueS2C, socketClient);
+        doWrite(queueS2C, c2pSocket);
     }
 
     /**
