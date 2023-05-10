@@ -2,6 +2,12 @@
 
 All notable changes to this project will are documented in this changelog file.
 
+## [2.1.0] - 2023-05-10
+### Added
+- Support for STARTTLS for TCP
+- Fixed example script
+- Minor refactorings
+
 ## [2.0.3] - 2022-01-01
 ### Added
 - Improved deserialization of Charset to work with newer Java

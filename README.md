@@ -48,6 +48,19 @@ It is possible to develop extensions using Java to implement support for new pro
 
 For more information about extension development, please see https://petep.warxim.com/dev-guide/.
 
+## SSL/TLS, STARTTLS proxy support
+PETEP supports TCP proxy with SSL/TLS and STARTTLS. In order to use these, you have to provide certificate,
+since the application does not generate it itself. For certificate generation, there are many tools that can be used,
+but one of them is part of Java binaries (`%JAVA_HOME%/bin/keytool`).
+
+To generate a certificate in JKS keystore, you can use the following command:
+
+```shell
+keytool -genkey -alias petep -keyalg RSA -validity 3650 -keysize 4096 -keystore C:/server.jks
+```
+
+***Note:** It is recommended to store these certificates alongside the project (project_dir/conf/server.jks)*
+
 ## Guides/Tutorials
 There are three different guides that will help you use PETEP to its full potential:
 - [User Guide](https://petep.warxim.com/user-guide/) - explanation of PETEP components for basic users
