@@ -12,6 +12,8 @@ You might find the following links useful:
 ## Requirements
 You need **Java 11** or newer version to run PETEP.
 
+***Note:** For Mac with ARM64 architecture (M1, M2 chips), use special build for Java 17.*
+
 ## Supported functionality
 Latest PETEP version has the following protocol support:
 - **TCP proxy with SSL/TLS support**
