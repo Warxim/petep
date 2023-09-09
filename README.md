@@ -30,7 +30,12 @@ And there are the following functionalities:
 - **Scripter** - basic support for JS scripts for custom traffic processing
 - **Connections** - management of active connections
 
-## Tunnel TCP through HTTP proxy like Burp or Zaproxy
+### Scripter extension
+In order to use Scripter extension, it is recommended to use GraalVM, since the implementation is built
+using GraalVM Polyglot. Since GraalVM 22.2, you might need to install the scripting language in the GraalVM using
+`gu install js`.
+
+### Tunnel TCP through HTTP proxy like Burp or Zaproxy
 In order to test TCP communication using existing HTTP proxies like Burp Suite, OWASP Zap etc.),
 you can use PETEP external HTTP proxy module, which allows you tunnel the TCP communication through these proxies.
 
@@ -45,12 +50,7 @@ For more information, see https://petep.warxim.com/user-guide/external-http-prox
 ***Note:** If you only want to use PETEP as the tunnel for sending the TCP through HTTP proxies,
 I would recommend setting it up in GUI mode and then running it in NO-GUI mode (`PETEP [project_path] --nogui`).*
 
-## Extensibility
-It is possible to develop extensions using Java to implement support for new protocols and/or to implement new functionality. 
-
-For more information about extension development, please see https://petep.warxim.com/dev-guide/.
-
-## SSL/TLS, STARTTLS proxy support
+### SSL/TLS, STARTTLS proxy support
 PETEP supports TCP proxy with SSL/TLS and STARTTLS. In order to use these, you have to provide certificate,
 since the application does not generate it itself. For certificate generation, there are many tools that can be used,
 but one of them is part of Java binaries (`%JAVA_HOME%/bin/keytool`).
@@ -58,7 +58,7 @@ but one of them is part of Java binaries (`%JAVA_HOME%/bin/keytool`).
 To generate a certificate in JKS keystore, you can use the following command:
 
 ```shell
-keytool -genkey -alias petep -keyalg RSA -validity 3650 -keysize 4096 -keystore C:/server.jks
+keytool -genkey -alias petep -keyalg RSA -validity 3650 -keysize 4096 -keystore server.jks
 ```
 
 ***Note:** It is recommended to store these certificates alongside the project (project_dir/conf/server.jks)*
@@ -67,8 +67,13 @@ keytool -genkey -alias petep -keyalg RSA -validity 3650 -keysize 4096 -keystore 
 There are three different guides that will help you use PETEP to its full potential:
 - [User Guide](https://petep.warxim.com/user-guide/) - explanation of PETEP components for basic users
 - [Methodology](https://petep.warxim.com/methodology/) - methodology with example usage (with video example)
-- [Development Guide](https://petep.warxim.com/dev-guide/) - guide for extending PETEP using own Java extensions 
+- [Development Guide](https://petep.warxim.com/dev-guide/) - guide for extending PETEP using own Java extensions
   (to support custom protocols or create custom modules for traffic interception)
+
+## Extensibility
+It is possible to develop extensions using Java to implement support for new protocols and/or to implement new functionality. 
+
+For more information about extension development, please see https://petep.warxim.com/dev-guide/.
 
 ## License
 PETEP is licensed under GNU GPL 3.0.
