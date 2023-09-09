@@ -14,6 +14,20 @@ You need **Java 11** or newer version to run PETEP.
 
 ***Note:** For Mac with ARM64 architecture (M1, M2 chips), use special build for Java 17.*
 
+## How to run
+In order to run PETEP, go to the directory of the downloaded PETEP release and run the sh/bat file:
+```shell
+# Linux / Mac
+chmod +x petep.sh
+./petep.sh
+
+# Windows
+petep.bat
+```
+
+***Note:** These run scripts contain useful variables, including path to Java executable. 
+You might need to change it if you do not have it in PATH or you use multiple Java versions.*
+
 ## Supported functionality
 Latest PETEP version has the following protocol support:
 - **TCP proxy with SSL/TLS support**
