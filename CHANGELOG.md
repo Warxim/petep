@@ -2,6 +2,10 @@
 
 All notable changes to this project will are documented in this changelog file.
 
+## Unreleased
+### Added
+- Fixed copy&paste behaviour of Text editor for bytes
+
 ## [2.1.0] - 2023-05-10
 ### Added
 - Support for STARTTLS for TCP
