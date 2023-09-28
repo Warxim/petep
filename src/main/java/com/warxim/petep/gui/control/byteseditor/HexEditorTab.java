@@ -14,65 +14,62 @@
  * You should have received a copy of the GNU General Public License along with this program. If
  * not, see <https://www.gnu.org/licenses/>.
  */
-package com.warxim.petep.gui.control;
+package com.warxim.petep.gui.control.byteseditor;
 
-import com.warxim.petep.common.Constant;
 import com.warxim.petep.extension.PetepAPI;
-import com.warxim.petep.util.BytesUtils;
-import com.warxim.petep.util.GuiUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.IndexRange;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TextArea;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 
 /**
- * Text editor of bytes.
- * <p>Uses text representation of bytes (depending on the charset).</p>
- * <p>
- *     Might not work correctly with some charsets, because JavaFX TextArea removes them.
- *     Therefore it is recommended to use default charset ({@link Constant#DEFAULT_CHARSET}).
- * </p>
+ * Hexadecimal editor of bytes.
+ * <p>Uses hex representation, for example: 77 61 72 78 69 6D 2E 63 6F 6D</p>
  */
 @PetepAPI
-public class TextEditorTab extends Tab implements BytesEditorTab {
-    private Charset charset;
-
+public class HexEditorTab extends Tab implements BytesEditorComponent {
     @FXML
-    private TextArea textInput;
+    private HexEditor hexInput;
 
     /**
-     * Constructs text editor tab.
+     * Constructs hex editor tab.
      * @throws IOException If the template could not be loaded
      */
-    public TextEditorTab() throws IOException {
-        var loader = new FXMLLoader(getClass().getResource("/fxml/control/TextEditorTab.fxml"));
+    public HexEditorTab() throws IOException {
+        var loader = new FXMLLoader(getClass().getResource("/fxml/control/HexEditorTab.fxml"));
         loader.setRoot(this);
         loader.setController(this);
         loader.setClassLoader(getClass().getClassLoader());
         loader.load();
 
-        charset = Constant.DEFAULT_CHARSET;
-
-        setText("Text");
+        setText("Hex");
     }
 
     @Override
     public void setBytes(byte[] bytes, int size, Charset charset) {
-        this.charset = charset;
-
-        textInput.setText(GuiUtils.formatText(BytesUtils.getString(bytes, size, charset)));
+        hexInput.setBytes(bytes, size, charset);
     }
 
     @Override
     public byte[] getBytes() {
-        return GuiUtils.unformatText(textInput.getText()).getBytes(charset);
+        return hexInput.getBytes();
     }
 
     @Override
     public void setEditable(boolean value) {
-        textInput.setEditable(value);
+        hexInput.setEditable(value);
+    }
+
+    @Override
+    public void selectBytes(IndexRange selectionRange) {
+        hexInput.selectBytes(selectionRange);
+    }
+
+    @Override
+    public IndexRange getBytesSelection() {
+        return hexInput.getBytesSelection();
     }
 }

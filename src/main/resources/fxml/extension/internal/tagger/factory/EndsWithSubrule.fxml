@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.warxim.petep.gui.control.BytesEditor?>
+<?import com.warxim.petep.gui.control.byteseditor.BytesEditor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 

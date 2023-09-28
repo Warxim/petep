@@ -2,7 +2,7 @@
 
 <!-- PetepAPI -->
 
-<?import com.warxim.petep.gui.control.BytesEditor?>
+<?import com.warxim.petep.gui.control.byteseditor.BytesEditor?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>

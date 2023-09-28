@@ -22,7 +22,7 @@ import com.warxim.petep.extension.internal.history.model.HistoricInterceptor;
 import com.warxim.petep.extension.internal.history.model.HistoricProxy;
 import com.warxim.petep.extension.internal.history.model.HistoryFilter;
 import com.warxim.petep.extension.internal.history.service.HistoryService;
-import com.warxim.petep.gui.control.BytesEditor;
+import com.warxim.petep.gui.control.byteseditor.BytesEditor;
 import com.warxim.petep.gui.dialog.Dialogs;
 import com.warxim.petep.gui.dialog.SimpleInputDialog;
 import javafx.application.Platform;

@@ -23,7 +23,7 @@ import com.warxim.petep.extension.internal.history.HistoryApi;
 import com.warxim.petep.extension.internal.history.gui.view.filter.HistoryFilterDialog;
 import com.warxim.petep.extension.internal.history.model.HistoricPduView;
 import com.warxim.petep.gui.common.InstantCellFactory;
-import com.warxim.petep.gui.control.BytesEditor;
+import com.warxim.petep.gui.control.byteseditor.BytesEditor;
 import com.warxim.petep.gui.dialog.Dialogs;
 import com.warxim.petep.helper.ExtensionHelper;
 import javafx.application.Platform;

@@ -22,7 +22,7 @@ import com.warxim.petep.core.pdu.PDU;
 import com.warxim.petep.core.pdu.PduDestination;
 import com.warxim.petep.extension.PetepAPI;
 import com.warxim.petep.gui.component.PduMetadataPane;
-import com.warxim.petep.gui.control.BytesEditor;
+import com.warxim.petep.gui.control.byteseditor.BytesEditor;
 import com.warxim.petep.gui.dialog.Dialogs;
 import com.warxim.petep.helper.ExtensionHelper;
 import com.warxim.petep.helper.PetepHelper;

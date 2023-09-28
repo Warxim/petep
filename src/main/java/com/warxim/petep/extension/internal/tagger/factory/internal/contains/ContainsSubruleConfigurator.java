@@ -18,7 +18,7 @@ package com.warxim.petep.extension.internal.tagger.factory.internal.contains;
 
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleConfigurator;
 import com.warxim.petep.extension.internal.tagger.factory.TagSubruleData;
-import com.warxim.petep.gui.control.BytesEditor;
+import com.warxim.petep.gui.control.byteseditor.BytesEditor;
 import com.warxim.petep.gui.dialog.Dialogs;
 import com.warxim.petep.util.GuiUtils;
 import javafx.fxml.FXML;

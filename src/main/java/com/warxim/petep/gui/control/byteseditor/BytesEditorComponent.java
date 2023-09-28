@@ -14,17 +14,18 @@
  * You should have received a copy of the GNU General Public License along with this program. If
  * not, see <https://www.gnu.org/licenses/>.
  */
-package com.warxim.petep.gui.control;
+package com.warxim.petep.gui.control.byteseditor;
 
 import com.warxim.petep.extension.PetepAPI;
+import javafx.scene.control.IndexRange;
 
 import java.nio.charset.Charset;
 
 /**
- * Interface for bytes editor tab.
+ * Interface for bytes editor tab wrappers and nested components.
  */
 @PetepAPI
-public interface BytesEditorTab {
+public interface BytesEditorComponent {
     /**
      * Sets bytes to the tab.
      * @param bytes Bytes to be set
@@ -44,4 +45,16 @@ public interface BytesEditorTab {
      * @param value {@code true} if the data in the tab should be editable
      */
     void setEditable(boolean value);
+
+    /**
+     * Select bytes in the editor tab
+     * @param selectionRange Selection range to use
+     */
+    void selectBytes(IndexRange selectionRange);
+
+    /**
+     * Obtains current bytes selection from editor tab
+     * @return Current selection range
+     */
+    IndexRange getBytesSelection();
 }

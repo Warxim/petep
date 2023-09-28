@@ -2,11 +2,11 @@
 
 <!-- PetepAPI -->
 
-<?import com.warxim.petep.gui.control.byteseditor.TextEditor?>
+<?import com.warxim.petep.gui.control.byteseditor.HexEditor?>
 <?import javafx.scene.control.Tab?>
 
 <fx:root type="Tab" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" closable="false">
     <content>
-        <TextEditor fx:id="textInput" styleClass="bytes-editor" />
+        <HexEditor fx:id="hexInput" styleClass="bytes-editor" />
     </content>
 </fx:root>

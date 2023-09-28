@@ -4,6 +4,8 @@ All notable changes to this project will are documented in this changelog file.
 
 ## Unreleased
 ### Added
+- A bit more convenient Hex Editor 
+- Support for keeping selection when switching between BytesEditor tabs 
 - Fixed copy&paste behaviour of Text editor for bytes
 
 ## [2.1.0] - 2023-05-10

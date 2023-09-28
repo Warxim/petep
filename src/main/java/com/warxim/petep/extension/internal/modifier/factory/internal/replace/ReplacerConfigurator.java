@@ -18,7 +18,7 @@ package com.warxim.petep.extension.internal.modifier.factory.internal.replace;
 
 import com.warxim.petep.extension.internal.modifier.factory.ModifierConfigurator;
 import com.warxim.petep.extension.internal.modifier.factory.ModifierData;
-import com.warxim.petep.gui.control.BytesEditor;
+import com.warxim.petep.gui.control.byteseditor.BytesEditor;
 import com.warxim.petep.gui.dialog.Dialogs;
 import com.warxim.petep.util.GuiUtils;
 import javafx.fxml.FXML;

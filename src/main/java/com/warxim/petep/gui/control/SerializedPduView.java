@@ -18,6 +18,7 @@ package com.warxim.petep.gui.control;
 
 import com.warxim.petep.core.pdu.SerializedPdu;
 import com.warxim.petep.extension.PetepAPI;
+import com.warxim.petep.gui.control.byteseditor.BytesEditor;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextArea;

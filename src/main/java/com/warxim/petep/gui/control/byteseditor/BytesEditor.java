@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License along with this program. If
  * not, see <https://www.gnu.org/licenses/>.
  */
-package com.warxim.petep.gui.control;
+package com.warxim.petep.gui.control.byteseditor;
 
 import com.warxim.petep.common.Constant;
 import com.warxim.petep.extension.PetepAPI;
@@ -24,6 +24,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -41,7 +42,7 @@ import java.nio.charset.Charset;
  */
 @PetepAPI
 public class BytesEditor extends AnchorPane {
-    private BooleanProperty editable = new SimpleBooleanProperty(this, "editable", true);
+    private final BooleanProperty editable = new SimpleBooleanProperty(this, "editable", true);
 
     protected Charset charset;
     protected byte[] bytes;
@@ -84,7 +85,7 @@ public class BytesEditor extends AnchorPane {
         this.bytes = bytes;
         this.charset = charset;
 
-        BytesEditorTab currentTab = (BytesEditorTab) tabs.getSelectionModel().getSelectedItem();
+        BytesEditorComponent currentTab = (BytesEditorComponent) tabs.getSelectionModel().getSelectedItem();
         if (currentTab != null) {
             currentTab.setBytes(bytes, size, charset);
         }
@@ -109,7 +110,7 @@ public class BytesEditor extends AnchorPane {
     public void setBytes(byte[] bytes, int size) {
         this.bytes = bytes;
 
-        var currentTab = (BytesEditorTab) tabs.getSelectionModel().getSelectedItem();
+        var currentTab = (BytesEditorComponent) tabs.getSelectionModel().getSelectedItem();
         if (currentTab != null) {
             currentTab.setBytes(bytes, size, charset);
         }
@@ -128,7 +129,7 @@ public class BytesEditor extends AnchorPane {
      * @return Byte array
      */
     public byte[] getBytes() {
-        bytes = ((BytesEditorTab) tabs.getSelectionModel().getSelectedItem()).getBytes();
+        bytes = ((BytesEditorComponent) tabs.getSelectionModel().getSelectedItem()).getBytes();
 
         return bytes;
     }
@@ -146,7 +147,7 @@ public class BytesEditor extends AnchorPane {
      * @param charset Charset to be set
      */
     public void setCharset(Charset charset) {
-        var currentTab = (BytesEditorTab) tabs.getSelectionModel().getSelectedItem();
+        var currentTab = (BytesEditorComponent) tabs.getSelectionModel().getSelectedItem();
         if (currentTab != null) {
             bytes = currentTab.getBytes();
         }
@@ -223,15 +224,17 @@ public class BytesEditor extends AnchorPane {
             ObservableValue<? extends Boolean> observable,
             Boolean oldValue,
             Boolean newValue) {
-        tabs.getTabs().forEach(tab -> ((BytesEditorTab) tab).setEditable(newValue));
+        tabs.getTabs().forEach(tab -> ((BytesEditorComponent) tab).setEditable(newValue));
     }
 
     /**
      * Sets bytes to newly opened tab.
      */
     protected void onTabChange(ObservableValue<? extends Tab> observable, Tab oldTab, Tab newTab) {
+        IndexRange bytesSelection = null;
         if (oldTab != null) {
-            bytes = ((BytesEditorTab) oldTab).getBytes();
+            bytes = ((BytesEditorComponent) oldTab).getBytes();
+            bytesSelection = ((BytesEditorComponent) oldTab).getBytesSelection();
         }
 
         if (bytes == null) {
@@ -239,7 +242,8 @@ public class BytesEditor extends AnchorPane {
         }
 
         if (newTab != null) {
-            ((BytesEditorTab) newTab).setBytes(bytes, bytes.length, charset);
+            ((BytesEditorComponent) newTab).setBytes(bytes, bytes.length, charset);
+            ((BytesEditorComponent) newTab).selectBytes(bytesSelection);
         }
     }
 }
