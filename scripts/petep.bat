@@ -2,7 +2,7 @@
 
 rem Useful params, change if needed
 set JAVA_EXE=java.exe
-set JAVAW_EXE=java.exe
+set JAVAW_EXE=javaw.exe
 set APP_HOME=%~dp0
 set WORKING_DIR=%APP_HOME%
 set CMD_LINE_ARGS=%*
