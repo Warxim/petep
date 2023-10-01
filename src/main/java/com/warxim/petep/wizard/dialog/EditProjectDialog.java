@@ -25,8 +25,8 @@ import com.warxim.petep.wizard.configuration.WizardExtensionsLoader;
 import com.warxim.petep.wizard.project.WizardProjectDecorator;
 import javafx.collections.FXCollections;
 
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,11 +46,10 @@ public final class EditProjectDialog extends ProjectDialog {
 
         // Load extensions for the project
         var list = WizardExtensionsLoader.load(
-                FileUtils.getApplicationFileAbsolutePath(project.getPath())
-                        + File.separator
-                        + Constant.PROJECT_CONFIG_DIRECTORY
-                        + File.separator
-                        + Constant.EXTENSIONS_CONFIG_FILE);
+                Path.of(FileUtils.getWorkingDirectoryFileAbsolutePath(project.getPath()))
+                        .resolve(Constant.PROJECT_CONFIG_DIRECTORY)
+                        .resolve(Constant.EXTENSIONS_CONFIG_FILE)
+                        .toString());
 
         // Fill inputs
         nameInput.setText(project.getName());

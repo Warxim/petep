@@ -32,6 +32,8 @@ import javafx.scene.control.Toggle;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,8 +63,8 @@ public final class NewProjectDialog extends ProjectDialog {
 
         extensionsList.setItems(extensions);
 
-        initPresets();
         initToggles();
+        initPresets();
     }
 
     /**
@@ -95,6 +97,13 @@ public final class NewProjectDialog extends ProjectDialog {
     private void initPresets() {
         var presetsDirectory = FileUtils.getApplicationFile(Constant.PRESETS_DIRECTORY);
         var presetsFiles = presetsDirectory.listFiles();
+        if (presetsFiles == null || presetsFiles.length == 0) {
+            // If there are no presets, disable the option and use custom project type
+            presetInput.setDisable(true);
+            presetRadioInput.setDisable(true);
+            customRadioInput.setSelected(true);
+            return;
+        }
         var presets = Arrays.stream(presetsFiles)
                 .filter(File::isDirectory)
                 .map(File::getName)
@@ -144,7 +153,8 @@ public final class NewProjectDialog extends ProjectDialog {
             throws IOException, ConfigurationException {
         FileUtils.copyDirectory(
                 new File(FileUtils.getApplicationFile(Constant.PRESETS_DIRECTORY), presetPath).getPath(),
-                path);
+                FileUtils.getWorkingDirectoryFileAbsolutePath(path)
+        );
 
         saveProject(path, projectDecorator.getProject());
     }
@@ -158,33 +168,31 @@ public final class NewProjectDialog extends ProjectDialog {
             List<WizardProjectExtension> extensions)
             throws ConfigurationException, IOException {
         // Create project directory.
+        path = FileUtils.getWorkingDirectoryFileAbsolutePath(path);
         WizardProjectDirectoryCreator.create(path);
 
         // Save project.
         saveProject(path, projectDecorator.getProject());
-        saveExtensions(path,extensions);
+        saveExtensions(path, extensions);
 
-        var configDirectory = path
-                + File.separator
-                + Constant.PROJECT_CONFIG_DIRECTORY
-                + File.separator;
+        var configDirectory = Path.of(path).resolve(Constant.PROJECT_CONFIG_DIRECTORY);
 
         // Create proxies.json if it does not exist.
-        var file = configDirectory + Constant.PROXIES_CONFIG_FILE;
-        if (!new File(file).exists()) {
-            ModulesSaver.save(file, new ArrayList<>());
+        var file = configDirectory.resolve(Constant.PROXIES_CONFIG_FILE);
+        if (!Files.exists(file)) {
+            ModulesSaver.save(file.toString(), new ArrayList<>());
         }
 
         // Create interceptors-C2S.json if it does not exist.
-        file = configDirectory + Constant.INTERCEPTORS_C2S_CONFIG_FILE;
-        if (!new File(file).exists()) {
-            ModulesSaver.save(file, new ArrayList<>());
+        file = configDirectory.resolve(Constant.INTERCEPTORS_C2S_CONFIG_FILE);
+        if (!Files.exists(file)) {
+            ModulesSaver.save(file.toString(), new ArrayList<>());
         }
 
         // Create interceptors-S2C.json if it does not exist.
-        file = configDirectory + Constant.INTERCEPTORS_S2C_CONFIG_FILE;
-        if (!new File(file).exists()) {
-            ModulesSaver.save(file, new ArrayList<>());
+        file = configDirectory.resolve(Constant.INTERCEPTORS_S2C_CONFIG_FILE);
+        if (!Files.exists(file)) {
+            ModulesSaver.save(file.toString(), new ArrayList<>());
         }
     }
 }

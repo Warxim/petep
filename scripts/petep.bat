@@ -1,12 +1,17 @@
 @echo off
+
+rem Useful params, change if needed
 set JAVA_EXE=java.exe
-set JAVAW_EXE=javaw.exe
-set DIRNAME=%~dp0
-set APP_HOME=%DIRNAME%
+set JAVAW_EXE=java.exe
+set APP_HOME=%~dp0
+set WORKING_DIR=%APP_HOME%
 set CMD_LINE_ARGS=%*
 set DEFAULT_JVM_OPTS=
 set CLASSPATH=%APP_HOME%\lib\*
 set MAIN_CLASS="com.warxim.petep.Main"
+
+rem Set working directory (important for petep.json), by default the startup directory is used
+cd /D "%WORKING_DIR%"
 
 if "%~2"=="--nogui" (
 	goto NOGUI

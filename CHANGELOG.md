@@ -4,9 +4,10 @@ All notable changes to this project will are documented in this changelog file.
 
 ## Unreleased
 ### Added
-- A bit more convenient Hex Editor 
-- Support for keeping selection when switching between BytesEditor tabs 
+- A bit more convenient Hex Editor (smart backspace/delete, support undo/redo, support keeping selection between tabs)
+- Use working directory for petep.json file
 - Fixed copy&paste behaviour of Text editor for bytes
+- Small refactors and fixes
 
 ## [2.1.0] - 2023-05-10
 ### Added

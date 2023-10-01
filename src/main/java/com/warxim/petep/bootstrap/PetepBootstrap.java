@@ -45,7 +45,7 @@ public abstract class PetepBootstrap {
         try {
             // Initialize utils.
             FileUtils.setProjectDirectory(
-                    FileUtils.getApplicationFileAbsolutePath(arguments.getProjectPath()));
+                    FileUtils.getWorkingDirectoryFileAbsolutePath(arguments.getProjectPath()));
 
             // Load PETEP bundle.
             Bundle.getInstance().load(arguments);

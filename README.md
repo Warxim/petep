@@ -25,7 +25,8 @@ chmod +x petep.sh
 petep.bat
 ```
 
-***Note:** These run scripts contain useful variables, including path to Java executable. 
+***Note:** These run scripts contain useful variables, 
+including working directory (for `petep.json` file), and path to Java executable. 
 You might need to change it if you do not have it in PATH or you use multiple Java versions.*
 
 ## Supported functionality

@@ -39,6 +39,7 @@ public class FileUtilsTest {
         try (var mocked = mockStatic(FileUtils.class)) {
             mocked.when(FileUtils::getApplicationDirectory).thenReturn(directory);
             mocked.when(() -> FileUtils.getApplicationFileAbsolutePath(anyString())).thenCallRealMethod();
+            mocked.when(() -> FileUtils.getFileAbsolutePath(anyString(), anyString())).thenCallRealMethod();
             mocked.when(() -> FileUtils.getApplicationFile(anyString())).thenCallRealMethod();
 
             assertThat(unifyPath(FileUtils.getApplicationFileAbsolutePath(path)))
@@ -57,6 +58,7 @@ public class FileUtilsTest {
         try (var mocked = mockStatic(FileUtils.class)) {
             mocked.when(FileUtils::getProjectDirectory).thenReturn(directory);
             mocked.when(() -> FileUtils.getProjectFileAbsolutePath(anyString())).thenCallRealMethod();
+            mocked.when(() -> FileUtils.getFileAbsolutePath(anyString(), anyString())).thenCallRealMethod();
             mocked.when(() -> FileUtils.getProjectFile(anyString())).thenCallRealMethod();
 
             assertThat(unifyPath(FileUtils.getProjectFileAbsolutePath(path)))
@@ -64,6 +66,21 @@ public class FileUtilsTest {
 
             assertThat(unifyPath(FileUtils.getProjectFile(path).getAbsolutePath()))
                     .endsWith(unifyPath(expectedResult));
+        }
+    }
+
+    @Test(dataProvider = "paths")
+    public void getWorkingDirectoryFileAbsolutePathTest(String directory, String path, String expectedResult, boolean windowsOnly) {
+        if (windowsOnly && !isWindows()) {
+            return;
+        }
+        try (var mocked = mockStatic(FileUtils.class)) {
+            mocked.when(FileUtils::getWorkingDirectory).thenReturn(directory);
+            mocked.when(() -> FileUtils.getWorkingDirectoryFileAbsolutePath(anyString())).thenCallRealMethod();
+            mocked.when(() -> FileUtils.getFileAbsolutePath(anyString(), anyString())).thenCallRealMethod();
+
+            assertThat(unifyPath(FileUtils.getWorkingDirectoryFileAbsolutePath(path)))
+                    .isEqualTo(unifyPath(expectedResult));
         }
     }
 
@@ -93,11 +110,50 @@ public class FileUtilsTest {
             mocked.when(FileUtils::getApplicationDirectory).thenReturn(directory);
             mocked.when(() -> FileUtils.applicationRelativize(anyString())).thenCallRealMethod();
             mocked.when(() -> FileUtils.applicationRelativize(any(Path.class))).thenCallRealMethod();
+            mocked.when(() -> FileUtils.relativize(any(Path.class), any(Path.class))).thenCallRealMethod();
 
             assertThat(unifyPath(FileUtils.applicationRelativize(path)))
                     .isEqualTo(unifyPath(expectedResult));
 
             assertThat(unifyPath(FileUtils.applicationRelativize(Path.of(path))))
+                    .isEqualTo(unifyPath(expectedResult));
+        }
+    }
+
+    @Test(dataProvider = "pathsToRelativize")
+    public void projectRelativizeTest(String directory, String path, String expectedResult, boolean windowsOnly) {
+        if (windowsOnly && !isWindows()) {
+            return;
+        }
+        try (var mocked = mockStatic(FileUtils.class)) {
+            mocked.when(FileUtils::getProjectDirectory).thenReturn(directory);
+            mocked.when(() -> FileUtils.projectRelativize(anyString())).thenCallRealMethod();
+            mocked.when(() -> FileUtils.projectRelativize(any(Path.class))).thenCallRealMethod();
+            mocked.when(() -> FileUtils.relativize(any(Path.class), any(Path.class))).thenCallRealMethod();
+
+            assertThat(unifyPath(FileUtils.projectRelativize(path)))
+                    .isEqualTo(unifyPath(expectedResult));
+
+            assertThat(unifyPath(FileUtils.projectRelativize(Path.of(path))))
+                    .isEqualTo(unifyPath(expectedResult));
+        }
+    }
+
+    @Test(dataProvider = "pathsToRelativize")
+    public void workingDirectoryRelativizeTest(String directory, String path, String expectedResult, boolean windowsOnly) {
+        if (windowsOnly && !isWindows()) {
+            return;
+        }
+        try (var mocked = mockStatic(FileUtils.class)) {
+            mocked.when(FileUtils::getWorkingDirectory).thenReturn(directory);
+            mocked.when(() -> FileUtils.workingDirectoryRelativize(anyString())).thenCallRealMethod();
+            mocked.when(() -> FileUtils.workingDirectoryRelativize(any(Path.class))).thenCallRealMethod();
+            mocked.when(() -> FileUtils.relativize(any(Path.class), any(Path.class))).thenCallRealMethod();
+
+            assertThat(unifyPath(FileUtils.workingDirectoryRelativize(path)))
+                    .isEqualTo(unifyPath(expectedResult));
+
+            assertThat(unifyPath(FileUtils.workingDirectoryRelativize(Path.of(path))))
                     .isEqualTo(unifyPath(expectedResult));
         }
     }

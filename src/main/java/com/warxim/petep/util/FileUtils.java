@@ -27,8 +27,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Comparator;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
 
 /**
  * File utils.
@@ -66,13 +66,7 @@ public final class FileUtils {
      * @return Absolute path of application file
      */
     public static String getApplicationFileAbsolutePath(String path) {
-        if (Paths.get(path).isAbsolute()) {
-            // Absolute path
-            return path;
-        }
-
-        // Relative path
-        return Paths.get(getApplicationDirectory()).resolve(path).normalize().toString();
+        return getFileAbsolutePath(getApplicationDirectory(), path);
     }
 
     /**
@@ -81,17 +75,7 @@ public final class FileUtils {
      * @return Path relative to application directory
      */
     public static String applicationRelativize(Path path) {
-        try {
-            var applicationDirectoryPath = Paths.get(getApplicationDirectory());
-
-            // Resolve path
-            path = applicationDirectoryPath.resolve(path).normalize();
-
-            // Relativize the path
-            return applicationDirectoryPath.relativize(path).toString();
-        } catch (IllegalArgumentException e) {
-            return path.toString();
-        }
+        return relativize(Path.of(getApplicationDirectory()), path);
     }
 
     /**
@@ -104,22 +88,30 @@ public final class FileUtils {
     }
 
     /**
+     * Relativizes given path to working directory path
+     * @param path Absolute path to relativize
+     * @return Path relative to working directory
+     */
+    public static String workingDirectoryRelativize(Path path) {
+        return relativize(Path.of(getWorkingDirectory()), path);
+    }
+
+    /**
+     * Relativizes given path to working directory path
+     * @param path Absolute path to relativize
+     * @return Path relative to working directory
+     */
+    public static String workingDirectoryRelativize(String path) {
+        return workingDirectoryRelativize(Path.of(path));
+    }
+
+    /**
      * Relativizes given path to project directory path
      * @param path Absolute path to relativize
      * @return Path relative to project directory
      */
     public static String projectRelativize(Path path) {
-        try {
-            var projectDirectoryPath = Paths.get(getProjectDirectory());
-
-            // Resolve path
-            path = projectDirectoryPath.resolve(path).normalize();
-
-            // Relativize the path
-            return projectDirectoryPath.relativize(path).toString();
-        } catch (IllegalArgumentException e) {
-            return path.toString();
-        }
+        return relativize(Path.of(getProjectDirectory()), path);
     }
 
     /**
@@ -129,6 +121,23 @@ public final class FileUtils {
      */
     public static String projectRelativize(String path) {
         return projectRelativize(Paths.get(path));
+    }
+
+    /**
+     * Relativizes given path to root directory path
+     * @param path Absolute path to relativize
+     * @return Path relative to root directory
+     */
+    public static String relativize(Path rootDirectoryPath, Path path) {
+        try {
+            // Resolve path
+            path = rootDirectoryPath.resolve(path).normalize();
+
+            // Relativize the path
+            return rootDirectoryPath.relativize(path).toString();
+        } catch (IllegalArgumentException e) {
+            return path.toString();
+        }
     }
 
     /**
@@ -146,13 +155,16 @@ public final class FileUtils {
      * @return Absolute path of project file
      */
     public static String getProjectFileAbsolutePath(String path) {
-        if (Paths.get(path).isAbsolute()) {
-            // Absolute path
-            return path;
-        }
+        return getFileAbsolutePath(getProjectDirectory(), path);
+    }
 
-        // Relative path
-        return Paths.get(getProjectDirectory()).resolve(path).normalize().toString();
+    /**
+     * Obtains working directory file absolute path
+     * @param path Path relative to working directory
+     * @return Absolute path of working directory file
+     */
+    public static String getWorkingDirectoryFileAbsolutePath(String path) {
+        return getFileAbsolutePath(getWorkingDirectory(), path);
     }
 
     /**
@@ -176,6 +188,14 @@ public final class FileUtils {
      * @return Current project director
      */
     public static String getProjectDirectory() {
+        return System.getProperty("user.dir");
+    }
+
+    /**
+     * Obtains working directory.
+     * @return Current working directory
+     */
+    public static String getWorkingDirectory() {
         return System.getProperty("user.dir");
     }
 
@@ -213,10 +233,29 @@ public final class FileUtils {
      * @throws IOException If the copy failed
      */
     public static void copyDirectory(Path source, Path destination) throws IOException {
-        try (Stream<Path> stream = Files.walk(source)) {
+        try (var stream = Files.walk(source)) {
+            var destFile = destination.toFile();
+            if (!destFile.exists() && !destFile.mkdirs()) {
+                throw new IOException(String.format("Could not create directory '%s'", destFile.getAbsolutePath()));
+            }
             stream.forEach(src -> copy(src, destination.resolve(source.relativize(src))));
         } catch (UncheckedIOException e) {
             throw e.getCause();
+        }
+    }
+
+    /**
+     * Deletes directories recursively
+     * @param directory Directory to delete (including content)
+     * @return {@code true} if the deletion was successful
+     */
+    public static boolean deleteDirectories(String directory) {
+        try (var stream = Files.walk(Path.of(directory))) {
+            return stream.sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .allMatch(File::delete);
+        } catch (IOException e) {
+            return false;
         }
     }
 
@@ -241,11 +280,13 @@ public final class FileUtils {
         try {
             var path = Paths.get(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI());
 
+            // PETEP run from lib/petep.jar
             if (path.toString().toLowerCase().endsWith(".jar")) {
                 return path.getParent().getParent().toString();
             }
 
-            return getProjectDirectory();
+            // Fallback for working directory in IDE
+            return Paths.get(".").toAbsolutePath().normalize().toString();
         } catch (URISyntaxException e) {
             Logger.getGlobal().severe(e.getMessage());
         }

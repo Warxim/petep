@@ -36,6 +36,7 @@ import javafx.stage.FileChooser;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -87,17 +88,17 @@ public abstract class ProjectDialog extends SimpleInputDialog<WizardProjectDecor
         }
 
         // Choose from internal extensions.
-        var dialog = new ChoiceDialog<String>(Constant.INTERNAL_EXTENSIONS.get(0), Constant.INTERNAL_EXTENSIONS);
-
-        dialog.setTitle("Add internal extension");
-        dialog.setHeaderText("Add internal extension");
-        dialog.setContentText("Extension:");
-
-        // Add extension to list.
-        var result = dialog.showAndWait();
-        if (result.isPresent()) {
-            extensions.add(new WizardProjectExtension(result.get(), null, null));
+        var result = Dialogs.createChoiceDialog(
+                "Add internal extension",
+                "Extension:",
+                Constant.INTERNAL_EXTENSIONS,
+                Constant.INTERNAL_EXTENSIONS.get(0)
+        );
+        if (result.isEmpty()) {
+            return;
         }
+
+        addExtension(result.get());
     }
 
     /**
@@ -108,7 +109,7 @@ public abstract class ProjectDialog extends SimpleInputDialog<WizardProjectDecor
         // Choose extension file.
         var fileChooser = new FileChooser();
         fileChooser.setTitle("Open project");
-        fileChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+        fileChooser.setInitialDirectory(new File(FileUtils.getApplicationDirectory()));
         fileChooser.getExtensionFilters()
                 .add(new FileChooser.ExtensionFilter("PETEP jar extensions (*.jar)", "*.jar"));
 
@@ -118,7 +119,19 @@ public abstract class ProjectDialog extends SimpleInputDialog<WizardProjectDecor
         }
 
         // Add extension to list.
-        extensions.add(new WizardProjectExtension(FileUtils.applicationRelativize(file.getPath()), null, null));
+        addExtension(FileUtils.applicationRelativize(file.getPath()));
+    }
+
+    /**
+     * Adds extension to the extension list if not already present
+     */
+    private void addExtension(String newExtensionPath) {
+        var alreadyExists = extensions.stream()
+                .anyMatch(extension -> extension.getPath().equals(newExtensionPath));
+        if (alreadyExists) {
+            return;
+        }
+        extensions.add(new WizardProjectExtension(newExtensionPath, null, null));
     }
 
     /**
@@ -131,7 +144,7 @@ public abstract class ProjectDialog extends SimpleInputDialog<WizardProjectDecor
             return;
         }
 
-        if (!Dialogs.createYesOrNoDialog("Are you sure?",
+        if (!Dialogs.createYesOrNoDialog("Remove extension",
                 "Do you really want to remove the extension '" + extension.getPath()
                         + "' from the project? (Extension data stored in the configuration will be lost!)")) {
             return;
@@ -162,7 +175,7 @@ public abstract class ProjectDialog extends SimpleInputDialog<WizardProjectDecor
     private void onPathButtonClick(ActionEvent event) {
         var directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Save project");
-        directoryChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+        directoryChooser.setInitialDirectory(new File(FileUtils.getWorkingDirectory()));
 
         var directory = directoryChooser.showDialog(null);
         if (directory == null) {
@@ -176,18 +189,17 @@ public abstract class ProjectDialog extends SimpleInputDialog<WizardProjectDecor
             return;
         }
 
-        pathInput.setText(FileUtils.applicationRelativize(directory.getPath()));
+        pathInput.setText(FileUtils.workingDirectoryRelativize(directory.getPath()));
     }
 
     /**
      * Saves project and its extension configuration.
      */
     protected static void saveProject(String path, Project project) throws ConfigurationException {
-        var projectConfigPath = FileUtils.getApplicationFileAbsolutePath(path)
-                + File.separator
-                + Constant.PROJECT_CONFIG_DIRECTORY
-                + File.separator
-                + Constant.PROJECT_CONFIG_FILE;
+        var projectConfigPath = Path.of(FileUtils.getWorkingDirectoryFileAbsolutePath(path))
+                .resolve(Constant.PROJECT_CONFIG_DIRECTORY)
+                .resolve(Constant.PROJECT_CONFIG_FILE)
+                .toString();
         ProjectSaver.save(projectConfigPath, project);
     }
 
@@ -196,11 +208,10 @@ public abstract class ProjectDialog extends SimpleInputDialog<WizardProjectDecor
      */
     protected static void saveExtensions(String path, List<WizardProjectExtension> extensions)
             throws ConfigurationException {
-        var projectExtensionsPath = FileUtils.getApplicationFileAbsolutePath(path)
-                + File.separator
-                + Constant.PROJECT_CONFIG_DIRECTORY
-                + File.separator
-                + Constant.EXTENSIONS_CONFIG_FILE;
+        var projectExtensionsPath = Path.of(FileUtils.getWorkingDirectoryFileAbsolutePath(path))
+                .resolve(Constant.PROJECT_CONFIG_DIRECTORY)
+                .resolve(Constant.EXTENSIONS_CONFIG_FILE)
+                .toString();
         WizardExtensionsSaver.save(projectExtensionsPath, extensions);
     }
 }

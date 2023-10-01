@@ -31,6 +31,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.Instant;
@@ -86,12 +87,12 @@ public final class WizardConfigurationLoader {
      */
     private static Optional<WizardProjectDecorator> loadProjectDecorator(JsonElement element) {
         try {
-            var configFile = FileUtils.getApplicationFileAbsolutePath(
-                    element.getAsString()
-                            + File.separator
-                            + Constant.PROJECT_CONFIG_DIRECTORY
-                            + File.separator
-                            + Constant.PROJECT_CONFIG_FILE);
+            var configFile = FileUtils.getWorkingDirectoryFileAbsolutePath(
+                    Path.of(element.getAsString())
+                            .resolve(Constant.PROJECT_CONFIG_DIRECTORY)
+                            .resolve(Constant.PROJECT_CONFIG_FILE)
+                            .toString()
+            );
 
             // Load project information.
             var project = ProjectLoader.load(configFile);

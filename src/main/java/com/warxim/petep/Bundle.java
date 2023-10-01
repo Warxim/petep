@@ -19,7 +19,12 @@ package com.warxim.petep;
 import com.warxim.petep.bootstrap.CommandLineArguments;
 import com.warxim.petep.common.Constant;
 import com.warxim.petep.common.ContextType;
-import com.warxim.petep.configuration.*;
+import com.warxim.petep.configuration.ExtensionsLoader;
+import com.warxim.petep.configuration.ExtensionsSaver;
+import com.warxim.petep.configuration.ModulesLoader;
+import com.warxim.petep.configuration.ModulesSaver;
+import com.warxim.petep.configuration.ProjectLoader;
+import com.warxim.petep.configuration.ProjectSaver;
 import com.warxim.petep.core.PetepManager;
 import com.warxim.petep.core.listener.PetepListenerManager;
 import com.warxim.petep.exception.ConfigurationException;
@@ -34,7 +39,7 @@ import com.warxim.petep.proxy.module.ProxyModuleContainer;
 import com.warxim.petep.util.FileUtils;
 import lombok.Getter;
 
-import java.io.File;
+import java.nio.file.Path;
 
 /**
  * Singleton for PETEP assets.
@@ -91,13 +96,15 @@ public final class Bundle {
         contextType = arguments.getContextType();
         projectPath = arguments.getProjectPath();
 
-        var configDirectory = FileUtils.getProjectFileAbsolutePath(Constant.PROJECT_CONFIG_DIRECTORY) + File.separator;
+        var configDirectory = Path.of(FileUtils.getProjectFileAbsolutePath(Constant.PROJECT_CONFIG_DIRECTORY));
 
-        project = ProjectLoader.load(configDirectory + Constant.PROJECT_CONFIG_FILE);
+        project = ProjectLoader.load(configDirectory.resolve(Constant.PROJECT_CONFIG_FILE).toString());
 
         receiverManager = new ReceiverManager();
         // Create managers.
-        extensionManager = new ExtensionManager(ExtensionsLoader.load(configDirectory + Constant.EXTENSIONS_CONFIG_FILE));
+        extensionManager = new ExtensionManager(ExtensionsLoader.load(
+                configDirectory.resolve(Constant.EXTENSIONS_CONFIG_FILE).toString()
+        ));
         proxyModuleFactoryManager = new ProxyFactoryModuleManager();
         interceptorModuleFactoryManager = new InterceptorModuleFactoryManager();
         petepListenerManager = new PetepListenerManager();
@@ -107,16 +114,16 @@ public final class Bundle {
 
         // Load proxies.
         var proxyModuleContainer = new ProxyModuleContainer(ModulesLoader.load(
-                configDirectory + Constant.PROXIES_CONFIG_FILE,
+                configDirectory.resolve(Constant.PROXIES_CONFIG_FILE).toString(),
                 proxyModuleFactoryManager));
 
         // Load interceptor module managers.
         var interceptorModuleContainerC2S = new InterceptorModuleContainer(ModulesLoader.load(
-                configDirectory + Constant.INTERCEPTORS_C2S_CONFIG_FILE,
+                configDirectory.resolve(Constant.INTERCEPTORS_C2S_CONFIG_FILE).toString(),
                 interceptorModuleFactoryManager));
 
         var interceptorModuleContainerS2C = new InterceptorModuleContainer(ModulesLoader.load(
-                configDirectory + Constant.INTERCEPTORS_S2C_CONFIG_FILE,
+                configDirectory.resolve(Constant.INTERCEPTORS_S2C_CONFIG_FILE).toString(),
                 interceptorModuleFactoryManager));
 
         // Create PETEP manager.
@@ -132,27 +139,26 @@ public final class Bundle {
      * @throws ConfigurationException if the bundle could not be saved because of configuration error
      */
     public void save() throws ConfigurationException {
-        var configDirectory =
-                FileUtils.getProjectFileAbsolutePath(Constant.PROJECT_CONFIG_DIRECTORY) + File.separator;
+        var configDirectory = Path.of(FileUtils.getProjectFileAbsolutePath(Constant.PROJECT_CONFIG_DIRECTORY));
 
         ProjectSaver.save(
-                configDirectory + Constant.PROJECT_CONFIG_FILE,
+                configDirectory.resolve(Constant.PROJECT_CONFIG_FILE).toString(),
                 project);
 
         ExtensionsSaver.save(
-                configDirectory + Constant.EXTENSIONS_CONFIG_FILE,
+                configDirectory.resolve(Constant.EXTENSIONS_CONFIG_FILE).toString(),
                 extensionManager.getList());
 
         ModulesSaver.save(
-                configDirectory + Constant.PROXIES_CONFIG_FILE,
+                configDirectory.resolve(Constant.PROXIES_CONFIG_FILE).toString(),
                 petepManager.getProxyModuleContainer().getList());
 
         ModulesSaver.save(
-                configDirectory + Constant.INTERCEPTORS_C2S_CONFIG_FILE,
+                configDirectory.resolve(Constant.INTERCEPTORS_C2S_CONFIG_FILE).toString(),
                 petepManager.getInterceptorModuleContainerC2S().getList());
 
         ModulesSaver.save(
-                configDirectory + Constant.INTERCEPTORS_S2C_CONFIG_FILE,
+                configDirectory.resolve(Constant.INTERCEPTORS_S2C_CONFIG_FILE).toString(),
                 petepManager.getInterceptorModuleContainerS2C().getList());
     }
 

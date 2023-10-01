@@ -28,13 +28,13 @@ import com.warxim.petep.gui.dialog.ProjectInfoDialog;
 import com.warxim.petep.gui.guide.GuideDialog;
 import com.warxim.petep.helper.DefaultGuiHelper;
 import com.warxim.petep.util.GuiUtils;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -133,7 +133,12 @@ public final class ApplicationController implements Initializable {
      */
     @FXML
     private void onExitMenuClick(ActionEvent event) {
-        Platform.exit();
+        var closeProject = Dialogs.createCloseProjectDialog();
+        if (!closeProject) {
+            return;
+        }
+        var stage = (Stage) tabs.getScene().getWindow();
+        stage.close();
     }
 
     /**

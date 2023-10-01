@@ -44,6 +44,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -74,7 +75,9 @@ public final class WizardController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Create observable list of projects.
-        projects = FXCollections.observableList(WizardConfigurationLoader.load(Constant.WIZARD_CONFIG_FILE));
+        projects = FXCollections.observableList(WizardConfigurationLoader.load(
+                FileUtils.getWorkingDirectoryFileAbsolutePath(Constant.WIZARD_CONFIG_FILE)
+        ));
 
         // Initialize columns.
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -105,7 +108,10 @@ public final class WizardController implements Initializable {
             projectsTable.getSelectionModel().select(maybeProject.get());
 
             // Save wizard configuration.
-            WizardConfigurationSaver.save(Constant.WIZARD_CONFIG_FILE, projects);
+            WizardConfigurationSaver.save(
+                    FileUtils.getWorkingDirectoryFileAbsolutePath(Constant.WIZARD_CONFIG_FILE),
+                    projects
+            );
         } catch (IOException e) {
             Logger.getGlobal().log(Level.SEVERE, "Exception during openning of project dialog", e);
         }
@@ -134,7 +140,10 @@ public final class WizardController implements Initializable {
             projectsTable.getSelectionModel().select(maybeProject.get());
 
             // Save wizard configuration.
-            WizardConfigurationSaver.save(Constant.WIZARD_CONFIG_FILE, projects);
+            WizardConfigurationSaver.save(
+                    FileUtils.getWorkingDirectoryFileAbsolutePath(Constant.WIZARD_CONFIG_FILE),
+                    projects
+            );
         } catch (IOException e) {
             Logger.getGlobal().log(Level.SEVERE, "Exception during openning of project dialog", e);
         } catch (ConfigurationException e) {
@@ -171,7 +180,7 @@ public final class WizardController implements Initializable {
         // Choose project directory.
         var directoryChooser = new DirectoryChooser();
         directoryChooser.setTitle("Open project");
-        directoryChooser.setInitialDirectory(new File(System.getProperty("user.dir")));
+        directoryChooser.setInitialDirectory(new File(FileUtils.getWorkingDirectory()));
 
         var directory = directoryChooser.showDialog(null);
         if (directory == null) {
@@ -180,15 +189,14 @@ public final class WizardController implements Initializable {
 
         // Load project.
         try {
-            var configFile = directory.getPath()
-                    + File.separator
-                    + Constant.PROJECT_CONFIG_DIRECTORY
-                    + File.separator
-                    + Constant.PROJECT_CONFIG_FILE;
+            var configFile = Path.of(directory.getPath())
+                    .resolve(Constant.PROJECT_CONFIG_DIRECTORY)
+                    .resolve(Constant.PROJECT_CONFIG_FILE)
+                    .toString();
 
             var project = ProjectLoader.load(configFile);
 
-            var relativizedPath = FileUtils.applicationRelativize(directory.getPath());
+            var relativizedPath = FileUtils.workingDirectoryRelativize(directory.getPath());
             var lastModified = Instant.ofEpochMilli(new File(configFile).lastModified());
 
             // Add project to table.
@@ -199,7 +207,10 @@ public final class WizardController implements Initializable {
                             lastModified));
 
             // Save wizard configuration.
-            WizardConfigurationSaver.save(Constant.WIZARD_CONFIG_FILE, projects);
+            WizardConfigurationSaver.save(
+                    FileUtils.getWorkingDirectoryFileAbsolutePath(Constant.WIZARD_CONFIG_FILE),
+                    projects
+            );
         } catch (ConfigurationException e) {
             Dialogs.createExceptionDialog("Project could not be loaded", "Project could not be loaded!",
                     e);
@@ -228,7 +239,10 @@ public final class WizardController implements Initializable {
         projects.remove(project);
 
         // Save wizard configuration.
-        WizardConfigurationSaver.save(Constant.WIZARD_CONFIG_FILE, projects);
+        WizardConfigurationSaver.save(
+                FileUtils.getWorkingDirectoryFileAbsolutePath(Constant.WIZARD_CONFIG_FILE),
+                projects
+        );
     }
 
     /**

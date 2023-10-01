@@ -41,7 +41,7 @@ public final class TestUtils {
             if (value != null) {
                 return value;
             }
-            TestUtils.sleep(retryInterval);
+            sleep(retryInterval);
         }
         throw new AssertionError("Could not get value!");
     }

@@ -19,7 +19,6 @@ package com.warxim.petep.gui;
 import com.sun.javafx.css.StyleManager;
 import com.warxim.petep.Bundle;
 import com.warxim.petep.common.Constant;
-import com.warxim.petep.exception.ConfigurationException;
 import com.warxim.petep.gui.common.GuiConstant;
 import com.warxim.petep.gui.common.PetepApplication;
 import com.warxim.petep.gui.dialog.Dialogs;
@@ -74,20 +73,9 @@ public final class PetepGui extends PetepApplication {
      * <p>Shows dialog to ask user, whether the project should be saved or not.</p>
      */
     private void onClose(WindowEvent event) {
-        var decision = Dialogs.createYesOrNoOrCancelDialog("Save project", "Do you want to save project before closing PETEP?");
-        if (decision.isEmpty()) {
+        var closeProject = Dialogs.createCloseProjectDialog();
+        if (!closeProject) {
             event.consume();
-            return;
-        }
-
-        if (Boolean.TRUE.equals(decision.get())) {
-            try {
-                Bundle.getInstance().save();
-            } catch (ConfigurationException e) {
-                event.consume();
-                Logger.getGlobal().log(Level.SEVERE, "Could not save project!", e);
-                Dialogs.createExceptionDialog("Could not save project", "Could not save project!", e);
-            }
         }
     }
 }

@@ -8,11 +8,11 @@ import com.warxim.petep.extension.internal.history.model.HistoricPdu;
 import com.warxim.petep.extension.internal.history.model.HistoricProxy;
 import com.warxim.petep.extension.internal.history.repository.CachedDatabaseHistoryRepository;
 import com.warxim.petep.extension.internal.history.repository.DatabaseHistoryRepository;
+import com.warxim.petep.util.FileUtils;
 import lombok.extern.java.Log;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -20,12 +20,15 @@ import java.nio.file.Path;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 @Log
 public class HistoryTestBase {
-    protected static final String TEST_DIRECTORY = "./test_temp_directory";
+    protected static final String TEST_DIRECTORY = "./tmp_test_history";
     protected static final Path TEST_DIRECTORY_PATH = Path.of(TEST_DIRECTORY);
 
     private List<DefaultHistoryService> services = new ArrayList<>();
@@ -33,6 +36,7 @@ public class HistoryTestBase {
     @BeforeSuite(alwaysRun = true)
     public void beforeSuite() throws IOException {
         log.info("Creating test directory: " + TEST_DIRECTORY);
+        FileUtils.deleteDirectories(TEST_DIRECTORY);
         Files.createDirectories(TEST_DIRECTORY_PATH);
     }
 
@@ -43,10 +47,7 @@ public class HistoryTestBase {
         }
 
         log.info("Deleting test directory: " + TEST_DIRECTORY);
-        Files.walk(TEST_DIRECTORY_PATH)
-                .sorted(Comparator.reverseOrder())
-                .map(Path::toFile)
-                .forEach(File::delete);
+        FileUtils.deleteDirectories(TEST_DIRECTORY);
     }
 
     protected static String getTestFilePath(String path) {
