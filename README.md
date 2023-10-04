@@ -1,35 +1,43 @@
-# ![PETEP - PEnetration TEsting Proxy](https://petep.warxim.com/img/logo.png)
-**PETEP** (**PEnetration TEsting Proxy**) is open-source Java application for network communication proxying for the purpose of penetration testing. It allows penetration testers to setup proxies and interceptors to manage the traffic transmitted between client and server.
+# ![PETEP - PEnetration TEsting Proxy](https://petep.warxim.com/img/social/logo.png)
+[![Release](https://img.shields.io/github/release/Warxim/petep?labelColor=383b53&color=737dde)](https://github.com/Warxim/petep/releases)
+[![License: GPL v3](https://img.shields.io/github/license/Warxim/petep?labelColor=383b53&color=98a0e3)](https://www.gnu.org/licenses/gpl-3.0)
+![Java: 177](https://img.shields.io/badge/java-11-11?labelColor=383b53&color=737dde)
+[![Release Date](https://img.shields.io/github/release-date/Warxim/petep?labelColor=383b53&color=98a0e3)](https://github.com/Warxim/petep/releases)
 
-Currently, PETEP supports primarily TCP (with SSL/TLS support) and has basic UDP support.
+**PETEP** (**PEnetration TEsting Proxy**) is an open-source Java application for creating proxies and traffic analysis & modification. 
+Main goal of PETEP is to provide a useful tool for performing penetration tests of applications with various protocols (on TCP/UDP) 
+by setting up proxies and interceptors to manage the traffic transmitted between the client and the server.
 
-You might find the following links useful:
-- [Official PETEP website](https://petep.warxim.com/)
-- [Youtube PETEP - Tutorial (TCP Proxy for Hacking)](https://www.youtube.com/watch?v=DPXEPLYttgQ)
+![PETEP](https://petep.warxim.com/img/social/screen.png)
 
-![PETEP](https://petep.warxim.com/img/screenshots/7.png)
+## Links
+- **[🌐 Official Website](https://petep.warxim.com/)**
+- **[🔽 Download](https://github.com/Warxim/petep/releases)**
+- **[📖 User Guide](https://petep.warxim.com/user-guide/)**
+- **[📚 Methodology](https://petep.warxim.com/methodology/)**
+- **[👩‍💻 Developer Guide](https://petep.warxim.com/dev-guide/)**
+- **[🎬 Youtube PETEP - Tutorial (TCP Proxy for Hacking)](https://www.youtube.com/watch?v=DPXEPLYttgQ)**
 
-## Requirements
-You need **Java 11** or newer version to run PETEP.
+## Installation & Usage
+**Requirements:** Java 11+ *(for M1, M2 Mac use Java 17+)*
 
-***Note:** For Mac with ARM64 architecture (M1, M2 chips), use special build for Java 17.*
+1. [Download latest PETEP release](https://github.com/Warxim/petep/releases/latest)
+2. Extract PETEP zip file
+3. Run PETEP using `petep.sh` (Linux, Mac) or `petep.bat` (Windows)
+    ```shell
+    # Linux / Mac
+    chmod +x petep.sh
+    ./petep.sh
+    
+    # Windows
+    petep.bat
+    ```
+***Note:** Provided run scripts contain useful variables,
+including working directory (for `petep.json` file), and path to Java executable.
+You might need to change it if you do not have it in PATH or you use multiple Java versions
+on your machine.*
 
-## How to run
-In order to run PETEP, go to the directory of the downloaded PETEP release and run the sh/bat file:
-```shell
-# Linux / Mac
-chmod +x petep.sh
-./petep.sh
-
-# Windows
-petep.bat
-```
-
-***Note:** These run scripts contain useful variables, 
-including working directory (for `petep.json` file), and path to Java executable. 
-You might need to change it if you do not have it in PATH or you use multiple Java versions.*
-
-## Supported functionality
+## Features
 Latest PETEP version has the following protocol support:
 - **TCP proxy with SSL/TLS support**
 - **UDP proxy**
@@ -58,7 +66,7 @@ External HTTP proxy module wraps the TCP communication inside HTTP, which is sen
 Repeating the packets is also supported as long as the connection is alive, so Burp Intruder/Repeater and Zaproxy Requester/Fuzzer
 can also be used for the TCP communication.
 
-![External HTTP Proxy Schema](https://petep.warxim.com/img/user-guide/ehttpp.png)
+![External HTTP Proxy Schema](https://petep.warxim.com/img/social/petep-external-http-proxy.png)
 
 For more information, see https://petep.warxim.com/user-guide/external-http-proxy/.
 
