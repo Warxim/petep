@@ -4,11 +4,11 @@
 ![Java: 177](https://img.shields.io/badge/java-11-11?labelColor=383b53&color=737dde)
 [![Release Date](https://img.shields.io/github/release-date/Warxim/petep?labelColor=383b53&color=98a0e3)](https://github.com/Warxim/petep/releases)
 
-**PETEP** (**PEnetration TEsting Proxy**) is an open-source Java application for creating proxies and traffic analysis & modification. 
+**PETEP** (**PEnetration TEsting Proxy**) is an open-source Java application for creating proxies for traffic analysis & modification. 
 Main goal of PETEP is to provide a useful tool for performing penetration tests of applications with various protocols (on TCP/UDP) 
 by setting up proxies and interceptors to manage the traffic transmitted between the client and the server.
 
-![PETEP](https://petep.warxim.com/img/social/screen.png)
+![PETEP](https://petep.warxim.com/img/social/screen-history.png)
 
 ## Links
 - **[🌐 Official Website](https://petep.warxim.com/)**
@@ -21,6 +21,7 @@ by setting up proxies and interceptors to manage the traffic transmitted between
 ## Installation & Usage
 **Requirements:** Java 11+ *(for M1, M2 Mac use Java 17+)*
 
+### Running PETEP for the first time
 1. [Download latest PETEP release](https://github.com/Warxim/petep/releases/latest)
 2. Extract PETEP zip file
 3. Run PETEP using `petep.sh` (Linux, Mac) or `petep.bat` (Windows)
@@ -32,10 +33,19 @@ by setting up proxies and interceptors to manage the traffic transmitted between
     # Windows
     petep.bat
     ```
-***Note:** Provided run scripts contain useful variables,
+***Tip:** Provided run scripts contain useful variables,
 including working directory (for `petep.json` file), and path to Java executable.
 You might need to change it if you do not have it in PATH or you use multiple Java versions
 on your machine.*
+
+### Setting up your first project
+1. Start PETEP
+2. Create a new project using the FULL preset and click Run 
+3. In Settings, setup TCP/UDP proxy and optionally configure interceptors
+4. Click START and start hacking
+
+***Tip:** Most changes to the project are not automatically persistent. 
+Use Project → Save to save the changes, when PETEP is running.*
 
 ## Features
 Latest PETEP version has the following protocol support:
@@ -53,6 +63,8 @@ And there are the following functionalities:
 - **Scripter** - basic support for JS scripts for custom traffic processing
 - **Connections** - management of active connections
 
+Detailed descriptions of all modules can be found in the official [User Guide](https://petep.warxim.com/user-guide/).
+
 ### Scripter extension
 In order to use Scripter extension, it is recommended to use GraalVM, since the implementation is built
 using GraalVM Polyglot. Since GraalVM 22.2, you might need to install the scripting language in the GraalVM using
@@ -68,7 +80,7 @@ can also be used for the TCP communication.
 
 ![External HTTP Proxy Schema](https://petep.warxim.com/img/social/petep-external-http-proxy.png)
 
-For more information, see https://petep.warxim.com/user-guide/external-http-proxy/.
+For more information, see [User Guide - External HTTP Proxy](https://petep.warxim.com/user-guide/external-http-proxy/).
 
 ***Note:** If you only want to use PETEP as the tunnel for sending the TCP through HTTP proxies,
 I would recommend setting it up in GUI mode and then running it in NO-GUI mode (`PETEP [project_path] --nogui`).*
@@ -94,9 +106,20 @@ There are three different guides that will help you use PETEP to its full potent
   (to support custom protocols or create custom modules for traffic interception)
 
 ## Extensibility
-It is possible to develop extensions using Java to implement support for new protocols and/or to implement new functionality. 
+It is possible to develop extensions using Java to implement support for new protocols
+and/or to implement new functionality for intercepting the communication (including graphical user interface). 
 
-For more information about extension development, please see https://petep.warxim.com/dev-guide/.
+For more information about extension development, please see [Dev Guide](https://petep.warxim.com/dev-guide/).
+
+## Screenshots
+### Repeater
+![PETEP Repeater](https://petep.warxim.com/img/social/screen-repeater.png)
+### Tagger
+![PETEP Tagger](https://petep.warxim.com/img/social/screen-tagger.png)
+### Modifier
+![PETEP Modifier](https://petep.warxim.com/img/social/screen-modifier.png)
+### Proxy Settings
+![PETEP Proxy Settings](https://petep.warxim.com/img/social/screen-proxy.png)
 
 ## License
 PETEP is licensed under GNU GPL 3.0.
