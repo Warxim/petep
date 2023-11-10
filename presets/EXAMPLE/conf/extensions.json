@@ -9,9 +9,6 @@
     "path": "tcp"
   },
   {
-    "path": "http"
-  },
-  {
     "path": "external_http_proxy",
     "store": {
       "serverIp": "127.0.0.1",
