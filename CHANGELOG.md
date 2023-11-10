@@ -2,6 +2,10 @@
 
 All notable changes to this project will are documented in this changelog file.
 
+## [2.3.0] - Unreleased
+### Added
+- Improved PDU View/Editor UX by automatically hiding/showing metadata panels based on metadata availability
+
 ## [2.2.0] - 2023-10-01
 ### Added
 - A bit more convenient Hex Editor (smart backspace/delete, support undo/redo, support keeping selection between tabs)

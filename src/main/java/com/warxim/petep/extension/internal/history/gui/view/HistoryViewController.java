@@ -26,6 +26,7 @@ import com.warxim.petep.gui.common.InstantCellFactory;
 import com.warxim.petep.gui.control.byteseditor.BytesEditor;
 import com.warxim.petep.gui.dialog.Dialogs;
 import com.warxim.petep.helper.ExtensionHelper;
+import com.warxim.petep.util.GuiUtils;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -35,6 +36,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
@@ -93,6 +95,8 @@ public class HistoryViewController implements Initializable {
     private BytesEditor bytesEditor;
     @FXML
     private TextArea metadataArea;
+    @FXML
+    private AnchorPane metadataPane;
 
     private final HistoryView view;
     private final HistoryApi api;
@@ -103,6 +107,7 @@ public class HistoryViewController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        metadataPane.managedProperty().bind(metadataPane.visibleProperty());
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         proxyColumn.setCellValueFactory(new PropertyValueFactory<>("proxyName"));
         connectionColumn.setCellValueFactory(new PropertyValueFactory<>("connectionName"));
@@ -337,23 +342,12 @@ public class HistoryViewController implements Initializable {
             bytesEditor.setDisable(false);
 
             if (pdu.getMetadata() == null || pdu.getMetadata().isEmpty()) {
+                metadataPane.setVisible(false);
                 return;
             }
 
-            int labelLength = pdu.getMetadata().keySet().stream()
-                    .map(String::length)
-                    .max(Integer::compareTo)
-                    .get();
-
-            var builder = new StringBuilder();
-            pdu.getMetadata().forEach((key, value) -> {
-                builder.append(key);
-                builder.append(": ");
-                builder.append(" ".repeat(Math.max(0, labelLength - key.length())));
-                builder.append(value);
-                builder.append('\n');
-            });
-            metadataArea.setText(builder.toString());
+            metadataPane.setVisible(true);
+            metadataArea.setText(GuiUtils.formatMetadata(pdu.getMetadata()));
             metadataArea.setDisable(false);
         }));
     }

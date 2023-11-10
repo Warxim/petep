@@ -24,6 +24,8 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.Tooltip;
 import javafx.util.Duration;
 
+import java.util.Map;
+
 /**
  * GUI utils.
  */
@@ -157,5 +159,29 @@ public final class GuiUtils {
         var tooltip = new Tooltip(text);
         tooltip.setShowDelay(Duration.millis(millisDuration));
         return tooltip;
+    }
+
+    /**
+     * Converts metadata to formatted string.
+     * @param metadata Metadata to format
+     */
+    public static String formatMetadata(Map<String, String> metadata) {
+        if (metadata.size() == 0) {
+            return "";
+        }
+
+        var labelLength = metadata.keySet().stream()
+                .map(String::length)
+                .max(Integer::compareTo)
+                .get();
+        var builder = new StringBuilder();
+        metadata.forEach((key, value) -> {
+            builder.append(key);
+            builder.append(": ");
+            builder.append(" ".repeat(Math.max(0, labelLength - key.length())));
+            builder.append(value);
+            builder.append('\n');
+        });
+        return builder.toString();
     }
 }

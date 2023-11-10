@@ -19,6 +19,7 @@ package com.warxim.petep.gui.control;
 import com.warxim.petep.core.pdu.SerializedPdu;
 import com.warxim.petep.extension.PetepAPI;
 import com.warxim.petep.gui.control.byteseditor.BytesEditor;
+import com.warxim.petep.util.GuiUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.TextArea;
@@ -26,7 +27,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
@@ -54,6 +54,8 @@ public class SerializedPduView extends AnchorPane {
     private BytesEditor bytesEditor;
     @FXML
     private TextArea metadataArea;
+    @FXML
+    private AnchorPane metadataPane;
 
     /**
      * Constructs view without any PDU.
@@ -65,6 +67,8 @@ public class SerializedPduView extends AnchorPane {
         loader.setController(this);
         loader.setClassLoader(getClass().getClassLoader());
         loader.load();
+
+        metadataPane.managedProperty().bind(metadataPane.visibleProperty());
     }
 
     /**
@@ -99,8 +103,11 @@ public class SerializedPduView extends AnchorPane {
             sizeField.setText(String.valueOf(serializedPdu.getBuffer().length));
         }
 
-        if (serializedPdu.getMetadata() != null) {
-            metadataArea.setText(metadataToString(serializedPdu.getMetadata()));
+        if (serializedPdu.getMetadata() != null && !serializedPdu.getMetadata().isEmpty()) {
+            metadataPane.setVisible(true);
+            metadataArea.setText(GuiUtils.formatMetadata(serializedPdu.getMetadata()));
+        } else {
+            metadataPane.setVisible(false);
         }
     }
 
@@ -125,26 +132,6 @@ public class SerializedPduView extends AnchorPane {
         bytesEditor.clear();
         sizeField.setText("");
         metadataArea.setText("");
-    }
-
-    /**
-     * Converts metadata to formatted string.
-     */
-    protected String metadataToString(Map<String, String> metadata) {
-        if (metadata.size() == 0) {
-            return "";
-        }
-
-        int labelLength = metadata.keySet().stream().map(String::length).max(Integer::compareTo).get();
-        var builder = new StringBuilder();
-        metadata.forEach((key, value) -> {
-            builder.append(key);
-            builder.append(": ");
-            builder.append(" ".repeat(Math.max(0, labelLength - key.length())));
-            builder.append(value);
-            builder.append('\n');
-        });
-        return builder.toString();
     }
 
     /**

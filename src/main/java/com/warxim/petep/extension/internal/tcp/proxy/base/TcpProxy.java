@@ -126,6 +126,8 @@ public abstract class TcpProxy extends Proxy {
             Logger.getGlobal().log(Level.SEVERE, "TCP unknown host exception thrown.", e);
         } catch (IOException e) {
             Logger.getGlobal().log(Level.SEVERE, "TCP IO exception thrown.", e);
+        } catch (IllegalArgumentException e) {
+            Logger.getGlobal().log(Level.SEVERE, "Invalid arguments provided.", e);
         }
 
         return false;

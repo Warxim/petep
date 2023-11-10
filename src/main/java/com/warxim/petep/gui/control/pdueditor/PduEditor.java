@@ -37,6 +37,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
@@ -80,6 +81,8 @@ public class PduEditor extends AnchorPane implements ConnectionListener {
     private ComboBox<Interceptor> interceptorInput;
     @FXML
     private AnchorPane metadataPane;
+    @FXML
+    private ScrollPane metadataScrollPane;
 
     /**
      * List of interceptors in direction C2S (Client -&gt; Server)
@@ -123,6 +126,8 @@ public class PduEditor extends AnchorPane implements ConnectionListener {
         connectionInput.focusedProperty().addListener(this::onConnectionFocusChange);
         proxyInput.valueProperty().addListener(this::onProxyChange);
         destinationInput.valueProperty().addListener(this::onDestinationChange);
+
+        metadataScrollPane.managedProperty().bind(metadataScrollPane.visibleProperty());
     }
 
     /**
@@ -402,12 +407,15 @@ public class PduEditor extends AnchorPane implements ConnectionListener {
         metadataPane.getChildren().clear();
 
         try {
-            var pane = proxy.getModule().getFactory().createPduMetadataPane();
-            if (pane.isPresent()) {
-                AnchorPane.setLeftAnchor(pane.get(), 0D);
-                AnchorPane.setRightAnchor(pane.get(), 0D);
-
-                metadataPane.getChildren().add(pane.get());
+            var maybePane = proxy.getModule().getFactory().createPduMetadataPane();
+            if (maybePane.isPresent()) {
+                var pane = maybePane.get();
+                AnchorPane.setLeftAnchor(pane, 0D);
+                AnchorPane.setRightAnchor(pane, 0D);
+                metadataPane.getChildren().add(pane);
+                metadataScrollPane.setVisible(true);
+            } else {
+                metadataScrollPane.setVisible(false);
             }
         } catch (IOException e) {
             Logger.getGlobal().log(Level.SEVERE, "Exception during PDU metadata pane creation.", e);
