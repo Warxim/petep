@@ -20,7 +20,6 @@ import com.warxim.petep.core.PETEP;
 import com.warxim.petep.core.PetepState;
 import com.warxim.petep.core.listener.ConnectionListener;
 import com.warxim.petep.core.pdu.PDU;
-import com.warxim.petep.core.pdu.PduDestination;
 import com.warxim.petep.exception.InactivePetepCoreException;
 import com.warxim.petep.interceptor.worker.Interceptor;
 import com.warxim.petep.proxy.worker.Proxy;
@@ -53,29 +52,17 @@ public final class DefaultPetepHelper implements PetepHelper {
 
     @Override
     public void processPdu(PDU pdu) {
-        if (pdu.getDestination() == PduDestination.SERVER) {
-            getPetepOrThrowException().processC2S(pdu);
-        } else {
-            getPetepOrThrowException().processS2C(pdu);
-        }
+        getPetepOrThrowException().process(pdu);
     }
 
     @Override
     public void processPdu(PDU pdu, int interceptorId) {
-        if (pdu.getDestination() == PduDestination.SERVER) {
-            getPetepOrThrowException().processC2S(pdu, interceptorId);
-        } else {
-            getPetepOrThrowException().processS2C(pdu, interceptorId);
-        }
+        getPetepOrThrowException().process(pdu, interceptorId);
     }
 
     @Override
     public void sendPdu(PDU pdu) {
-        if (pdu.getDestination() == PduDestination.SERVER) {
-            getPetepOrThrowException().sendC2S(pdu);
-        } else {
-            getPetepOrThrowException().sendS2C(pdu);
-        }
+        getPetepOrThrowException().send(pdu);
     }
 
     @Override

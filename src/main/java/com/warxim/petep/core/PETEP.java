@@ -19,6 +19,7 @@ package com.warxim.petep.core;
 import com.warxim.petep.core.listener.ConnectionListenerManager;
 import com.warxim.petep.core.listener.PetepListener;
 import com.warxim.petep.core.pdu.PDU;
+import com.warxim.petep.core.pdu.PduDestination;
 import com.warxim.petep.helper.DefaultPetepHelper;
 import com.warxim.petep.helper.PetepHelper;
 import com.warxim.petep.interceptor.module.InterceptorModuleContainer;
@@ -79,8 +80,8 @@ public final class PETEP {
 
         // Create executors.
         proxyExecutor = new ProxyExecutor(proxyManager);
-        interceptorExecutorC2S = new InterceptorExecutor(interceptorManagerC2S, this::sendC2S);
-        interceptorExecutorS2C = new InterceptorExecutor(interceptorManagerS2C, this::sendS2C);
+        interceptorExecutorC2S = new InterceptorExecutor(interceptorManagerC2S, this::send);
+        interceptorExecutorS2C = new InterceptorExecutor(interceptorManagerS2C, this::send);
 
         state = PetepState.STOPPED;
 
@@ -210,65 +211,38 @@ public final class PETEP {
     }
 
     /**
-     * Sends PDU in direction C2S out of PETEP. (Client -&gt; Server)
+     * Sends PDU out of PETEP
      * @param pdu PDU to be sent
      */
-    public void sendC2S(PDU pdu) {
-        pdu.getConnection().sendC2S(pdu);
+    public void send(PDU pdu) {
+        pdu.getConnection().send(pdu);
     }
 
     /**
-     * Sends PDU in direction S2C out of PETEP. (Client &lt;- Server)
-     * @param pdu PDU to be sent
-     */
-    public void sendS2C(PDU pdu) {
-        pdu.getConnection().sendS2C(pdu);
-    }
-
-    /**
-     * Processes PDU internally in direction C2S. (Client -&gt; Server)
+     * Processes PDU internally
      * <p>Sends PDU to appropriate interceptors.</p>
      * @param pdu PDU to be processed
      */
-    public void processC2S(PDU pdu) {
+    public void process(PDU pdu) {
         if (pdu.getLastInterceptor() == null) {
-            interceptorExecutorC2S.intercept(pdu);
+            process(pdu, 0);
         } else {
-            interceptorExecutorC2S.intercept(pdu, pdu.getLastInterceptor().getId() + 1);
+            process(pdu, pdu.getLastInterceptor().getId() + 1);
         }
     }
 
     /**
-     * Processes PDU internally in direction S2C. (Client &lt;- Server)
+     * Processes PDU internally by sending it in specified interceptor
      * <p>Sends PDU to appropriate interceptors.</p>
      * @param pdu PDU to be processed
+     * @param interceptorId Interceptor identifier (zero-based numbering)
      */
-    public void processS2C(PDU pdu) {
-        if (pdu.getLastInterceptor() == null) {
-            interceptorExecutorS2C.intercept(pdu);
+    public void process(PDU pdu, int interceptorId) {
+        if (pdu.getDestination() == PduDestination.SERVER) {
+            interceptorExecutorC2S.intercept(pdu, interceptorId);
         } else {
-            interceptorExecutorS2C.intercept(pdu, pdu.getLastInterceptor().getId() + 1);
+            interceptorExecutorS2C.intercept(pdu, interceptorId);
         }
-    }
-
-    /**
-     * Processes PDU internally in direction C2S by sending it in specified interceptor. (Client -&gt; Server)
-     * <p>Sends PDU to appropriate interceptors.</p>
-     * @param pdu PDU to be processed
-     * @param interceptorId Interceptor identifier (zero-based numbering)
-     */
-    public void processC2S(PDU pdu, int interceptorId) {
-        interceptorExecutorC2S.intercept(pdu, interceptorId);
-    }
-
-    /**
-     * Processes PDU internally in direction S2C by sending it in specified interceptor. (Client &lt;- Server)
-     * <p>Sends PDU to appropriate interceptors.</p>
-     * @param pdu PDU to be processed
-     * @param interceptorId Interceptor identifier (zero-based numbering)
-     */
-    public void processS2C(PDU pdu, int interceptorId) {
-        interceptorExecutorS2C.intercept(pdu, interceptorId);
     }
 
     /**

@@ -115,6 +115,7 @@ public final class TcpConfigurator extends ConfigPane<TcpConfig> {
         super("/fxml/extension/internal/tcp/TcpConfigurator.fxml");
 
         proxyIpInput.setText("127.0.0.1");
+        targetIpInput.setText("127.0.0.1");
         proxyPortInput.setText("8888");
         bufferSizeInput.setText("4096");
         connectionCloseDelayInput.setText("500");

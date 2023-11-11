@@ -25,6 +25,7 @@ import com.warxim.petep.exception.ConfigurationException;
 import com.warxim.petep.extension.Extension;
 import com.warxim.petep.extension.internal.catcher.CatcherExtension;
 import com.warxim.petep.extension.internal.connectionview.ConnectionViewExtension;
+import com.warxim.petep.extension.internal.deluder.DeluderExtension;
 import com.warxim.petep.extension.internal.externalhttpproxy.EHTTPPExtension;
 import com.warxim.petep.extension.internal.history.HistoryExtension;
 import com.warxim.petep.extension.internal.http.HttpExtension;
@@ -132,6 +133,9 @@ public final class ExtensionsLoader {
                 break;
             case "repeater":
                 extension = new RepeaterExtension("repeater");
+                break;
+            case "deluder":
+                extension = new DeluderExtension("deluder");
                 break;
             default:
                 extension = loadExternalExtension(path);

@@ -62,6 +62,16 @@
           "name": "Default",
           "rules": [
             {
+              "name": "Log PDU size",
+              "description": "",
+              "language": "js",
+              "enabled": false,
+              "type": "STRING",
+              "data": {
+                "string": "const log \u003d scripter.getLogger();\n\nscripter.registerInterceptor({\n    intercept: function(pdu, helper) {\n        log.info(\u0027PDU size: \u0027 + pdu.getSize());\n        return true;\n    }\n});"
+              }
+            },
+            {
               "name": "File script",
               "description": "",
               "language": "js",

@@ -70,7 +70,9 @@ public final class Constant {
             "modifier",
             "history",
             "scripter",
-            "repeater");
+            "repeater",
+            "deluder"
+    );
 
     // Configuration items
     public static final String CONFIG_ITEM_FACTORY = "factory";

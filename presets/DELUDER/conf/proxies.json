@@ -1,0 +1,14 @@
+[
+  {
+    "code": "deluder",
+    "name": "Deluder",
+    "description": "",
+    "factory": "deluder",
+    "enabled": true,
+    "config": {
+      "petepHost": "127.0.0.1",
+      "petepPort": 8008,
+      "charset": "ISO-8859-1"
+    }
+  }
+]
