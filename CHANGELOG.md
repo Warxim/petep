@@ -6,6 +6,7 @@ All notable changes to this project will are documented in this changelog file.
 ### Added
 - Improved PDU View/Editor UX by automatically hiding/showing metadata panels based on metadata availability
 - Removed HTTP extension from FULL and EXAMPLE presets
+- Fixed Scripter int/byte casting
 
 ## [2.2.0] - 2023-10-01
 ### Added

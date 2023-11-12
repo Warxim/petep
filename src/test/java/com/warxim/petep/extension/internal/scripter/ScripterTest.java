@@ -50,4 +50,84 @@ public class ScripterTest {
 
         manager.close();
     }
+
+    @Test
+    public void allBytesTest() throws URISyntaxException, IOException {
+        var manager = new ScriptGroupManager();
+        var group = new RuleGroup<Script>("group_1", "Group 1");
+        manager.add(group);
+
+        var factory = new ScriptHelperFactory(null);
+        var path = getClass().getClassLoader().getResource("scripter/all-bytes.js").toURI();
+        var script = new StringScript(
+                "Test",
+                "Test script",
+                true,
+                "js",
+                factory,
+                Files.readString(Paths.get(path), StandardCharsets.UTF_8));
+        group.addRule(script);
+
+        var data = new byte[256];
+        var pdu = new DefaultPdu(
+                null,
+                null,
+                PduDestination.SERVER,
+                data,
+                data.length
+        );
+        script.getScriptInterceptorManager().intercept(pdu, null);
+
+        var size = pdu.getSize();
+        assertThat(size).isEqualTo(256);
+
+        var buffer = pdu.getBuffer();
+        byte expectedByte = 0;
+        for (int i = 0; i < size; ++i) {
+            assertThat(buffer[i]).isEqualTo(expectedByte);
+            ++expectedByte;
+        }
+
+        manager.close();
+    }
+
+    @Test
+    public void int8ArrayTest() throws URISyntaxException, IOException {
+        var manager = new ScriptGroupManager();
+        var group = new RuleGroup<Script>("group_1", "Group 1");
+        manager.add(group);
+
+        var factory = new ScriptHelperFactory(null);
+        var path = getClass().getClassLoader().getResource("scripter/int8array.js").toURI();
+        var script = new StringScript(
+                "Test",
+                "Test script",
+                true,
+                "js",
+                factory,
+                Files.readString(Paths.get(path), StandardCharsets.UTF_8));
+        group.addRule(script);
+
+        var data = new byte[1];
+        var pdu = new DefaultPdu(
+                null,
+                null,
+                PduDestination.SERVER,
+                data,
+                data.length
+        );
+        script.getScriptInterceptorManager().intercept(pdu, null);
+
+        var size = pdu.getSize();
+        assertThat(size).isEqualTo(256);
+
+        var buffer = pdu.getBuffer();
+        byte expectedByte = 0;
+        for (int i = 0; i < size; ++i) {
+            assertThat(buffer[i]).isEqualTo(expectedByte);
+            ++expectedByte;
+        }
+
+        manager.close();
+    }
 }

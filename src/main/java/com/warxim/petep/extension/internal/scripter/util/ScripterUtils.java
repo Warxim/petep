@@ -43,10 +43,31 @@ public class ScripterUtils {
         return Context.newBuilder()
                 .allowExperimentalOptions(true)
                 .allowHostClassLoading(true)
-                .allowHostAccess(HostAccess.ALL)
+                .allowHostAccess(createHostAccess())
                 .allowAllAccess(true)
                 .allowNativeAccess(true)
                 .allowPolyglotAccess(PolyglotAccess.ALL)
                 .allowEnvironmentAccess(EnvironmentAccess.INHERIT);
+    }
+
+    /**
+     * Creates host access with type converters for bytes
+     */
+    private static HostAccess createHostAccess() {
+        return HostAccess.newBuilder(HostAccess.ALL)
+                .targetTypeMapping(Integer.class, Byte.class, null, Integer::byteValue)
+                .targetTypeMapping(int[].class, byte[].class, null, ScripterUtils::castIntArrayToByteArray)
+                .build();
+    }
+
+    /**
+     * Casts integers in int array to byte array
+     */
+    private static byte[] castIntArrayToByteArray(int[] intArray) {
+        var byteArray = new byte[intArray.length];
+        for (var i = 0; i < intArray.length ; ++i) {
+            byteArray[i] = (byte) intArray[i];
+        }
+        return byteArray;
     }
 }
