@@ -26,10 +26,10 @@
       <Label layoutX="20.0" layoutY="24.0" styleClass="h3" text="PDU View" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
       <VBox layoutY="187.0" prefHeight="251.0" prefWidth="680.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="187.0">
          <children>
-            <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+            <AnchorPane minHeight="200.0" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                <children>
                     <Label alignment="TOP_CENTER" contentDisplay="TOP" styleClass="input-label" text="Data:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0" />
-                    <BytesEditor fx:id="bytesEditor" editable="false" prefHeight="141.0" prefWidth="476.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
+                    <BytesEditor fx:id="bytesEditor" minHeight="200.0" editable="false" prefHeight="141.0" prefWidth="476.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
             <AnchorPane fx:id="metadataPane" prefHeight="200.0" prefWidth="200.0">

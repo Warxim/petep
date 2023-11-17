@@ -215,6 +215,13 @@
   -fx-background-color: -fx-color-dark-3;
 }
 
+/*
+ SCROLL PANE
+*/
+.scroll-pane {
+  -fx-background-color:transparent;
+  -fx-border-width: 0;
+}
 
 /*
  SPLIT PANE

@@ -4,11 +4,14 @@ All notable changes to this project will are documented in this changelog file.
 
 ## [2.3.0] - Unreleased
 ### Added
-- Improved PDU View/Editor UX by automatically hiding/showing metadata panels based on metadata availability
 - Added Index & Length information to BytesEditor
-- Removed HTTP extension from FULL and EXAMPLE presets
+- Improved PDU View/Editor UX by automatically hiding/showing metadata panels based on metadata availability
+- Added scroll to PDU Control
+### Fixed
 - Fixed Scripter int/byte casting
 - Minor fixes
+### Removed
+- Removed HTTP extension from FULL and EXAMPLE presets
 
 ## [2.2.0] - 2023-10-01
 ### Added

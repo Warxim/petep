@@ -37,7 +37,7 @@
             <Insets />
          </opaqueInsets>
       </HBox>
-      <BytesEditor fx:id="dataInput" layoutX="90.0" layoutY="193.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="190.0" />
+      <BytesEditor fx:id="dataInput" layoutX="90.0" layoutY="193.0" minHeight="100" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="190.0" />
       <Label layoutX="9.0" layoutY="190.0" styleClass="input-label" text="Data:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="195.0" />
       <RadioButton fx:id="containsDataInput" layoutX="90.0" layoutY="307.0" mnemonicParsing="false" selected="true" text="Contains" AnchorPane.bottomAnchor="10.0">
          <toggleGroup>
