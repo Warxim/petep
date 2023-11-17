@@ -17,6 +17,8 @@
 package com.warxim.petep.gui.control.byteseditor;
 
 import com.warxim.petep.extension.PetepAPI;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyMapProperty;
 import javafx.scene.control.IndexRange;
 
 import java.nio.charset.Charset;
@@ -57,4 +59,16 @@ public interface BytesEditorComponent {
      * @return Current selection range
      */
     IndexRange getBytesSelection();
+
+    /**
+     * Obtains information about the data (length etc.)
+     * @return Values mapped by the key to be displayed (Len: 1)
+     */
+    ReadOnlyMapProperty<String, String> getInfoProperty();
+
+    /**
+     * Obtains focused property of the whole component
+     * @return Focused property
+     */
+    ReadOnlyBooleanProperty getFocusedProperty();
 }

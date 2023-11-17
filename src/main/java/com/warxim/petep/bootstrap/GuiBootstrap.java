@@ -42,10 +42,14 @@ public final class GuiBootstrap extends PetepBootstrap {
         try {
             super.start();
         } catch (BootstrapException e) {
-            Platform.runLater(() -> {
-                Dialogs.createExceptionDialog("Exception: " + e.getCause().getClass().getSimpleName(), e.getMessage(), e);
-                Platform.setImplicitExit(true);
-            });
+            try {
+                Platform.runLater(() -> {
+                    Dialogs.createExceptionDialog("Exception: " + e.getCause().getClass().getSimpleName(), e.getMessage(), e);
+                    Platform.setImplicitExit(true);
+                });
+            } catch (IllegalStateException e2) {
+                // GUI might not have been initialized yet
+            }
             throw e;
         }
 

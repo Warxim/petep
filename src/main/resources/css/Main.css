@@ -660,10 +660,25 @@
 */
 
 .bytes-editor {
-  -fx-font-family: "Noto Sans Mono";
+  -fx-border-style: solid;
+  -fx-background-color: -fx-color-light-1;
+  -fx-border-color: -fx-input-border;
+  -fx-border-width: 1px;
 }
 
-.bytes-editor-charset {
+.bytes-editor:focused, .bytes-editor:hover {
+  -fx-border-style: solid;
+  -fx-border-color: -fx-input-border-hover;
+  -fx-background-color: -fx-color-light-1;
+  -fx-border-width: 1px;
+}
+
+.bytes-editor-component {
+  -fx-font-family: "Noto Sans Mono";
+  -fx-border-width: 0;
+}
+
+.bytes-editor-charset, .bytes-editor-info {
   -fx-font-family: "Noto Sans Mono";
   -fx-background-color: rgba(142, 150, 217, 0.3);
   -fx-padding: 3;

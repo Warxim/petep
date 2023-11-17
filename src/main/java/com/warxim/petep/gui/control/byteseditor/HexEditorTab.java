@@ -17,6 +17,8 @@
 package com.warxim.petep.gui.control.byteseditor;
 
 import com.warxim.petep.extension.PetepAPI;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyMapProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.IndexRange;
@@ -71,5 +73,15 @@ public class HexEditorTab extends Tab implements BytesEditorComponent {
     @Override
     public IndexRange getBytesSelection() {
         return hexInput.getBytesSelection();
+    }
+
+    @Override
+    public ReadOnlyMapProperty<String, String> getInfoProperty() {
+        return hexInput.getInfoProperty();
+    }
+
+    @Override
+    public ReadOnlyBooleanProperty getFocusedProperty() {
+        return hexInput.getFocusedProperty();
     }
 }

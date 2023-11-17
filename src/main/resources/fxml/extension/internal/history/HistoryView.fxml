@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="845.0" prefWidth="728.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="845.0" prefWidth="728.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <SplitPane dividerPositions="0.4074074074074074" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="33.0">
         <items>
@@ -58,7 +58,7 @@
                               <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                                  <children>
                                     <Label alignment="TOP_CENTER" contentDisplay="TOP" styleClass="input-label" text="Data:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0" />
-                                    <BytesEditor fx:id="bytesEditor" editable="false" prefHeight="141.0" prefWidth="476.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
+                                    <BytesEditor fx:id="bytesEditor" editable="false" minHeight="100.0" prefHeight="141.0" prefWidth="476.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane fx:id="metadataPane" prefHeight="200.0" prefWidth="200.0">

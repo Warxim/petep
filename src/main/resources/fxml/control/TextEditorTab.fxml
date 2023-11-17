@@ -7,6 +7,6 @@
 
 <fx:root type="Tab" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" closable="false">
     <content>
-        <TextEditor fx:id="textInput" styleClass="bytes-editor" />
+        <TextEditor fx:id="textInput" styleClass="bytes-editor-component" />
     </content>
 </fx:root>

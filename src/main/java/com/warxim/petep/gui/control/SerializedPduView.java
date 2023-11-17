@@ -69,6 +69,7 @@ public class SerializedPduView extends AnchorPane {
         loader.load();
 
         metadataPane.managedProperty().bind(metadataPane.visibleProperty());
+        metadataPane.setVisible(false);
     }
 
     /**

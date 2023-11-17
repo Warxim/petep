@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<fx:root prefHeight="438.0" prefWidth="680.0" type="AnchorPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="438.0" prefWidth="680.0" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <Label alignment="TOP_CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="37.0" styleClass="input-label" text="Proxy:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="37.0" />
         <TextField fx:id="proxyField" alignment="TOP_LEFT" editable="false" layoutX="90.0" layoutY="34.0" prefHeight="17.0" prefWidth="491.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="34.0" />

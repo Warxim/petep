@@ -19,24 +19,35 @@ package com.warxim.petep.gui.control.byteseditor;
 import com.warxim.petep.extension.PetepAPI;
 import com.warxim.petep.util.BytesUtils;
 import javafx.application.Platform;
+import javafx.beans.property.MapProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.ReadOnlyMapProperty;
+import javafx.beans.property.SimpleMapProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextFormatter;
 
 import java.nio.charset.Charset;
+import java.util.LinkedHashMap;
 
 /**
  * HEX editor that extends {@link TextArea} in order to support smart byte array editing.
  */
 @PetepAPI
 public class HexEditor extends TextArea implements BytesEditorComponent {
+    private final MapProperty<String, String> info = new SimpleMapProperty<>(FXCollections.observableMap(new LinkedHashMap<>()));
+
     public HexEditor() {
         super();
 
         setWrapText(true);
         setTextFormatter(new TextFormatter<>(this::formatTextChange));
         focusedProperty().addListener(this::onTextFocusChange);
+        selectionProperty().addListener(this::onSelectionChange);
+        textProperty().addListener(this::onTextChange);
+        recalculateInfo();
     }
 
     @Override
@@ -56,6 +67,7 @@ public class HexEditor extends TextArea implements BytesEditorComponent {
         var end = selectionRange.getEnd() * 3 - 1;
 
         if (end <= start) {
+            selectRange(0, 0);
             return;
         }
 
@@ -83,6 +95,28 @@ public class HexEditor extends TextArea implements BytesEditorComponent {
         var selectedData = BytesUtils.hexStringToBytes(hexData.substring(start, end));
 
         return new IndexRange(beforeSelectedData.length, beforeSelectedData.length + selectedData.length);
+    }
+
+    @Override
+    public ReadOnlyMapProperty<String, String> getInfoProperty() {
+        return info;
+    }
+
+    @Override
+    public ReadOnlyBooleanProperty getFocusedProperty() {
+        return focusedProperty();
+    }
+
+    private void recalculateInfo() {
+        var selectionRange = selectionProperty().get();
+        var selectionStart = selectionRange.getStart() / 3;
+        var selectionEnd = selectionRange.getEnd() / 3;
+        if (selectionEnd - selectionStart > 0) {
+            info.put("Index", selectionStart + "-" + selectionEnd);
+        } else {
+            info.put("Index", String.valueOf(selectionStart));
+        }
+        info.put("Length", String.valueOf(getLength() / 3 + 1));
     }
 
     /**
@@ -233,6 +267,20 @@ public class HexEditor extends TextArea implements BytesEditorComponent {
         change.setCaretPosition(change.getCaretPosition() + 1);
         change.setAnchor(change.getCaretPosition());
         return change;
+    }
+
+    /**
+     * Recalculates info when selection changes
+     */
+    private void onSelectionChange(ObservableValue<? extends IndexRange> observable, IndexRange oldValue, IndexRange newValue) {
+        recalculateInfo();
+    }
+
+    /**
+     * Recalculates info when text changes
+     */
+    private void onTextChange(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        recalculateInfo();
     }
 
     /**

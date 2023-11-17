@@ -18,6 +18,8 @@ package com.warxim.petep.gui.control.byteseditor;
 
 import com.warxim.petep.common.Constant;
 import com.warxim.petep.extension.PetepAPI;
+import javafx.beans.property.MapProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.IndexRange;
@@ -77,5 +79,15 @@ public class TextEditorTab extends Tab implements BytesEditorComponent {
     @Override
     public IndexRange getBytesSelection() {
         return textInput.getBytesSelection();
+    }
+
+    @Override
+    public MapProperty<String, String> getInfoProperty() {
+        return textInput.getInfoProperty();
+    }
+
+    @Override
+    public ReadOnlyBooleanProperty getFocusedProperty() {
+        return textInput.getFocusedProperty();
     }
 }

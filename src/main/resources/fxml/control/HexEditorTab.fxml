@@ -7,6 +7,6 @@
 
 <fx:root type="Tab" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" closable="false">
     <content>
-        <HexEditor fx:id="hexInput" styleClass="bytes-editor" />
+        <HexEditor fx:id="hexInput" styleClass="bytes-editor-component" />
     </content>
 </fx:root>

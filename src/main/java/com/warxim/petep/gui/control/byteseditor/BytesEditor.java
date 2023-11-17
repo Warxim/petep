@@ -22,6 +22,7 @@ import com.warxim.petep.gui.dialog.Dialogs;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.MapChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.IndexRange;
@@ -33,6 +34,8 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * JavaFX byte array editor.
@@ -51,6 +54,8 @@ public class BytesEditor extends AnchorPane {
     protected TabPane tabs;
     @FXML
     protected Label charsetLabel;
+    @FXML
+    protected Label infoLabel;
 
     /**
      * Constructs byte editor.
@@ -85,7 +90,7 @@ public class BytesEditor extends AnchorPane {
         this.bytes = bytes;
         this.charset = charset;
 
-        BytesEditorComponent currentTab = (BytesEditorComponent) tabs.getSelectionModel().getSelectedItem();
+        var currentTab = (BytesEditorComponent) tabs.getSelectionModel().getSelectedItem();
         if (currentTab != null) {
             currentTab.setBytes(bytes, size, charset);
         }
@@ -233,17 +238,48 @@ public class BytesEditor extends AnchorPane {
     protected void onTabChange(ObservableValue<? extends Tab> observable, Tab oldTab, Tab newTab) {
         IndexRange bytesSelection = null;
         if (oldTab != null) {
-            bytes = ((BytesEditorComponent) oldTab).getBytes();
-            bytesSelection = ((BytesEditorComponent) oldTab).getBytesSelection();
-        }
-
-        if (bytes == null) {
-            return;
+            var component = ((BytesEditorComponent) oldTab);
+            bytes = component.getBytes();
+            bytesSelection = component.getBytesSelection();
+            component.getInfoProperty().removeListener(this::onInfoMapChange);
+            component.getFocusedProperty().removeListener(this::onFocusChange);
         }
 
         if (newTab != null) {
-            ((BytesEditorComponent) newTab).setBytes(bytes, bytes.length, charset);
-            ((BytesEditorComponent) newTab).selectBytes(bytesSelection);
+            var component = ((BytesEditorComponent) newTab);
+
+            if (bytes != null) {
+                component.setBytes(bytes, bytes.length, charset);
+                component.selectBytes(bytesSelection);
+            }
+
+            component.getInfoProperty().addListener(this::onInfoMapChange);
+            setInfo(component.getInfoProperty());
+            component.getFocusedProperty().addListener(this::onFocusChange);
         }
+    }
+
+    /**
+     * Handles change of focus in the editor tabs
+     */
+    private void onFocusChange(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+        setFocused(newValue);
+    }
+
+    /**
+     * Handles change of editor info from the tab
+     */
+    private void onInfoMapChange(MapChangeListener.Change<? extends String, ? extends String> change) {
+        setInfo(change.getMap());
+    }
+
+    /**
+     * Displays editor info from the tab in the info label
+     */
+    private void setInfo(Map<? extends String, ? extends String> info) {
+        var newInfo = info.entrySet().stream()
+                .map(entry -> entry.getKey() + ": " + entry.getValue())
+                .collect(Collectors.joining(", "));
+        infoLabel.setText(newInfo);
     }
 }

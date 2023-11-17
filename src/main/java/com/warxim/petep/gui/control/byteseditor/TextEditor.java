@@ -20,18 +20,26 @@ import com.warxim.petep.common.Constant;
 import com.warxim.petep.extension.PetepAPI;
 import com.warxim.petep.util.BytesUtils;
 import com.warxim.petep.util.GuiUtils;
+import javafx.beans.property.MapProperty;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+import javafx.beans.property.SimpleMapProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
 import java.nio.charset.Charset;
+import java.util.LinkedHashMap;
 
 /**
  * Text editor that extends {@link TextArea} in order to correctly support clipboard.
  */
 @PetepAPI
 public class TextEditor extends TextArea implements BytesEditorComponent {
+    private final MapProperty<String, String> info = new SimpleMapProperty<>(FXCollections.observableMap(new LinkedHashMap<>()));
+
     private Charset charset;
 
     public TextEditor() {
@@ -40,6 +48,9 @@ public class TextEditor extends TextArea implements BytesEditorComponent {
         charset = Constant.DEFAULT_CHARSET;
 
         setWrapText(true);
+        selectionProperty().addListener(this::onSelectionChange);
+        textProperty().addListener(this::onTextChange);
+        recalculateInfo();
     }
 
     @Override
@@ -60,6 +71,7 @@ public class TextEditor extends TextArea implements BytesEditorComponent {
         var end = selectionRange.getEnd();
 
         if (end <= start) {
+            selectRange(0, 0);
             return;
         }
 
@@ -88,6 +100,26 @@ public class TextEditor extends TextArea implements BytesEditorComponent {
                 beforeSelectedDataBytesLength,
                 beforeSelectedDataBytesLength + selectedDataBytesLength
         );
+    }
+
+    @Override
+    public MapProperty<String, String> getInfoProperty() {
+        return info;
+    }
+
+    @Override
+    public ReadOnlyBooleanProperty getFocusedProperty() {
+        return focusedProperty();
+    }
+
+    private void recalculateInfo() {
+        var selectionRange = selectionProperty().get();
+        if (selectionRange.getLength() > 1) {
+            info.put("Index", selectionRange.getStart() + "-" + (selectionRange.getEnd() - 1));
+        } else {
+            info.put("Index", String.valueOf(selectionRange.getStart()));
+        }
+        info.put("Length", String.valueOf(getLength()));
     }
 
     @Override
@@ -121,6 +153,20 @@ public class TextEditor extends TextArea implements BytesEditorComponent {
         // Format text before displaying it in text editor
         var formattedText = GuiUtils.formatText(clipboardText);
         replaceSelection(formattedText);
+    }
+
+    /**
+     * Recalculates info when selection changes
+     */
+    private void onSelectionChange(ObservableValue<? extends IndexRange> observable, IndexRange oldValue, IndexRange newValue) {
+        recalculateInfo();
+    }
+
+    /**
+     * Recalculates info when text changes
+     */
+    private void onTextChange(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        recalculateInfo();
     }
 
     private void setTextWithUndo(String newText) {

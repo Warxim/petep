@@ -4,14 +4,15 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<fx:root prefHeight="269.0" prefWidth="490.0" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="269.0" prefWidth="490.0" styleClass="bytes-editor" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TabPane fx:id="tabs" prefHeight="200.0" prefWidth="301.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <TabPane fx:id="tabs" prefHeight="200.0" prefWidth="301.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
         </tabs>
       </TabPane>
-      <Label fx:id="charsetLabel" onMouseClicked="#onCharsetClick" styleClass="bytes-editor-charset" text="-" textAlignment="RIGHT" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <Label fx:id="charsetLabel" onMouseClicked="#onCharsetClick" prefHeight="22.0" styleClass="bytes-editor-charset" text="-" textAlignment="RIGHT" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <Label fx:id="infoLabel" layoutX="10.0" layoutY="10.0" prefHeight="22.0" styleClass="bytes-editor-info" text="-" textAlignment="RIGHT" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" />
    </children>
 </fx:root>

@@ -123,6 +123,7 @@ public class HistoryViewController implements Initializable {
         // Refresh items
         view.setFilter(view.getFilter());
         initContextMenu();
+        metadataPane.setVisible(false);
     }
 
     /**
