@@ -62,7 +62,7 @@
               "name": "File script",
               "description": "",
               "language": "js",
-              "enabled": true,
+              "enabled": false,
               "type": "FILE",
               "data": {
                 "path": "scripts/main.js"

@@ -1,7 +1,6 @@
 package com.warxim.petep.util;
 
 import com.warxim.petep.test.base.extension.proxy.TestPdu;
-import com.warxim.petep.util.PduUtils;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -46,6 +45,9 @@ public class PduUtilsTest {
                 {getBytes("Test string!"), getBytes("ing!"), getBytes("X"), getBytes("Test strX")},
                 {getBytes("Test string!"), getBytes("ing!"), getBytes("XYZ"), getBytes("Test strXYZ")},
                 {getBytes("Test string!"), getBytes("ing!"), getBytes("XYZ123"), getBytes("Test strXYZ123")},
+                {getBytes("Test string Test!"), getBytes("Test"), getBytes("XYZ"), getBytes("XYZ string XYZ!")},
+                {getBytes("Test string Test! Test"), getBytes("Test"), getBytes("XYZ"), getBytes("XYZ string XYZ! XYZ")},
+                {getBytes("Test string!"), getBytes("XYZ"), getBytes("NOPE"), getBytes("Test string!")},
         };
     }
 

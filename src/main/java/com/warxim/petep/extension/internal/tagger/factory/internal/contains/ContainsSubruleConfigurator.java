@@ -43,7 +43,7 @@ public final class ContainsSubruleConfigurator extends TagSubruleConfigurator {
         super("/fxml/extension/internal/tagger/factory/ContainsSubrule.fxml");
 
         indexInput.setTooltip(GuiUtils.createTooltip(
-                "Use -1 to look for any occurrence or specific occurrence index (zero-based numbering)."
+                "Use -1 to look for the bytes at any index, or use specific index (zero-based numbering)."
         ));
     }
 

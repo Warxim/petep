@@ -47,7 +47,7 @@ public final class ReplacerConfigurator extends ModifierConfigurator {
         occurrenceInput.setText("-1");
 
         occurrenceInput.setTooltip(GuiUtils.createTooltip(
-                "Use -1 for replacing all occurrences or specific occurrence index (zero-based numbering)."
+                "Use -1 for replacing all occurrences or specific occurrence (zero-based numbering)."
         ));
     }
 

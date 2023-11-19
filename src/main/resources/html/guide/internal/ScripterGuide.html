@@ -6,6 +6,9 @@
 	One of the greatest advantages is that you can use Java libraries in the code, so you can also use PETEP utils etc.
 </p>
 <p>
+	<strong>Note:</strong> If you edit a File script, you have to reload the script in the PETEP UI.
+</p>
+<p>
 	<strong>Note:</strong> All scripts are persisted in Groups. You have to define these groups and bind them with specific Scripter interceptors to make them work.
 </p>
 
@@ -73,8 +76,44 @@ const BytesUtils = Java.type('com.warxim.petep.util.BytesUtils');
 
 <h2>Example scripts</h2>
 <p>
-	The following examples are part of Example preset. There are two scripts - logging interceptor and colorizing interceptor.
+	The following examples are part of Example preset. There are three scripts - simple replacer,
+	logging interceptor and colorizing interceptor.
 </p>
+
+
+<h3>Simple console replacer - custom</h3>
+<p>
+	This simple script uses JavaScript to process custom replacement.
+	(Replaces bytes at specific index with given data.)
+</p>
+<h4>replacer.js</h4>
+<pre class="code">
+// Imports
+const BytesUtils = Java.type('com.warxim.petep.util.BytesUtils');
+
+// Config
+const NEW_DATA = BytesUtils.hexStringToBytes('3A 29');
+const TARGET_INDEX = 2;
+const TARGET_LENGTH = NEW_DATA.length;
+const TARGET_TAG = 'tag-1';
+
+// Replacer
+scripter.registerInterceptor({
+    intercept: function(pdu, helper) {
+        const buffer = pdu.getBuffer();
+
+        if (!pdu.hasTag(TARGET_TAG)) {
+            return true;
+        }
+
+        for (let i = 0; i < TARGET_LENGTH; ++i) {
+            buffer[TARGET_INDEX + i] = NEW_DATA[i];
+        }
+
+        return true;
+    }
+});
+</pre>
 
 <h3>Simple console logger</h3>
 <p>
@@ -167,7 +206,7 @@ scripter.registerInterceptor({
 </pre>
 
 
-<h3>Simple console logger</h3>
+<h3>Simple console replacer - using internal utils</h3>
 <p>
 	This simple script uses PduUtils and BytesUtils to replace colors in the PDU data.
 </p>
