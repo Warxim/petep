@@ -17,10 +17,10 @@
 package com.warxim.petep.extension.internal.deluder.proxy;
 
 import com.warxim.petep.core.connection.Connection;
+import com.warxim.petep.core.pdu.DefaultPdu;
 import com.warxim.petep.core.pdu.PDU;
 import com.warxim.petep.core.pdu.PduDestination;
 import com.warxim.petep.extension.Extension;
-import com.warxim.petep.extension.internal.tcp.proxy.base.TcpPdu;
 import com.warxim.petep.gui.component.ConfigPane;
 import com.warxim.petep.gui.component.PduMetadataPane;
 import com.warxim.petep.persistence.Configurator;
@@ -100,6 +100,6 @@ public final class DeluderProxyModuleFactory
             Charset charset,
             Set<String> tags,
             Map<String, String> serializedMetadata) {
-        return Optional.of(new TcpPdu(proxy, connection, destination, buffer, size, charset, tags));
+        return Optional.of(new DefaultPdu(proxy, connection, destination, buffer, size, charset, tags));
     }
 }

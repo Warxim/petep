@@ -26,196 +26,130 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * PDU (Protocol Data Unit) is core unit for data processed in PETEP.
+ * PDU (Protocol Data Unit) is core unit for data processed in PETEP
  */
 @PetepAPI
-public abstract class PDU {
-    /**
-     * Parent proxy.
-     */
-    protected Proxy proxy;
-
-    /**
-     * Parent connection.
-     */
-    protected Connection connection;
-
-    /**
-     * PDU destination.
-     */
-    protected PduDestination destination;
-
-    /**
-     * Interceptor in which was the PDU processed the last time.
-     */
-    protected Interceptor lastInterceptor;
-
-    /**
-     * PDU tags.
-     */
-    protected Set<String> tags;
-
-    /**
-     * Creates PDU with specified arguments
-     * @param proxy Proxy
-     * @param connection Connection
-     * @param destination Destination of the PDU
-     * @param tags Set of tags
-     *             <p><b>Warning:</b> The set of tags should be mutable, so that the PDU can be tagged afterwards.</p>
-     */
-    protected PDU(Proxy proxy, Connection connection, PduDestination destination, Set<String> tags) {
-        this.proxy = proxy;
-        this.destination = destination;
-        this.connection = connection;
-        this.tags = tags;
-    }
-
+public interface PDU {
     /**
      * Checks if the PDU contain specified tag.
      * @param tag Tag to be checked
      * @return {@code true} if the PDU has the specified tag
      */
-    public boolean hasTag(String tag) {
-        return tags.contains(tag);
-    }
+    boolean hasTag(String tag);
 
     /**
      * Adds tag to the PDU.
      * @param tag Tag to be added
      */
-    public void addTag(String tag) {
-        tags.add(tag);
-    }
+    void addTag(String tag);
 
     /**
      * Removes tag from the PDU.
      * @param tag Tag to be removed
      */
-    public void removeTag(String tag) {
-        tags.remove(tag);
-    }
+    void removeTag(String tag);
 
     /**
      * Adds tags to the PDU.
      * @param tags Tags to be added to the PDU
      */
-    public void addTags(Collection<String> tags) {
-        this.tags.addAll(tags);
-    }
+    void addTags(Collection<String> tags);
 
     /**
      * Obtains tags.
      * @return Set of tags
      */
-    public Set<String> getTags() {
-        return tags;
-    }
+    Set<String> getTags();
 
     /**
      * Obtains parent proxy.
      * @return Proxy from which this PDU is coming
      */
-    public Proxy getProxy() {
-        return proxy;
-    }
+    Proxy getProxy();
 
     /**
      * Sets parent proxy.
      * @param proxy Proxy to be set
      */
-    public void setProxy(Proxy proxy) {
-        this.proxy = proxy;
-    }
+    void setProxy(Proxy proxy);
 
     /**
      * Obtains PDU destination.
      * @return Destination of the PDU
      */
-    public PduDestination getDestination() {
-        return destination;
-    }
+    PduDestination getDestination();
 
     /**
      * Sets PDU destination.
      * @param destination Destination of the PDU
      */
-    public void setDestination(PduDestination destination) {
-        this.destination = destination;
-    }
+    void setDestination(PduDestination destination);
 
     /**
      * Obtains connection.
      * @return Connection that will handle sending of this PDU
      */
-    public Connection getConnection() {
-        return connection;
-    }
+    Connection getConnection();
 
     /**
      * Sets connection.
      * @param connection Connection that will handle sending of this PDU
      */
-    public void setConnection(Connection connection) {
-        this.connection = connection;
-    }
+    void setConnection(Connection connection);
 
     /**
      * Obtains last interceptor.
      * @return Last interceptor that processed this PDU
      */
-    public Interceptor getLastInterceptor() {
-        return lastInterceptor;
-    }
+    Interceptor getLastInterceptor();
 
     /**
      * Sets last interceptor.
      * @param lastInterceptor Last interceptor that processed this PDU
      */
-    public void setLastInterceptor(Interceptor lastInterceptor) {
-        this.lastInterceptor = lastInterceptor;
-    }
+    void setLastInterceptor(Interceptor lastInterceptor);
 
     /**
      * Get the data buffer.
      * @return The whole byte buffer used to store data (can be bigger that the data inside it)
      */
-    public abstract byte[] getBuffer();
+    byte[] getBuffer();
 
     /**
      * Get size of data in the buffer.
      * @return Size of the data
      */
-    public abstract int getSize();
+    int getSize();
 
     /**
      * Set the buffer
      * @param buffer new byte array buffer to be used
      * @param size size of the data in provided buffer
      */
-    public abstract void setBuffer(byte[] buffer, int size);
+    void setBuffer(byte[] buffer, int size);
 
     /**
      * Resizes the buffer.
      * @param size New size of the buffer
      */
-    public abstract void resize(int size);
+    void resize(int size);
 
     /**
      * Get the charset of the PDU.
      * @return Charset of the data in the buffer
      */
-    public abstract Charset getCharset();
+    Charset getCharset();
 
     /**
      * Sets the charset of the PDU.
      * <p><b>Note:</b> Does not convert the data, just sets the charset property of PDU.</p>
      * @param charset Charset of the PDU
      */
-    public abstract void setCharset(Charset charset);
+    void setCharset(Charset charset);
 
     /**
      * Creates deep copy of the PDU.
      * @return Deep copy of the PDU
      */
-    public abstract PDU copy();
+    PDU copy();
 }

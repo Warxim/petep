@@ -17,10 +17,10 @@
 package com.warxim.petep.extension.internal.deluder.proxy;
 
 import com.warxim.petep.core.connection.Connection;
+import com.warxim.petep.core.pdu.DefaultPdu;
 import com.warxim.petep.core.pdu.PDU;
 import com.warxim.petep.core.pdu.PduDestination;
 import com.warxim.petep.core.pdu.PduQueue;
-import com.warxim.petep.extension.internal.tcp.proxy.base.TcpPdu;
 import com.warxim.petep.proxy.worker.Proxy;
 import com.warxim.petep.util.GsonUtils;
 
@@ -37,7 +37,9 @@ import java.util.logging.Logger;
  * Deluder connection
  * <p>Simple implementation for Deluder integration.</p>
  */
-public final class DeluderConnection extends Connection {
+public final class DeluderConnection implements Connection {
+    private final String code;
+    private final Proxy proxy;
     private final Socket socket;
     private final PduQueue outQueue;
     private ExecutorService executor;
@@ -50,14 +52,22 @@ public final class DeluderConnection extends Connection {
      * @param socket Client socket for the connection
      */
     public DeluderConnection(String code, Proxy proxy, Socket socket) {
-        super(code, proxy);
+        this.code = code;
+        this.proxy = proxy;
         this.socket = socket;
         this.outQueue = new PduQueue();
     }
 
-    /**
-     * About connection.
-     */
+    @Override
+    public String getCode() {
+        return code;
+    }
+
+    @Override
+    public Proxy getProxy() {
+        return proxy;
+    }
+
     @Override
     public String toString() {
         if (info != null) {
@@ -109,6 +119,11 @@ public final class DeluderConnection extends Connection {
     @Override
     public void send(PDU pdu) {
         outQueue.add(pdu);
+    }
+
+    @Override
+    public boolean supports(PDU pdu) {
+        return proxy.supports(pdu);
     }
 
     /**
@@ -187,10 +202,10 @@ public final class DeluderConnection extends Connection {
                 var destination = messageType == DeluderMessageType.DATA_C2S
                         ? PduDestination.SERVER
                         : PduDestination.CLIENT;
-                var pdu = new TcpPdu(proxy, this, destination, buffer, size, charset);
+                var pdu = new DefaultPdu(proxy, this, destination, buffer, size, charset);
 
                 // Process PDU in PETEP.
-                process(pdu);
+                proxy.getHelper().processPdu(pdu);
             }
         } catch (IOException e) {
             // Closed

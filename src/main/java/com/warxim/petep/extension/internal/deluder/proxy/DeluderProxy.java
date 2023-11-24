@@ -47,7 +47,7 @@ public final class DeluderProxy extends Proxy {
      * Constructs Deluder Proxy
      * @param module Parent module of the worker
      * @param helper Helper for accessing running instance of PETEP core
-     * @param config TCP configuration
+     * @param config Deluder configuration
      */
     public DeluderProxy(ProxyModule module, PetepHelper helper, DeluderConfig config) {
         super(module, helper);

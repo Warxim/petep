@@ -1,6 +1,6 @@
 package com.warxim.petep.test.base.extension.proxy;
 
-import com.warxim.petep.core.connection.Connection;
+import com.warxim.petep.core.connection.ConnectionBase;
 import com.warxim.petep.core.pdu.PduDestination;
 import com.warxim.petep.proxy.worker.Proxy;
 import lombok.extern.java.Log;
@@ -9,7 +9,7 @@ import lombok.extern.java.Log;
  * Test connection
  */
 @Log
-public class TestConnection extends Connection {
+public class TestConnection extends ConnectionBase {
     /**
      * Constructs test connection.
      * @param code Unique code of the connection
