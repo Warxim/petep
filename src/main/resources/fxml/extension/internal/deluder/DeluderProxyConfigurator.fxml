@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<fx:root prefHeight="224.0" prefWidth="394.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="10.0" layoutY="108.0" styleClass="input-label" text="Host:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="108.0" />
+      <TextField fx:id="petepHostInput" layoutX="86.0" layoutY="103.0" prefHeight="26.0" prefWidth="237.0" AnchorPane.leftAnchor="85.0" AnchorPane.rightAnchor="10.0" />
+      <Label layoutX="10.0" layoutY="138.0" styleClass="input-label" text="Port:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="138.0" />
+      <TextField fx:id="petepPortInput" layoutX="86.0" layoutY="133.0" prefHeight="26.0" prefWidth="237.0" AnchorPane.leftAnchor="86.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="133.0" />
+      <Label layoutX="10.0" layoutY="83.0" styleClass="h3" text="Integration server" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="83.0" />
+      <Label layoutX="10.0" layoutY="198.0" styleClass="input-label" text="Charset:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="198.0" />
+      <TextField fx:id="charsetInput" layoutX="86.0" layoutY="193.0" prefHeight="26.0" prefWidth="237.0" AnchorPane.leftAnchor="86.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="193.0" />
+      <Label layoutX="10.0" layoutY="173.0" styleClass="h3" text="Other" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="173.0" />
+      <Label layoutX="11.0" layoutY="14.0" styleClass="h2" text="Deluder" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <Label layoutX="11.0" layoutY="39.0" text="Deluder is an utility for intercepting traffic of proxy unaware applications." AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="33.0" />
+      <Label layoutX="14.0" layoutY="61.0" styleClass="input-label" text="Website:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="58.0" />
+      <Hyperlink fx:id="website" layoutX="60.0" layoutY="55.0" text="https://link" AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="55.0" />
+   </children>
+</fx:root>

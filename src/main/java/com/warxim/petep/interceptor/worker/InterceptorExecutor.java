@@ -134,15 +134,7 @@ public final class InterceptorExecutor {
     }
 
     /**
-     * Puts PDU into first queue for processing by first interceptor.
-     * @param pdu PDU to be processed
-     */
-    public void intercept(PDU pdu) {
-        queues.get(0).add(pdu);
-    }
-
-    /**
-     * Puts PDU into specified queue (for specified interceptor).
+     * Puts PDU into specified queue (to specified interceptor)
      * @param interceptorId Interceptor identifier (zero-based numbering)
      * @param pdu PDU to be processed
      */

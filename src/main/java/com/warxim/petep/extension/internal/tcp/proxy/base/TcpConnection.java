@@ -16,7 +16,7 @@
  */
 package com.warxim.petep.extension.internal.tcp.proxy.base;
 
-import com.warxim.petep.core.connection.Connection;
+import com.warxim.petep.core.connection.ConnectionBase;
 import com.warxim.petep.extension.internal.tcp.TcpConfig;
 import com.warxim.petep.proxy.worker.Proxy;
 
@@ -39,7 +39,7 @@ import java.util.logging.Logger;
  *     <li>Write to client</li>
  * </ul>
  */
-public abstract class TcpConnection extends Connection {
+public abstract class TcpConnection extends ConnectionBase {
     /**
      * Socket between client and proxy.
      */

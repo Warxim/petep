@@ -16,14 +16,18 @@
  */
 package com.warxim.petep.extension.internal.udp.proxy;
 
-import com.warxim.petep.core.connection.Connection;
+import com.warxim.petep.core.connection.ConnectionBase;
 import com.warxim.petep.core.pdu.PDU;
 import com.warxim.petep.core.pdu.PduDestination;
 import com.warxim.petep.core.pdu.PduQueue;
 import com.warxim.petep.proxy.worker.Proxy;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -39,7 +43,7 @@ import java.util.logging.Logger;
  * </ul>
  * <p>(Read from client is done by UdpProxy.)</p>
  */
-public class UdpConnection extends Connection {
+public class UdpConnection extends ConnectionBase {
     private final InetAddress clientAddress;
     private final int clientPort;
     private final DatagramSocket socketClient;

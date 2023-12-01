@@ -16,6 +16,7 @@
  */
 package com.warxim.petep.core.connection;
 
+import com.warxim.petep.core.listener.ConnectionListener;
 import com.warxim.petep.extension.PetepAPI;
 import com.warxim.petep.helper.PetepHelper;
 
@@ -31,7 +32,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * </p>
  */
 @PetepAPI
-public class StringBasedConnectionManager extends ConnectionManager {
+public class StringBasedConnectionManager implements ConnectionManager {
+    /**
+     * PETEP helper for currently running core.
+     */
+    protected final PetepHelper helper;
+
+    /**
+     * Connection listener for reporting new connections etc.
+     */
+    protected final ConnectionListener listener;
+
     /**
      * Map of connections.
      */
@@ -42,7 +53,8 @@ public class StringBasedConnectionManager extends ConnectionManager {
      * @param helper PETEP helper for currently running core
      */
     public StringBasedConnectionManager(PetepHelper helper) {
-        super(helper);
+        this.helper = helper;
+        listener = helper.getConnectionListener();
         connections = new ConcurrentHashMap<>();
     }
 

@@ -707,3 +707,7 @@
 .monospaced {
   -fx-font-family: "Noto Sans Mono";
 }
+
+.hyperlink {
+    -fx-text-fill: -fx-color-dark-3;
+}

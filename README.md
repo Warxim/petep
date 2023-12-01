@@ -49,8 +49,9 @@ Use Project → Save to save the changes, when PETEP is running.*
 
 ## Features
 Latest PETEP version has the following protocol support:
-- **TCP proxy with SSL/TLS support**
-- **UDP proxy**
+- **TCP proxy with SSL/TLS support** - application protocols built on TCP
+- **UDP proxy** - application protocols built on UDP
+- **Deluder** - integration with [Deluder](https://github.com/Warxim/deluder) for proxy unaware applications
 
 And there are the following functionalities:
 - **External HTTP proxy** - support for tunneling the TCP traffic through HTTP proxies like Zaproxy, Burp Suite, etc
@@ -64,6 +65,26 @@ And there are the following functionalities:
 - **Connections** - management of active connections
 
 Detailed descriptions of all modules can be found in the official [User Guide](https://petep.warxim.com/user-guide/).
+
+### TCP/UDP proxy
+PETEP is made to be a proxy for application protocols built on TCP/UDP. 
+In order to use PETEP as a proxy for your application, there are usually one the following 
+options:
+- Target application can be configured to use specific IP address and port for communication.
+  - In this case, simply configure PETEP to communicate with the target server and configure the target application
+    to use PETEP's IP address and port.
+- Target application uses domain resolution in order to connect to the target server.
+  - In this case, you can usually configure `/etc/hosts` file and override the IP address
+    for the target domain.
+  - Note that for SSL applications, you sometimes have to add the PETEP certificate to your computers trusted certificates.
+
+### Deluder for proxy unaware applications
+If the target application is not proxy aware and/or it is not possible to use other approaches (e.g. `/etc/hosts`)
+to make the application communicate through PETEP, you can use [Deluder](https://github.com/Warxim/deluder).
+
+Deluder is a Python utility, which uses dynamic instrumentation to intercept function calls 
+in common networking and encryption libraries. 
+See [Deluder GitHub](https://github.com/Warxim/deluder). 
 
 ### Scripter extension
 In order to use Scripter extension, it is recommended to use GraalVM, since the implementation is built

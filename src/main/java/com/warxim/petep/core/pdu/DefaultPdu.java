@@ -19,9 +19,11 @@ package com.warxim.petep.core.pdu;
 import com.warxim.petep.common.Constant;
 import com.warxim.petep.core.connection.Connection;
 import com.warxim.petep.extension.PetepAPI;
+import com.warxim.petep.interceptor.worker.Interceptor;
 import com.warxim.petep.proxy.worker.Proxy;
 
 import java.nio.charset.Charset;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,7 +33,27 @@ import java.util.Set;
  * <p>By default uses charset specified in {@link Constant#DEFAULT_CHARSET}.</p>
  */
 @PetepAPI
-public class DefaultPdu extends PDU {
+public class DefaultPdu implements PDU {
+    /**
+     * Parent proxy.
+     */
+    protected Proxy proxy;
+    /**
+     * Parent connection.
+     */
+    protected Connection connection;
+    /**
+     * PDU destination.
+     */
+    protected PduDestination destination;
+    /**
+     * Interceptor in which was the PDU processed the last time.
+     */
+    protected Interceptor lastInterceptor;
+    /**
+     * PDU tags.
+     */
+    protected Set<String> tags;
     /**
      * Data buffer
      */
@@ -56,7 +78,10 @@ public class DefaultPdu extends PDU {
      * @param tags Set of tags
      */
     public DefaultPdu(Proxy proxy, Connection connection, PduDestination destination, byte[] buffer, int size, Charset charset, Set<String> tags) {
-        super(proxy, connection, destination, tags);
+        this.proxy = proxy;
+        this.destination = destination;
+        this.connection = connection;
+        this.tags = tags;
         this.buffer = buffer;
         this.size = size;
         this.charset = charset;
@@ -153,5 +178,70 @@ public class DefaultPdu extends PDU {
         pdu.setLastInterceptor(pdu.getLastInterceptor());
 
         return pdu;
+    }
+
+    @Override
+    public boolean hasTag(String tag) {
+        return tags.contains(tag);
+    }
+
+    @Override
+    public void addTag(String tag) {
+        tags.add(tag);
+    }
+
+    @Override
+    public void removeTag(String tag) {
+        tags.remove(tag);
+    }
+
+    @Override
+    public void addTags(Collection<String> tags) {
+        this.tags.addAll(tags);
+    }
+
+    @Override
+    public Set<String> getTags() {
+        return tags;
+    }
+
+    @Override
+    public Proxy getProxy() {
+        return proxy;
+    }
+
+    @Override
+    public void setProxy(Proxy proxy) {
+        this.proxy = proxy;
+    }
+
+    @Override
+    public PduDestination getDestination() {
+        return destination;
+    }
+
+    @Override
+    public void setDestination(PduDestination destination) {
+        this.destination = destination;
+    }
+
+    @Override
+    public Connection getConnection() {
+        return connection;
+    }
+
+    @Override
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
+    @Override
+    public Interceptor getLastInterceptor() {
+        return lastInterceptor;
+    }
+
+    @Override
+    public void setLastInterceptor(Interceptor lastInterceptor) {
+        this.lastInterceptor = lastInterceptor;
     }
 }
