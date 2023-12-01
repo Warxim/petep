@@ -69,7 +69,7 @@ Detailed descriptions of all modules can be found in the official [User Guide](h
 ### TCP/UDP proxy
 PETEP is made to be a proxy for application protocols built on TCP/UDP. 
 In order to use PETEP as a proxy for your application, there are usually one the following 
-scenarios:
+options:
 - Target application can be configured to use specific IP address and port for communication.
   - In this case, simply configure PETEP to communicate with the target server and configure the target application
     to use PETEP's IP address and port.
