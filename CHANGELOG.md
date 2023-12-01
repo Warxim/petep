@@ -2,7 +2,7 @@
 
 All notable changes to this project will are documented in this changelog file.
 
-## [2.3.0] - Unreleased
+## [2.3.0] - 2023-11-01
 ### Added
 - Added Index & Length information to BytesEditor
 - Improved PDU View/Editor UX by automatically hiding/showing metadata panels based on metadata availability
